@@ -15,7 +15,11 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        if (HttpContext.Session.GetString("id") == null){
+            return RedirectToAction("VistaIniciarSesion", "Usuario");
+        }
+        ViewBag.user = BD.GetUsuario(int.Parse(HttpContext.Session.GetString("id")));
+        return View();   
     }
 
     public IActionResult Privacy()

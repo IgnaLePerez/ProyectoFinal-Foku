@@ -11,4 +11,15 @@ public class Usuario{
     public int Racha { get; set; }
 
     public Usuario(){}
+
+    public Usuario(int monedas, string username, string nombre, string apellido, string email, string contraseña, int racha)
+    {
+        Monedas = monedas;
+        Username = username;
+        Nombre = nombre;
+        Apellido = apellido;
+        Email = email;
+        Contraseña = contraseña;
+        Racha = racha;
+    }
 }

@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section>
+    <h2>Iniciar Sesión</h2>
+    <div>
+        <form method="post" action="@Url.Action("IniciarSesion", "Usuario")">
+            <div>
+                <label for="inputUserName" id="labelUserName">Nombre de Usuario</label>
+                <input type="text" id="inputUserName" name="nombreUsuario" required>
+            </div>
+            <div>
+                <label for="inputPassword" id="labelPassword">Contraseña</label>
+                <input type="password" id="inputPassword" name="contraseña" required>
+            </div>
+            <button type="submit" onsubmit="return validarCampos();">Iniciar Sesión</button>
+        </form>
+    </div>
+    <p>¿No tienes una cuenta? <a href="@Url.Action(action: "Registrarse", controller: "Usuario")">Regístrate aquí</a></p>
+</section>
+
+<script src="IniciarSesion.js"></script>
