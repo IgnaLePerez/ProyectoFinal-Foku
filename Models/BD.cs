@@ -5,7 +5,7 @@ namespace Foku.Models;
 
 public static class BD
 {
-        private static string _connectionString = @"Server=localhost\sqlexpress; DataBase=DBFoku;Integrated Security=True;TrustServerCertificate=True;";
+        private static string _connectionString = @"Server=localhost;DataBase=DBFoku;Integrated Security=True;TrustServerCertificate=True;";
 
     public static string BuscarSesion(string nombreUsuario, string contraseña)
     {
@@ -40,10 +40,10 @@ public static class BD
     }
 
     public static bool NombreUsuarioValido(string nombreUsuario){
-        string query = "SELECT COUNT(Username) FROM Usuarios WHERE Username = @nombreUsuario";
+        string query = "SELECT COUNT(Username) FROM Usuarios WHERE Username = @pnombreUsuario";
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            int count = connection.QueryFirstOrDefault<int>(query, new { nombreUsuario = nombreUsuario });
+            int count = connection.QueryFirstOrDefault<int>(query, new { pnombreUsuario = nombreUsuario });
             if (count > 0)
             {
                 return false;

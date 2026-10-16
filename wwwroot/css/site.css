@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Average&family=Commissioner:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=MuseoModerno:wght@300;400;500;600;700&display=swap');
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html {
   font-size: 14px;
 }
@@ -18,7 +26,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +36,348 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+:root {
+  /* Fuentes */
+  --font-museomoderno: 'MuseoModerno', 'Segoe UI', sans-serif;
+  --font-commissioner: 'Commissioner', 'Segoe UI', sans-serif;
+  --font-jost: 'Jost', 'Segoe UI', sans-serif;
+  --font-average: 'Average', serif;
+
+  /* Acento */
+  --acento-rest: #FF9509;
+  --acento-hover: #DA7C00;
+  --acento-pressed: #9C5901;
+
+  /* Secundario I */
+  --secundario-i-rest: #4F6D9A;
+  --secundario-i-hover: #445F87;
+  --secundario-i-pressed: #384E6E;
+
+  /* Secundario II */
+  --secundario-ii-rest: #ACC5F1;
+  --secundario-ii-hover: #A2BAE3;
+  --secundario-ii-pressed: #91A6C9;
+
+  /* Black */
+  --black-rest: #212225;
+  --black-hover: #404247;
+  --black-pressed: #53555C;
+
+  /* White */
+  --white-rest: #FCFBF8;
+  --white-hover: #EAEAEA;
+  --white-pressed: #CCCCCC;
+
+  /* Grey */
+  --grey-rest: #5D5E65;
+  --grey-hover: #74757D;
+  --grey-pressed: #84858F;
+
+  /* Estados */
+  --info: #6F8FBF;
+  --success: #7FA58A;
+  --warning: #D9A45C;
+  --error: #EB7577;
+
+  /* Superficies */
+  --bordes: #E3E0DA;
+  --cards: #F2F0EB;
+  --border-radius-cards: 25px;
+
+  /* Tipografías por estilo */
+  --landing-header: 300 70px/1.2 var(--font-museomoderno);
+  --workspace-foku: 400 40px/1.2 var(--font-museomoderno);
+  --text-buttons: 400 16px/1.5 var(--font-commissioner);
+  --text-buttons-medium: 500 16px/1.5 var(--font-commissioner);
+  --text-buttons-regular: 400 16px/1.5 var(--font-commissioner);
+  --text-buttons-desplegables: 400 16px/1.5 var(--font-commissioner);
+  --titulo-pagina: 400 116px/1.2 var(--font-jost);
+  --titulo-tarjetas: 400 40px/1.2 var(--font-jost);
+  --titulo-popups: 400 40px/1.2 var(--font-jost);
+  --subtitulo-1: 400 85px/1.2 var(--font-average);
+  --subtitulo-2: 400 45px/1.2 var(--font-average);
+  --texto: 400 20px/1.5 var(--font-commissioner);
+  --texto-label: 400 15px/1.5 var(--font-commissioner);
+  --texto-workspace-lateral: 700 14px/1.4 var(--font-commissioner);
+  --tipografia-grandes-popups: 400 96px/1.2 var(--font-commissioner);
+  --texto-grafico: 400 10px/1.4 var(--font-commissioner);
+}
+
+
+.seccionblanca{
+  background-color: var(--white-rest);
+  height: 100vh;
+}
+
+.contenedorCentrado{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.tarjeta{
+  border: 3px solid var(--bordes);
+  background-color: var(--cards);
+  padding: 43px;
+  border-radius: var(--border-radius-cards);
+}
+
+.tarjetaLog{
+  width: 40%;
+}
+
+.subtitulo-2{
+  font: var(--subtitulo-2);
+  color: var(--black-rest);
+}
+
+.subtitulo-1{
+  font: var(--subtitulo-1);
+  color: var(--black-rest);
+}
+
+.formLog{
+  padding-top: 43px;
+  width: 100%;
+}
+
+.formLog div{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.formLog input{
+  padding: 5px;
+  border: 2px solid var(--bordes);
+  border-radius: 7px;
+  width: 100%;
+}
+
+.formLog input:focus {
+  outline: none;
+  border-color: var(--acento-rest);
+  box-shadow: 0 0 0 2px rgba(255, 149, 9, 0.15);
+}
+
+.formLog label{
+  font: var(--texto-label);
+  color: var(--black-rest);
+  margin-bottom: 5px;
+}
+
+.formLog button{
+  width: 100%;
+}
+
+.formLog h2{
+  font: var(--subtitulo-2);
+  color: var(--black-rest);
+}
+
+.formLog .checkbox-container{
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  margin-bottom: 20px;
+}
+
+.formLog input[type="checkbox"] {
+  width: auto;
+  margin-right: 5px;
+}
+
+.btnAcento{
+  background-color: var(--acento-rest);
+  color: var(--white-rest);
+  font: var(--text-buttons);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btnAcento:hover{
+  background-color: var(--acento-hover);
+}
+
+.btnAcento:active{
+  background-color: var(--acento-pressed);
+}
+
+.btnAcentoOutline{
+  background-color: transparent;
+  color: var(--acento-rest);
+  font: var(--text-buttons);
+  border: 3px solid var(--acento-rest);
+  padding: 10px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 5px;
+}
+
+.btnAcentoOutline:hover{
+  background-color: var(--acento-hover);
+  color: var(--white-rest);
+  border-color: var(--acento-hover);
+}
+
+.btnAcentoOutline:active{
+  background-color: var(--acento-pressed);
+  color: var(--white-rest);
+  border-color: var(--acento-pressed);
+}
+
+.btnAcentoOutline:focus-visible{
+  outline: 2px solid var(--acento-rest);
+  outline-offset: 2px;
+}
+
+.btnSecundarioIOutline{
+  background-color: transparent;
+  color: var(--secundario-i-rest);
+  font: var(--text-buttons);
+  border: 3px solid var(--secundario-i-rest);
+  padding: 10px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 5px;
+}
+
+.btnSecundarioIOutline:hover{
+  background-color: var(--secundario-i-hover);
+  color: var(--white-rest);
+  border-color: var(--secundario-i-hover);
+}
+
+.btnSecundarioIOutline:active{
+  background-color: var(--secundario-i-pressed);
+  color: var(--white-rest);
+  border-color: var(--secundario-i-pressed);
+}
+
+.btnSecundarioIIOutline{
+  background-color: transparent;
+  color: var(--secundario-ii-rest);
+  font: var(--text-buttons);
+  border: 3px solid var(--secundario-ii-rest);
+  padding: 10px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 5px;
+}
+
+.btnSecundarioIIOutline:hover{
+  background-color: var(--secundario-ii-hover);
+  color: var(--white-rest);
+  border-color: var(--secundario-ii-hover);
+}
+
+.btnSecundarioIIOutline:active{
+  background-color: var(--secundario-ii-pressed);
+  color: var(--white-rest);
+  border-color: var(--secundario-ii-pressed);
+}
+
+.btnBlackOutline{
+  background-color: transparent;
+  color: var(--black-rest);
+  font: var(--text-buttons);
+  border: 3px solid var(--black-rest);
+  padding: 10px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 5px;
+}
+
+.btnBlackOutline:hover{
+  background-color: var(--black-hover);
+  color: var(--white-rest);
+  border-color: var(--black-hover);
+}
+
+.btnBlackOutline:active{
+  background-color: var(--black-pressed);
+  color: var(--white-rest);
+  border-color: var(--black-pressed);
+}
+
+.btnWhiteOutline{
+  background-color: transparent;
+  color: var(--white-rest);
+  font: var(--text-buttons);
+  border: 3px solid var(--white-rest);
+  padding: 10px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 5px;
+}
+
+.btnWhiteOutline:hover{
+  background-color: var(--white-hover);
+  color: var(--black-rest);
+  border-color: var(--white-hover);
+}
+
+.btnWhiteOutline:active{
+  background-color: var(--white-pressed);
+  color: var(--black-rest);
+  border-color: var(--white-pressed);
+}
+
+.btnGreyOutline{
+  background-color: transparent;
+  color: var(--grey-rest);
+  font: var(--text-buttons);
+  border: 3px solid var(--grey-rest);
+  padding: 10px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 5px;
+}
+
+.btnGreyOutline:hover{
+  background-color: var(--grey-hover);
+  color: var(--white-rest);
+  border-color: var(--grey-hover);
+}
+
+.btnGreyOutline:active{
+  background-color: var(--grey-pressed);
+  color: var(--white-rest);
+  border-color: var(--grey-pressed);
+}
+
+.btnArribaIzquierda{
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }

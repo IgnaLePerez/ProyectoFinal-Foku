@@ -2,13 +2,11 @@
     ViewData["Title"] = "Privacy Policy";
 }
 
-<section>
-    <a href="@Url.Action(action: "LandingPage", controller: "Home")">
-        Volver
-    </a>
-    <h2>Registrarse</h2>
-    <div>
-        <form method="post" action="@Url.Action("RegistrarDatos", "Usuario")">
+<section class="seccionblanca contenedorCentrado">
+    <button class="btnBlackOutline btnArribaIzquierda" onclick='@Url.Action("Index", "Home")'>Volver</button>
+    <div class="contenedorCentrado tarjeta tarjetaLog">
+        <h2 class="subtitulo-2">Registrarse</h2>
+        <form method="post" action="@Url.Action("RegistrarDatos", "Usuario")" class="formLog" onsubmit="return validarCampos();">
         <div>
             <label for="nombreUsuario">Nombre de Usuario</label>
             <input type="text" id="nombreUsuario" name="nombreUsuario" required>
@@ -29,9 +27,11 @@
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
         </div>
-        <input type="checkbox" id="aceptoTerminos" name="aceptoTerminos" required>
-        <label for="aceptoTerminos">Acepto los términos y condiciones</label>
-        <button type="submit">Registrarse</button>
+        <div class="checkbox-container">
+            <input type="checkbox" id="aceptoTerminos" name="aceptoTerminos" required>
+            <label for="aceptoTerminos">Acepto los términos y condiciones</label>
+        </div>
+        <button type="submit" class="btnAcento">Registrarse</button>
         </form>
     </div>
     <p>¿Ya tienes una cuenta? <a href="@Url.Action(action: "VistaIniciarSesion", controller: "Usuario")">Inicia sesión</a></p>

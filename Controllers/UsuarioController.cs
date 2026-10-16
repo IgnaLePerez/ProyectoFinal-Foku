@@ -15,12 +15,12 @@ public class UsuarioController : Controller
     public IActionResult IniciarSesion(string nombreUsuario, string contraseña)
     {
         HttpContext.Session.SetString("id", BD.BuscarSesion(nombreUsuario, contraseña));
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult CerrarSesion(){
         HttpContext.Session.Clear();
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult Registrarse(){
