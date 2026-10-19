@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = "Foku";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foku App</title>
+    <link rel="stylesheet" href="~/css/workspace.css">
+</head>
+<body>
+
+    <!-- Header superior -->
+    <header>
+        <div>
+            <img src="~/images/logo.png" alt="Foku Logo" class="logo-img" />
+            <h1>Foku</h1>
+        </div>
+
+        <div>
+            <div>
+                <p>Número de racha</p>
+                <img src="~/images/fire-icon.png" alt="Fire Icon"/>
+            </div>
+            <div>
+                <img src="~/images/user-avatar.png" alt="User Avatar"/>
+                <p>Nombre de Usuario</p>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Cuerpo principal -->
+    <main>
+        <aside>
+            <nav>
+                <ul>
+                    <li>
+                        <button>
+                            <img src="~/images/documents-icon.png" alt="Documents Icon" />
+                            <p>Documentos</p>
+                        </button>
+                    </li>
+                    <li>
+                        <button id="btn-pomodoro" class="sidebar-item sidebar-btn" onclick="abrirPomodoro()">
+                            <img src="~/images/pomodoro-icon.png" alt="Pomodoro Icon" class="sidebar-icon-img" />
+                            <p>Pomodoro</p>
+                        </button>
+                    </li>
+                    <li>
+                        <button>
+                            <img src="~/images/tasks-icon.png" alt="Tasks Icon" class="sidebar-icon-img" />
+                            <p>Tareas</p>
+                        </button>
+                    </li>
+                    <li>
+                        <button>
+                            <img src="~/images/calendar-icon.png" alt="Calendar Icon" class="sidebar-icon-img" />
+                            <p>Calendario</p>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Zona de trabajo para contenido y widgets -->
+        <div class="workspace-area"> 
+            <!-- Widget Flotante del Pomodoro -->
+            <div id="pomodoro-widget" class="floating-widget hidden">
+                <div class="widget-header">
+                    <span class="widget-title">Pomodoro</span>
+                    <button class="close-btn" onclick="cerrarPomodoro()">&times;</button>
+                </div>
+                <div class="widget-body">
+                    <h2>25:00</h2>
+                    <button class="btnAcento">Iniciar</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Vinculación del script del cliente -->
+    <script src="~/js/site.js"></script>
+</body>
+</html>

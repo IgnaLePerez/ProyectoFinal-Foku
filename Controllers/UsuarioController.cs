@@ -44,4 +44,8 @@ public class UsuarioController : Controller
     public bool NombreUsuarioValido(string nombreUsuario){
         return BD.NombreUsuarioValido(nombreUsuario);
     }
+
+    public IActionResult WorkSpace(){
+        return View();
+    }
 }

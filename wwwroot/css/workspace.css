@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Average&family=Commissioner:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=MuseoModerno:wght@300;400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+:root {
+  /* Fuentes */
+  --font-museomoderno: 'MuseoModerno', 'Segoe UI', sans-serif;
+  --font-commissioner: 'Commissioner', 'Segoe UI', sans-serif;
+  --font-jost: 'Jost', 'Segoe UI', sans-serif;
+  --font-average: 'Average', serif;
+
+  /* Colores */
+  --acento-rest: #FF9509;
+  --acento-hover: #DA7C00;
+  --acento-pressed: #9C5901;
+  --black-rest: #212225;
+  --black-hover: #404247;
+  --black-pressed: #53555C;
+  --white-rest: #FCFBF8;
+  --grey-rest: #5D5E65;
+
+  /* Superficies */
+  --bordes: #E3E0DA;
+  --cards: #F2F0EB;
+  --border-radius-cards: 25px;
+
+  /* Tipografías */
+  --workspace-foku: 400 40px/1.2 var(--font-museomoderno);
+  --titulo-tarjetas: 400 40px/1.2 var(--font-jost);
+  --text-buttons-medium: 500 16px/1.5 var(--font-commissioner);
+  --texto-label: 400 15px/1.5 var(--font-commissioner);
+  --texto-workspace-lateral: 700 14px/1.4 var(--font-commissioner);
+}
+
+/* BOTONES GENERALES */
+.btnAcento {
+  background-color: var(--acento-rest);
+  color: var(--white-rest);
+  font: var(--text-buttons-medium);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btnAcento:hover {
+  background-color: var(--acento-hover);
+}
+
+.btnAcento:active {
+  background-color: var(--acento-pressed);
+}
+
+/* ===================================================
+   ESTILOS DE MAQUETACIÓN WORKSPACE Y WIDGET
+   =================================================== */
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  width: 94.8%;
+  margin: 0 2.6%;
+  margin-top:1.4%;
+  height: 9.18%;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+header div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--cards);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-cards);
+}
+header h1 {
+  font: var(--workspace-foku);
+  color: var(--black-rest);
+  margin-left: 1rem;
+}
+/* Menú lateral */
+main aside{
+    margin-top: 5%; 
+    margin-left: 2.6%;
+}
+ul{
+    background-color: var(--cards);
+    width: fit-content;
+}
+ul li{
+    list-style: none;
+}
+ul li button{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    font: var(--texto-workspace-lateral);
+    color: var(--black-rest);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+/* Widget Flotante */
+.floating-widget {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 260px;
+  background-color: var(--white-rest);
+  border: 2px solid var(--bordes);
+  border-radius: var(--border-radius-cards);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.widget-header {
+  padding: 12px 16px;
+  background-color: var(--cards);
+  border-bottom: 2px solid var(--bordes);
+  cursor: grab;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: var(--text-buttons-medium);
+  color: var(--black-rest);
+}
+
+.widget-header:active {
+  cursor: grabbing;
+}
+
+.widget-body {
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.widget-body h2 {
+  font: var(--titulo-tarjetas);
+  color: var(--black-rest);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--grey-rest);
+}
+
+.close-btn:hover {
+  color: var(--black-rest);
+}
