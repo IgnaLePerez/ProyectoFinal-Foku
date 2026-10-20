@@ -5,331 +5,146 @@
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foku | Home</title>
-
-
-    <link rel="stylesheet" href="~/css/estilo.css" asp-append-version="true">
-</head>
-<body>
-
-
-    <header class="navbar">
-        <div class="container nav-container">
-
-
-            <a asp-controller="Usuario" asp-action="VistaLanding"
-               class="logo" aria-label="Foku - Inicio">
-                <img src="~/images/Logo.png" alt="Foku">
-            </a>
-
-
-            <nav class="nav-links" aria-label="Navegación principal">
-                <a href="#inicio">Inicio</a>
-                <a href="#tutorial">Tutorial</a>
-                <a href="#sobre-nosotros">Sobre nosotros</a>
-                <a href="#experiencias">Experiencias</a>
-            </nav>
-
-
-            <div class="nav-auth">
-                <a class="btn btnGrey"
-                   asp-controller="Usuario"
-                   asp-action="Registrarse">
-                    Registrarse
-                </a>
-
-
-                <a class="btn btnAcento"
-                   asp-controller="Usuario"
-                   asp-action="VistaIniciarSesion">
-                    Iniciar sesión
-                </a>
-            </div>
-
-
-        </div>
-    </header>
-
-
-    <main>
-        <!-- INICIO -->
-        <section id="inicio" class="hero container">
-
-
-            <div class="hero-content">
-                <h1>Accede a tu workspace</h1>
-
-
-                <p>
-                    Foku, el lugar donde las ideas y el conocimiento
-                    se vuelven uno.
-                </p>
-
-
-                <div class="hero-buttons">
-                    <a class="btn btnGrey"
-                       asp-controller="Usuario"
-                       asp-action="Registrarse">
-                        Registrarse
-                    </a>
-
-
-                    <a class="btn btnAcento"
-                       asp-controller="Usuario"
-                       asp-action="VistaIniciarSesion">
-                        Iniciar sesión
-                    </a>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Foku | Home</title>
+        <link rel="stylesheet" href="~/css/estilo.css" asp-append-version="true">
+    </head>
+    <body>
+        <header class="navbar">
+            <div class="container nav-container">
+                <a asp-controller="Usuario" asp-action="VistaLanding" class="logo" aria-label="Foku - Inicio"><img src="~/images/Logo.png" alt="Foku"></a>
+                <nav class="nav-links" aria-label="Navegación principal">
+                    <a href="#inicio">Inicio</a>
+                    <a href="#tutorial">Tutorial</a>
+                    <a href="#sobre-nosotros">Sobre nosotros</a>
+                    <a href="#experiencias">Experiencias</a>
+                </nav>
+                <div class="nav-auth">
+                    <a class="btnGrey" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
+                    <a class="btnAcento" asp-controller="Usuario" asp-action="VistaIniciarSesion">Iniciar sesión</a>
                 </div>
             </div>
-
-
-            <div class="hero-media">
-                <div class="placeholder-box">
-                    <img src="~/images/Foto.png"
-                         alt="Persona estudiando en su workspace">
-                </div>
-            </div>
-
-
-        </section>
-
-
-        <!-- TUTORIAL -->
-        <section id="tutorial" class="tutorial">
-            <div class="container text-center">
-
-
-                <h2>Cómo utilizar la Workspace</h2>
-
-
-                <div class="video-container">
-                    <div class="video-placeholder"
-                         aria-label="Espacio para el video tutorial">
-                        <span class="video-play-icon" aria-hidden="true">
-                            ▶
-                        </span>
+        </header>
+        <main>
+            <section id="inicio" class="hero container">
+                <div class="hero-content">
+                    <h1>Accede a tu workspace</h1>
+                    <p>Foku, el lugar donde las ideas y el conocimiento se vuelven uno.</p>
+                    <div class="hero-buttons">
+                        <a class="btnGrey" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
+                        <a class="btnAcento" asp-controller="Usuario" asp-action="VistaIniciarSesion">Iniciar sesión</a>
                     </div>
                 </div>
-
-
-            </div>
-        </section>
-
-
-        <!-- SOBRE NOSOTROS -->
-        <section id="sobre-nosotros" class="about">
-            <div class="container about-grid">
-
-
-                <div class="about-card">
-                    <div class="logo logo-large">
-                        <img src="~/images/Logo.png" alt="Logo de Foku">
+                <div class="hero-media">
+                    <div class="placeholder-box">
+                        <img src="~/images/Foto.png" alt="Persona estudiando en su workspace">
                     </div>
                 </div>
+            </section>
 
-
-                <div class="about-text">
-                    <h2>Sobre nosotros</h2>
-
-
-                    <p>
-                        Foku es una herramienta diseñada para estudiantes
-                        universitarios con <strong>TDAH</strong>, que ayuda
-                        a mejorar la concentración, organización y rendimiento
-                        académico.
-                    </p>
-
-
-                    <p>
-                        Adaptamos la forma de estudiar a las necesidades de
-                        cada persona para que pueda aprovechar al
-                        <strong>máximo su potencial.</strong>
-                    </p>
+            <section id="tutorial" class="tutorial">
+                <div class="container text-center">
+                    <h2>Cómo utilizar la Workspace</h2>
+                    <div class="video-container">
+                        <div class="video-placeholder" aria-label="Espacio para el video tutorial">
+                            <span class="video-play-icon" aria-hidden="true">▶</span>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-
-            </div>
-        </section>
-
-
-        <!-- EXPERIENCIAS -->
-        <section id="experiencias" class="testimonials container">
-
-
-            <h2 class="text-center">Nuestros usuarios</h2>
-
-
-            <div class="testimonials-grid">
-
-
-                <article class="testimonial-card">
-                    <img src="~/images/Usuario1.png" alt="Usuario 1">
-                    <h3>Usuario 1</h3>
-                    <p>
-                        “Por fin una app que entiende cómo estudio yo.
-                        Me ayudó muchísimo a organizarme y concentrarme.”
-                    </p>
-                </article>
-
-
-                <article class="testimonial-card">
-                    <img src="~/images/Usuario2.png" alt="Usuario 2">
-                    <h3>Usuario 2</h3>
-                    <p>
-                        “Me ayudó a estudiar mejor, organizarme y dejar de
-                        sentir que todo se me viene encima. 10/10.”
-                    </p>
-                </article>
-
-
-                <article class="testimonial-card">
-                    <img src="~/images/Usuario3.png" alt="Usuario 3">
-                    <h3>Usuario 3</h3>
-                    <p>
-                        “Ahora estudiar se siente mucho más simple.
-                        Me organizo mejor y puedo concentrarme de verdad.”
-                    </p>
-                </article>
-
-
-            </div>
-        </section>
-
-
-        <!-- INVITACIÓN FINAL -->
-        <section class="cta container">
-            <div class="cta-card">
-
-
-                <h2>¿Qué estás esperando?</h2>
-
-
-                <p>
-                    ¡Únete ya a nuestra comunidad y descubre un mundo
-                    de posibilidades!
-                </p>
-
-
-                <a class="btn btnAcento"
-                   asp-controller="Usuario"
-                   asp-action="Registrarse">
-                    Registrarse
-                </a>
-
-
-                <div class="cta-image-placeholder">
-                    <img src="~/images/Foto2.png"
-                         alt="Grupo de graduados celebrando">
+            <section id="sobre-nosotros" class="about">
+                <div class="container about-grid">
+                    <div class="about-card">
+                        <div class="logo logo-large">
+                            <img src="~/images/Logo.png" alt="Logo de Foku">
+                        </div>
+                    </div>
+                    <div class="about-text">
+                        <h2>Sobre nosotros</h2>
+                        <p>Foku es una herramienta diseñada para estudiantes universitarios con <strong>TDAH</strong>, que ayuda a mejorar la concentración, organización y rendimiento académico.</p>
+                        <p>Adaptamos la forma de estudiar a las necesidades de cada persona para que pueda aprovechar al <strong>máximo su potencial.</strong></p>
+                    </div>
                 </div>
+            </section>
 
+            <section id="experiencias" class="testimonials container">
+                <h2 class="text-center">Nuestros usuarios</h2>
+                <div class="testimonials-grid">
+                    <article class="testimonial-card">
+                        <img src="~/images/Usuario1.png" alt="Usuario 1">
+                        <h3>Usuario 1</h3>
+                        <p>“Por fin una app que entiende cómo estudio yo. Me ayudó muchísimo a organizarme y concentrarme.”</p>
+                    </article>
+                    <article class="testimonial-card">
+                        <img src="~/images/Usuario2.png" alt="Usuario 2">
+                        <h3>Usuario 2</h3>
+                        <p>“Me ayudó a estudiar mejor, organizarme y dejar de sentir que todo se me viene encima. 10/10.”</p>
+                    </article>
+                    <article class="testimonial-card">
+                        <img src="~/images/Usuario3.png" alt="Usuario 3">
+                        <h3>Usuario 3</h3>
+                        <p>“Ahora estudiar se siente mucho más simple. Me organizo mejor y puedo concentrarme de verdad.”</p>
+                    </article>
+                </div>
+            </section>
 
-            </div>
-        </section>
-    </main>
-
-
-    <!-- FOOTER -->
-    <footer class="footer">
-
-
-        <div class="container footer-grid">
-
-
-            <div class="footer-brand">
-                <img class="footer-logo"
-                     src="~/images/Logo.png"
-                     alt="Foku">
-
-
-                <p>
-                    Tu lugar de estudio ideal, donde las ideas se vuelven
-                    realidad.
-                </p>
-
-
-                <div class="social-icons">
-                    <a href="#" aria-label="Twitter">
-                        <img src="~/images/Twiter.png" alt="">
-                    </a>
-
-
-                    <a href="#" aria-label="Facebook">
-                        <img src="~/images/Facebook.png" alt="">
-                    </a>
-
-
-                    <a href="#" aria-label="Instagram">
-                        <img src="~/images/Instagram.png" alt="">
-                    </a>
+            <section class="cta container">
+                <div class="cta-card">
+                    <h2>¿Qué estás esperando?</h2>
+                    <p>¡Únete ya a nuestra comunidad y descubre un mundo de posibilidades!</p>
+                    <a class="btn btnAcento" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
+                    <div class="cta-image-placeholder">
+                        <img src="~/images/Foto2.png" alt="Grupo de graduados celebrando">
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="footer">
+            <div class="container footer-grid">
+                <div class="footer-brand">
+                    <img class="footer-logo" src="~/images/Logo.png" alt="Foku">
+                    <p>Tu lugar de estudio ideal, donde las ideas se vuelven realidad.</p>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Twitter"><img src="~/images/Twiter.png" alt=""></a>
+                        <a href="#" aria-label="Facebook"><img src="~/images/Facebook.png" alt=""></a>
+                        <a href="#" aria-label="Instagram"><img src="~/images/Instagram.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Empresa</h4>
+                    <ul>
+                        <li>
+                            <a href="#sobre-nosotros">Sobre nosotros</a>
+                        </li>
+                        <li>
+                            <a href="#experiencias">Experiencias</a>
+                        </li>
+                        <li>
+                            <a href="mailto:foku.estudio@gmail.com">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li>
+                            <a href="https://wa.me/5491142452803"><img src="~/images/whastapp.png" alt="">Escríbenos por WhatsApp</a>
+                        </li>
+                        <li>
+                            <a href="tel:+5491142452803"><img src="~/images/Telefono.png" alt="">+54 9 11 4245-2803</a>
+                        </li>
+                        <li>
+                            <a href="mailto:foku.estudio@gmail.com"><img src="~/images/Mail.png" alt="">foku.estudio@gmail.com</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-
-
-            <div class="footer-col">
-                <h4>Empresa</h4>
-
-
-                <ul>
-                    <li>
-                        <a href="#sobre-nosotros">Sobre nosotros</a>
-                    </li>
-                    <li>
-                        <a href="#experiencias">Experiencias</a>
-                    </li>
-                    <li>
-                        <a href="mailto:foku.estudio@gmail.com">Contacto</a>
-                    </li>
-                </ul>
+            <div class="footer-bottom">
+                <p>© 2026 Foku. Todos los derechos reservados. | <a href="#">Política de privacidad</a></p>
             </div>
-
-
-            <div class="footer-col">
-                <h4>Contacto</h4>
-
-
-                <ul>
-                    <li>
-                        <a href="https://wa.me/5491142452803">
-                            <img src="~/images/whastapp.png" alt="">
-                            Escríbenos por WhatsApp
-                        </a>
-                    </li>
-
-
-                    <li>
-                        <a href="tel:+5491142452803">
-                            <img src="~/images/Telefono.png" alt="">
-                            +54 9 11 4245-2803
-                        </a>
-                    </li>
-
-
-                    <li>
-                        <a href="mailto:foku.estudio@gmail.com">
-                            <img src="~/images/Mail.png" alt="">
-                            foku.estudio@gmail.com
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-
-        </div>
-
-
-        <div class="footer-bottom">
-            <p>
-                © 2026 Foku. Todos los derechos reservados. |
-                <a href="#">Política de privacidad</a>
-            </p>
-        </div>
-
-
-    </footer>
-
-
-</body>
+        </footer>
+    </body>
 </html>

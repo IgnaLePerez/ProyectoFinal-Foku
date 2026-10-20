@@ -455,6 +455,11 @@ li {
 .btnGrey {
   background-color: var(--grey-rest);
   color: var(--white-rest);
+  font: var(--text-buttons);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 
@@ -480,15 +485,13 @@ li {
   z-index: 100;
   background: var(--white-pressed);
   border-bottom: 1px solid var(--bordes);
-  padding: .45em 0;
+  padding: 1.5em 0;
 }
 
 
 .nav-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.25em;
 }
 
 
@@ -500,7 +503,7 @@ li {
 
 
 .logo img {
-  width: 6.2em;
+  width: 8em;
   height: auto;
 }
 
@@ -541,9 +544,8 @@ li {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: clamp(2em, 5vw, 4.5em);
-  padding-top: 4.2em;
-  padding-bottom: 4.2em;
+  padding-top: 15em;
+  padding-bottom: 15em;
 }
 
 
@@ -559,7 +561,6 @@ li {
   line-height: 1.02;
   color: var(--black-rest);
   margin-bottom: .8em;
-  letter-spacing: -.025em;
 }
 
 
@@ -647,7 +648,7 @@ li {
 
 /* Sobre nosotros */
 .about {
-  padding: 4em 0;
+  padding: 7em 0;
   background: var(--black-rest);
   color: var(--white-rest);
 }
