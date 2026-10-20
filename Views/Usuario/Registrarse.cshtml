@@ -3,7 +3,9 @@
 }
 
 <section class="seccionblanca contenedorCentrado">
-    <button class="btnBlackOutline btnArribaIzquierda" onclick='@Url.Action("VistaLanding", "Home")'>Volver</button>
+    <a href='@Url.Action("VistaLanding", "Home")'>
+        <button class="btnBlackOutline btnArribaIzquierda">Volver</button>
+    </a>
     <div class="contenedorCentrado tarjeta tarjetaLog">
         <h2 class="subtitulo-2">Registrarse</h2>
         <form method="post" action="@Url.Action("RegistrarDatos", "Usuario")" class="formLog" onsubmit="return validarCampos();">
