@@ -9,16 +9,17 @@ public static class BD
 
     public static string BuscarSesion(string nombreUsuario, string contraseña)
     {
-        string id = "-1";
         string query = "SELECT id FROM Usuarios WHERE Username = @NombreUsuario AND Contraseña = @Contraseña";
+
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            if(connection.QueryFirstOrDefault<string>(query, new { NombreUsuario = nombreUsuario, Contraseña = contraseña }) != null)
-            {
-                id = connection.QueryFirstOrDefault<string>(query, new { NombreUsuario = nombreUsuario, Contraseña = contraseña }).ToString();
-            }
+            int? id = connection.QueryFirstOrDefault<int?>(
+                query,
+                new { NombreUsuario = nombreUsuario, Contraseña = contraseña }
+            );
+
+            return id?.ToString() ?? "-1";
         }
-        return id;
     }
 
     public static Usuario GetUsuario(int id){

@@ -13,13 +13,18 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    public IActionResult VistaLanding()
+    {
+        return View("Landing");
+    }
+
     public IActionResult Index()
     {
-        if (HttpContext.Session.GetString("id") == null){
-            return RedirectToAction("VistaIniciarSesion", "Usuario");
+        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1"){
+            return RedirectToAction("VistaLanding");
         }
         ViewBag.user = BD.GetUsuario(int.Parse(HttpContext.Session.GetString("id")));
-        return View();   
+        return View();  
     }
 
     public IActionResult Privacy()
