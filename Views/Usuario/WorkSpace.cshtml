@@ -22,12 +22,10 @@
 
         <div>
             <div>
-                <p>Número de racha</p>
-                <img src="~/images/fire-icon.png" alt="Fire Icon"/>
+                <p>Número de racha: 67 🔥</p>
             </div>
             <div>
-                <img src="~/images/user-avatar.png" alt="User Avatar"/>
-                <p>Nombre de Usuario</p>
+                <p>👤 Nombre de Usuario ▾</p>
             </div>
         </div>
     </header>
@@ -44,7 +42,7 @@
                         </button>
                     </li>
                     <li>
-                        <button id="btn-pomodoro" class="sidebar-item sidebar-btn" onclick="abrirPomodoro()">
+                        <button id="btn-pomodoro" onclick="abrirPomodoro()">
                             <img src="~/images/pomodoro-icon.png" alt="Pomodoro Icon" class="sidebar-icon-img" />
                             <p>Pomodoro</p>
                         </button>
@@ -65,24 +63,83 @@
             </nav>
         </aside>
 
-        <!-- Zona de trabajo para contenido y widgets -->
+        <!-- Zona de trabajo -->
         <div class="workspace-area"> 
             <!-- Widget Flotante del Pomodoro -->
             <div id="pomodoro-widget" class="floating-widget hidden">
+                
+                <!-- Encabezado del Widget -->
                 <div class="widget-header">
-                    <span class="widget-title">Pomodoro</span>
-                    <button class="close-btn" onclick="cerrarPomodoro()">&times;</button>
+                    <div class="title-container">
+                        <h3>Pomodoro</h3>
+                        <span class="info-icon">?</span>
+                    </div>
+                    <div class="header-actions">
+                        <button class="config-btn" onclick="toggleConfigPanel()" title="Personalizar tiempos">⚙️</button>
+                        <button class="close-btn" onclick="cerrarPomodoro()">&times;</button>
+                    </div>
                 </div>
+
+                <!-- Cuadro emergente explicativo al pasar por ? (424x64px) -->
+                <div class="pomodoro-info-tooltip">
+                    El pomodoro es una técnica donde hay 25 minutos de concentración y 5 minutos de descanso
+                </div>
+
+                <!-- Desplegable compacto de configuración -->
+                <div class="config-dropdown" id="configPanel">
+                    <div class="config-header">
+                        <span class="config-title">Configurar modo:</span>
+                        <div class="select-wrapper">
+                            <select id="config-mode-select" onchange="cargarTiempoEnInputs()">
+                                <option value="concentracion">Concentración</option>
+                                <option value="pausaCorta">Pausa corta</option>
+                                <option value="pausaLarga">Pausa larga</option>
+                            </select>
+                            <span class="select-arrow">▾</span>
+                        </div>
+                    </div>
+                    <div class="config-body">
+                        <div class="config-inputs">
+                            <div class="config-input-group">
+                                <input type="number" id="input-custom-min" value="25" min="0" max="99" oninput="updateCustomDurations()">
+                                <span>m</span>
+                            </div>
+                            <span class="input-separator">:</span>
+                            <div class="config-input-group">
+                                <input type="number" id="input-custom-sec" value="0" min="0" max="59" oninput="updateCustomDurations()">
+                                <span>s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cuerpo principal -->
                 <div class="widget-body">
-                    <h2>25:00</h2>
-                    <button class="btnAcento">Iniciar</button>
+                    <div class="timer-main-row">
+                        <h2 id="timer-display">25:00</h2>
+                        <div class="actions-col">
+                            <button id="btn-toggle-timer" class="btn-main-action" onclick="toggleTimer()">Empezar</button>
+                            <button id="btn-reset-timer" class="btn-reset" onclick="resetTimer()">Reiniciar</button>
+                        </div>
+                    </div>
+
+                    <div class="next-cycle-info">
+                        <p id="next-cycle-label" class="next-cycle-text">Próximo ciclo: 5 minutos de descanso</p>
+                        <span class="cycle-count-badge" id="cycleBadge">Ciclo #1</span>
+                    </div>
+
+                    <div class="pomodoro-tabs">
+                        <button class="tab-btn active" id="mode-concentracion" onclick="seleccionarModoManual('concentracion')">Concentración</button>
+                        <button class="tab-btn" id="mode-pausaCorta" onclick="seleccionarModoManual('pausaCorta')">Pausa corta</button>
+                        <button class="tab-btn" id="mode-pausaLarga" onclick="seleccionarModoManual('pausaLarga')">Pausa larga</button>
+                    </div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Vinculación del script del cliente -->
+    <!-- Script del cliente -->
     <script src="~/js/site.js"></script>
 </body>
 </html>
