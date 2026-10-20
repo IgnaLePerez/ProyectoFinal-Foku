@@ -4,7 +4,9 @@
 <!-- SACAR ESTO DESPUÉS -->
 <button><a href="@Url.Action("WorkSpace", "Usuario")">Al workspace</a></button>
 <section class="seccionblanca contenedorCentrado">
-    <button class="btnBlackOutline btnArribaIzquierda" onclick='@Url.Action("Index", "Home")'>Volver</button>
+    <a href='@Url.Action("VistaLanding", "Home")'>
+        <button class="btnBlackOutline btnArribaIzquierda">Volver</button>
+    </a>
     <div class="contenedorCentrado tarjeta tarjetaLog">
         <h2 class="subtitulo-2">Iniciar Sesión</h2>
         <form method="post" action="@Url.Action("IniciarSesion", "Usuario")" class="formLog" onsubmit="return validarCampos();">
