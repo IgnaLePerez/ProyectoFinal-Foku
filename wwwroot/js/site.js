@@ -282,12 +282,202 @@ function hacerArrastrable(widget) {
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('pomodoro-widget');
+    const nextBtn = document.getElementById('tour-next');
+    const skipBtn = document.getElementById('tour-skip');
 
     if (widget) {
         hacerArrastrable(widget);
     }
     actualizarAparienciaModo();
     actualizarPantalla();
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            siguientePasoTutorial();
+        });
+    }
+
+    if (skipBtn) {
+        skipBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            cerrarTutorial();
+        });
+    }
+
+    if (document.getElementById('tour-overlay')) {
+        iniciarTutorialSiHaceFalta();
+    }
+
+    window.addEventListener('resize', () => {
+        if (widget) {
+            asegurarDentroDePantalla(widget);
+        }
+    });
+});
+
+const tourSteps = [
+    {
+        target: '#tour-header-brand',
+        text: 'Este es el nombre de tu espacio. Aquí ves a qué proyecto estás entrando.'
+    },
+    {
+        target: '#tour-header-user',
+        text: 'Aquí aparece tu usuario y tu racha. Es un resumen rápido de tu progreso.'
+    },
+    {
+        target: '#tour-sidebar',
+        text: 'Este menú te lleva a las secciones del workspace, como documentos y tareas.'
+    },
+    {
+        target: '#btn-pomodoro',
+        text: 'Este botón abre el temporizador para ayudarte a concentrarte.'
+    },
+    {
+        target: '#pomodoro-widget',
+        text: 'Aquí puedes empezar, pausar o reiniciar el temporizador y cambiar el modo de trabajo.'
+    }
+];
+
+let currentTourStep = 0;
+let tourStarted = false;
+
+function actualizarPasoTutorial() {
+    const popover = document.getElementById('tour-popover');
+    const textEl = document.getElementById('tour-text');
+    const nextBtn = document.getElementById('tour-next');
+    const badge = document.querySelector('.tour-step-badge');
+    const activeTarget = document.querySelector(tourSteps[currentTourStep].target);
+
+    if (!popover || !textEl || !nextBtn || !activeTarget) return;
+
+    const allTargets = document.querySelectorAll('.tour-target');
+    allTargets.forEach((element) => {
+        element.classList.remove('is-highlighted', 'is-dimmed');
+        const tip = element.querySelector('.tour-step-tip');
+        if (tip) tip.remove();
+    });
+
+    allTargets.forEach((element) => {
+        if (element !== activeTarget) {
+            element.classList.add('is-dimmed');
+        }
+    });
+
+    activeTarget.classList.add('is-highlighted');
+
+    const tip = document.createElement('div');
+    tip.className = 'tour-step-tip';
+    tip.textContent = tourSteps[currentTourStep].text;
+    activeTarget.appendChild(tip);
+
+    const isLastStep = currentTourStep === tourSteps.length - 1;
+    nextBtn.textContent = isLastStep ? 'Comenzar' : 'Siguiente';
+    textEl.textContent = tourSteps[currentTourStep].text;
+
+    if (badge) {
+        badge.textContent = `Paso ${currentTourStep + 1}`;
+    }
+
+    const rect = activeTarget.getBoundingClientRect();
+    const popoverWidth = popover.offsetWidth || 320;
+    const left = Math.min(window.innerWidth - popoverWidth - 24, Math.max(20, rect.left + rect.width + 18));
+    const top = Math.max(20, rect.top + 10);
+    popover.style.left = `${left}px`;
+    popover.style.top = `${top}px`;
+}
+
+function iniciarTutorial() {
+    const overlay = document.getElementById('tour-overlay');
+    const popover = document.getElementById('tour-popover');
+
+    if (!overlay || !popover) return;
+
+    tourStarted = true;
+    currentTourStep = 0;
+    document.body.classList.add('tour-active');
+    overlay.classList.add('active');
+    popover.classList.add('visible');
+    actualizarPasoTutorial();
+}
+
+function siguientePasoTutorial() {
+    if (!tourStarted) {
+        iniciarTutorial();
+        return;
+    }
+
+    if (currentTourStep < tourSteps.length - 1) {
+        currentTourStep += 1;
+        actualizarPasoTutorial();
+        return;
+    }
+
+    cerrarTutorial();
+}
+
+function cerrarTutorial() {
+    const overlay = document.getElementById('tour-overlay');
+    const popover = document.getElementById('tour-popover');
+    const allTargets = document.querySelectorAll('.tour-target');
+
+    allTargets.forEach((element) => {
+        element.classList.remove('is-highlighted', 'is-dimmed');
+        const tip = element.querySelector('.tour-step-tip');
+        if (tip) tip.remove();
+    });
+
+    document.body.classList.remove('tour-active');
+    if (overlay) overlay.classList.remove('active');
+    if (popover) popover.classList.remove('visible');
+
+    tourStarted = false;
+    currentTourStep = 0;
+    localStorage.setItem('foku-tour-closed', 'true');
+}
+
+function iniciarTutorialSiHaceFalta() {
+    const yaSeCerro = localStorage.getItem('foku-tour-closed');
+    if (yaSeCerro === 'true') return;
+
+    iniciarTutorial();
+}
+
+// ==========================================
+// INICIALIZACIÓN
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.getElementById('pomodoro-widget');
+    const nextBtn = document.getElementById('tour-next');
+    const skipBtn = document.getElementById('tour-skip');
+
+    if (widget) {
+        hacerArrastrable(widget);
+    }
+    actualizarAparienciaModo();
+    actualizarPantalla();
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            siguientePasoTutorial();
+        });
+    }
+
+    if (skipBtn) {
+        skipBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            cerrarTutorial();
+        });
+    }
+
+    if (document.getElementById('tour-overlay')) {
+        iniciarTutorialSiHaceFalta();
+    }
 
     window.addEventListener('resize', () => {
         if (widget) {
