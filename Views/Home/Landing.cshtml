@@ -14,7 +14,7 @@
     <body>
         <header class="navbar">
             <div class="container nav-container">
-                <a asp-controller="Usuario" asp-action="VistaLanding" class="logo" aria-label="Foku - Inicio"><img src="~/images/Logo.png" alt="Foku"></a>
+                <a asp-controller="Usuario" asp-action="VistaLanding" class="logo" aria-label="Foku - Inicio"><img src="~/images/LogoCompleto.png" alt="Foku"></a>
                 <nav class="nav-links" aria-label="Navegación principal">
                     <a href="#inicio">Inicio</a>
                     <a href="#tutorial">Tutorial</a>
@@ -30,17 +30,23 @@
         <main>
             <section id="inicio" class="hero container">
                 <div class="hero-content">
-                    <h1>Accede a tu workspace</h1>
-                    <p>Foku, el lugar donde las ideas y el conocimiento se vuelven uno.</p>
+                    <h1>Tu forma de aprender merece <span>su propio ritmo.</span></h1>
+                    <p class="hero-text">Organizá tus tareas, enfocá tu atención y avanzá de a poco. Foku te acompaña a hacer más llevadero el estudio universitario, sin exigirte que lo hagas todo de una vez.</p>
                     <div class="hero-buttons">
                         <a class="btnGrey" asp-controller="Usuario" asp-action="Registrarse">Quiero empezar <span aria-hidden="true">→</span></a>
-                        <a class="btnAcento" asp-controller="Usuario" asp-action="VistaIniciarSesion">Iniciar sesión</a>
+                        <a class="btnAcento" href="#tutorial">Conocer cómo funciona</a>
                     </div>
                 </div>
                 <div class="hero-media">
                     <div class="placeholder-box">
                         <img src="~/images/Foto.png" alt="Persona estudiando en su workspace">
                     </div>
+                </div>
+            </section>
+
+            <section class="reassurance">
+                <div class="section-wrap reassurance-inner">
+                    <p><strong>No necesitás tener todo resuelto para empezar.</strong> Empezá por lo que puedas hacer hoy.</p>
                 </div>
             </section>
 
@@ -67,6 +73,33 @@
                         <p>Foku es una herramienta diseñada para estudiantes universitarios con <strong>TDAH</strong>, que ayuda a mejorar la concentración, organización y rendimiento académico.</p>
                         <p>Adaptamos la forma de estudiar a las necesidades de cada persona para que pueda aprovechar al <strong>máximo su potencial.</strong></p>
                     </div>
+                </div>
+            </section>
+
+            <section class="section-wrap section-space">
+                <div class="section-heading">
+                    <h2>De “no sé por dónde empezar”<br><span>a un paso concreto.</span></h2>
+                    <p>Foku busca bajar el ruido y ayudarte a ver con más claridad qué podés hacer ahora.</p>
+                </div>
+                <div class="steps-grid">
+                    <article class="step-card">
+                    <span class="step-number">01</span>
+                    <div class="step-symbol symbol-blue" aria-hidden="true">☷</div>
+                    <h3>Anotá lo que tenés pendiente</h3>
+                    <p>Reuní tus tareas y trabajos en un solo lugar para no depender de acordarte de todo.</p>
+                    </article>
+                    <article class="step-card">
+                    <span class="step-number">02</span>
+                    <div class="step-symbol symbol-green" aria-hidden="true">↗</div>
+                    <h3>Elegí por dónde empezar</h3>
+                    <p>Convertí una lista abrumadora en un próximo paso más claro y manejable.</p>
+                    </article>
+                    <article class="step-card">
+                    <span class="step-number">03</span>
+                    <div class="step-symbol symbol-orange" aria-hidden="true">◷</div>
+                    <h3>Estudiá y hacé una pausa</h3>
+                    <p>Usá sesiones de concentración con descansos para organizar tu tiempo sin exigirte estar horas seguidas.</p>
+                    </article>
                 </div>
             </section>
 
@@ -105,7 +138,7 @@
         <footer class="footer">
             <div class="container footer-grid">
                 <div class="footer-brand">
-                    <img class="footer-logo" src="~/images/Logo.png" alt="Foku">
+                    <img class="footer-logo" src="~/images/LogoCompleto.png" alt="Foku">
                     <p>Tu lugar de estudio ideal, donde las ideas se vuelven realidad.</p>
                     <div class="social-icons">
                         <a href="#" aria-label="Twitter"><img src="~/images/Twiter.png" alt=""></a>

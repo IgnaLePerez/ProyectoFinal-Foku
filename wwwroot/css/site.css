@@ -526,6 +526,10 @@ p, nav, li {
   max-width: 29em;
 }
 
+.hero-content h1 span { 
+   color: var(--secundario-i-rest); 
+  }
+
 .hero h1 {
   font-family: var(--font-jost);
   font-weight: 400;
@@ -567,6 +571,9 @@ p, nav, li {
 }
 
 /* Tutorial */
+.reassurance { background: #EEF3FA; }
+.reassurance-inner { display: flex; align-items: center; justify-content: center; gap: 1rem; padding-block: 1.15rem; }
+
 .tutorial {
   padding: 2em 0 4em;
   background: var(--white-rest);
@@ -610,7 +617,7 @@ p, nav, li {
 /* Sobre nosotros */
 .about {
   padding: 7em 0;
-  background: var(--black-rest);
+  background: linear-gradient(var(--secundario-i-rest), var(--white-pressed), var(--secundario-ii-pressed));
   color: var(--white-rest);
 }
 
@@ -658,11 +665,89 @@ p, nav, li {
   font-weight: 700;
 }
 
+/* datos */
+.section-wrap {
+  width: min(1120px, 90%);
+  margin-inline: auto;
+}
+
+.section-space {
+  padding-block: 6rem;
+}
+
+.section-heading {
+  max-width: 680px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.section-heading h2 {
+  margin-bottom: 1rem;
+}
+
+.section-heading p {
+  max-width: 570px;
+  margin-inline: auto;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.step-card {
+  position: relative;
+  background: var(--white-rest);
+  border: 1px solid var(--white-hover);
+  border-radius: 1.35rem;
+  padding: 1.8rem;
+}
+
+.step-number {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.5rem;
+  color: #A4A5AA;
+  font-family: "Jost", sans-serif;
+  font-weight: 700;
+}
+
+.step-symbol {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.symbol-blue {
+  color: var(--secundario-i-rest);
+  background: var(--info);
+}
+
+.symbol-green {
+  color: #42634B;
+  background: var(--success);
+}
+
+.symbol-orange {
+  color: var(--acento-hover);
+  background: #FFF0D9;
+}
+
+.step-card p {
+  margin-bottom: 0;
+  font-size: .94rem;
+}
+
 /* Comentarios */
 .testimonials {
   padding-top: 4em;
   padding-bottom: 4em;
-  background: var(--white-rest);
+  background-color: #F2F0EB;;
 }
 
 .testimonials h2 {
