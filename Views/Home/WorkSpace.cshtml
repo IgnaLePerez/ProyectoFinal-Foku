@@ -1,8 +1,9 @@
+@using Foku.Models
 @{
     ViewData["Title"] = "Foku";
     Layout = null;
+    Usuario usuario = ViewBag.user as Usuario;
 }
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,50 +13,53 @@
     <link rel="stylesheet" href="~/css/workspace.css">
 </head>
 <body>
-
     <!-- Header superior -->
     <header>
         <div>
-            <img src="~/images/logo.png" alt="Foku Logo" />
+            <img src="/images/logo.png" alt="Foku Logo" />
             <h1>Foku</h1>
         </div>
-
         <div>
-            <div>
-                <h2>67</h2> <!-- NumeroRacha.ViewBag -->
-                <img src="~/images/racha.png">
+            <!-- Agregado id="tour-racha" -->
+            <div id="tour-racha">
+                <h2>@(usuario?.Racha ?? 0)</h2>
+                <img src="/images/racha.png" alt="Racha">
             </div>
             <div>
-                <p>👤 Nombre de Usuario ▾</p>
+                <p>@(usuario?.Username ?? "Usuario")</p>
             </div>
         </div>
     </header>
-    
+
     <!-- Cuerpo principal -->
     <main>
         <aside>
             <nav>
                 <ul>
+                    <!-- Agregado id="tour-documentos" -->
                     <li>
-                        <button>
-                            <img src="~/images/documents-icon.png" alt="Documents Icon" class="sidebar-icon-img"/>
+                        <button id="tour-documentos">
+                            <img src="~/images/documents-icon.png" alt="Documents Icon" class="sidebar-icon-img" />
                             <p>Documentos</p>
                         </button>
                     </li>
+                    <!-- Agregado id="tour-pomodoro" -->
                     <li>
-                        <button id="btn-pomodoro" onclick="abrirPomodoro()">
-                            <img src="~/images/pomodoro-icon.png" alt="Pomodoro Icon" class="sidebar-icon-img" />
+                        <button id="btn-pomodoro" id-tour="tour-pomodoro" onclick="abrirPomodoro()">
+                            <img src="/images/pomodoro-icon.png" alt="Pomodoro Icon" class="sidebar-icon-img" />
                             <p>Pomodoro</p>
                         </button>
                     </li>
+                    <!-- Agregado id="tour-tareas" -->
                     <li>
-                        <button>
+                        <button id="tour-tareas">
                             <img src="~/images/tasks-icon.png" alt="Tasks Icon" class="sidebar-icon-img" />
                             <p>Tareas</p>
                         </button>
                     </li>
+                    <!-- Agregado id="tour-calendario" -->
                     <li>
-                        <button>
+                        <button id="tour-calendario">
                             <img src="~/images/calendar-icon.png" alt="Calendar Icon" class="sidebar-icon-img" />
                             <p>Calendario</p>
                         </button>
@@ -65,28 +69,24 @@
         </aside>
 
         <!-- Zona de trabajo -->
-        <div class="workspace-area"> 
-            <!-- Widget Flotante del Pomodoro -->
+        <div class="workspace-area">
+            <!-- Widget Flotante: Pomodoro -->
             <div id="pomodoro-widget" class="floating-widget hidden">
-                
-                <!-- Encabezado del Widget -->
                 <div class="widget-header">
                     <div class="title-container">
                         <h3>Pomodoro</h3>
                         <img src="~/images/infoIcon.png" class="info-icon" alt="?InfoIcon"/>
                     </div>
                     <div class="header-actions">
-                        <button class="config-icon" onclick="toggleConfigPanel()" title="Personalizar tiempos"><img src="~/images/config.png"/></button>
+                        <button class="config-icon" onclick="toggleConfigPanel()" title="Personalizar tiempos"><img src="/images/config.png"/></button>
                         <button class="close-btn" onclick="cerrarPomodoro()">&times;</button>
                     </div>
                 </div>
 
-                <!-- Cuadro emergente explicativo al pasar por ? (424x64px) -->
                 <div class="pomodoro-info-tooltip">
                     El pomodoro es una técnica donde hay 25 minutos de concentración y 5 minutos de descanso
                 </div>
 
-                <!-- Desplegable compacto de configuración -->
                 <div class="config-dropdown" id="configPanel">
                     <div class="config-header">
                         <span class="config-title">Configurar modo:</span>
@@ -96,7 +96,7 @@
                                 <option value="pausaCorta">Pausa corta</option>
                                 <option value="pausaLarga">Pausa larga</option>
                             </select>
-                            <span class="select-arrow">▾</span>
+                            <span class="select-arrow"></span>
                         </div>
                     </div>
                     <div class="config-body">
@@ -113,8 +113,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Cuerpo principal -->
+
                 <div class="widget-body">
                     <div class="timer-main-row">
                         <h2 id="timer-display">25:00</h2>
@@ -123,12 +122,10 @@
                             <button id="btn-reset-timer" class="btn-reset" onclick="resetTimer()">Reiniciar</button>
                         </div>
                     </div>
-
                     <div class="next-cycle-info">
                         <p id="next-cycle-label" class="next-cycle-text">Próximo ciclo: 5 minutos de descanso</p>
                         <span class="cycle-count-badge" id="cycleBadge">Ciclo #1</span>
                     </div>
-
                     <div class="pomodoro-tabs">
                         <button class="tab-btn active" id="mode-concentracion" onclick="seleccionarModoManual('concentracion')">Concentración</button>
                         <button class="tab-btn" id="mode-pausaCorta" onclick="seleccionarModoManual('pausaCorta')">Pausa corta</button>
@@ -137,8 +134,18 @@
                 </div>
             </div>
         </div>
-
     </main>
+
+    <!-- Estrutura HTML limpia para el Tour -->
+    <div id="tour-overlay" class="tour-overlay"></div>
+    <div id="tour-card" class="tour-card hidden">
+        <h3 id="tour-titulo">Paso del Tour</h3>
+        <p id="tour-descripcion">Descripción del paso actual.</p>
+        <div class="tour-botones">
+            <button class="btn-saltear" onclick="saltearTour()">Saltear</button>
+            <button class="btn-entendido" onclick="siguientePaso()">Entendido</button>
+        </div>
+    </div>
 
     <!-- Script del cliente -->
     <script src="~/js/site.js"></script>

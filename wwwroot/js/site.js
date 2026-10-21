@@ -282,8 +282,6 @@ function hacerArrastrable(widget) {
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('pomodoro-widget');
-    const nextBtn = document.getElementById('tour-next');
-    const skipBtn = document.getElementById('tour-skip');
 
     if (widget) {
         hacerArrastrable(widget);
@@ -317,171 +315,145 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+/* ==========================================
+   LÓGICA DEL TOUR PASO A PASO (FOKU)
+   ========================================== */
 
-const tourSteps = [
+// Configuración de los pasos del tour
+const listaPasosTour = [
     {
-        target: '#tour-header-brand',
-        text: 'Este es el nombre de tu espacio. Aquí ves a qué proyecto estás entrando.'
+        elementoId: 'tour-documentos',
+        titulo: 'Documentos',
+        descripcion: 'Aquí podrás gestionar, organizar y acceder a todos tus archivos de estudio.'
     },
     {
-        target: '#tour-header-user',
-        text: 'Aquí aparece tu usuario y tu racha. Es un resumen rápido de tu progreso.'
+        elementoId: 'btn-pomodoro',
+        titulo: 'Pomodoro',
+        descripcion: 'Utiliza esta herramienta para mantener tus sesiones de concentración y descansos.'
     },
     {
-        target: '#tour-sidebar',
-        text: 'Este menú te lleva a las secciones del workspace, como documentos y tareas.'
+        elementoId: 'tour-tareas',
+        titulo: 'Tareas',
+        descripcion: 'Organiza tus pendientes día a día para no olvidar nada importante.'
     },
     {
-        target: '#btn-pomodoro',
-        text: 'Este botón abre el temporizador para ayudarte a concentrarte.'
+        elementoId: 'tour-calendario',
+        titulo: 'Calendario',
+        descripcion: 'Visualiza tus entrega de trabajos, exámenes y eventos importantes.'
     },
     {
-        target: '#pomodoro-widget',
-        text: 'Aquí puedes empezar, pausar o reiniciar el temporizador y cambiar el modo de trabajo.'
+        elementoId: 'tour-racha',
+        titulo: 'Racha',
+        descripcion: '¡Tu constancia suma! Aquí verás los días seguidos que has estado activo.'
     }
 ];
 
-let currentTourStep = 0;
-let tourStarted = false;
+let indicePasoActual = 0;
 
-function actualizarPasoTutorial() {
-    const popover = document.getElementById('tour-popover');
-    const textEl = document.getElementById('tour-text');
-    const nextBtn = document.getElementById('tour-next');
-    const badge = document.querySelector('.tour-step-badge');
-    const activeTarget = document.querySelector(tourSteps[currentTourStep].target);
+function iniciarTour() {
+    // Verificar si el usuario ya completó o salteó el tour
+    if (localStorage.getItem('foku_tour_completado') === 'true') {
+        return;
+    }
 
-    if (!popover || !textEl || !nextBtn || !activeTarget) return;
+    const overlay = document.getElementById('tour-overlay');
+    if (overlay) {
+        overlay.classList.add('visible');
+    }
 
-    const allTargets = document.querySelectorAll('.tour-target');
-    allTargets.forEach((element) => {
-        element.classList.remove('is-highlighted', 'is-dimmed');
-        const tip = element.querySelector('.tour-step-tip');
-        if (tip) tip.remove();
-    });
+    indicePasoActual = 0;
+    mostrarPasoActual();
+}
 
-    allTargets.forEach((element) => {
-        if (element !== activeTarget) {
-            element.classList.add('is-dimmed');
+function mostrarPasoActual() {
+    // Quitar resaltado del paso previo
+    const elementoPrevio = document.querySelector('.tour-resaltado');
+    if (elementoPrevio) {
+        elementoPrevio.classList.remove('tour-resaltado');
+    }
+
+    // Obtener datos del paso actual
+    const pasoInfo = listaPasosTour[indicePasoActual];
+    const elementoActual = document.getElementById(pasoInfo.elementoId);
+    const tarjeta = document.getElementById('tour-card');
+    const tituloEl = document.getElementById('tour-titulo');
+    const descEl = document.getElementById('tour-descripcion');
+
+    if (!elementoActual || !tarjeta) return;
+
+    // Resaltar elemento objetivo
+    elementoActual.classList.add('tour-resaltado');
+
+    // Cargar contenido
+    tituloEl.innerText = pasoInfo.titulo;
+    descEl.innerText = pasoInfo.descripcion;
+
+    // Mostrar tarjeta
+    tarjeta.classList.remove('hidden');
+
+    // Posicionar la tarjeta al lado o cerca del elemento
+    posicionarTarjeta(elementoActual, tarjeta);
+}
+
+function posicionarTarjeta(elemento, tarjeta) {
+    const rect = elemento.getBoundingClientRect();
+
+    // Posicionamiento lateral (por defecto a la derecha o ajustado si es la racha)
+    let left = rect.right + 15;
+    let top = rect.top;
+
+    // Si la tarjeta se sale a la derecha, la colocamos debajo o a la izquierda
+    if (left + 320 > window.innerWidth) {
+        left = rect.left - 330;
+        if (left < 10) {
+            left = 20;
+            top = rect.bottom + 15;
         }
-    });
-
-    activeTarget.classList.add('is-highlighted');
-
-    const tip = document.createElement('div');
-    tip.className = 'tour-step-tip';
-    tip.textContent = tourSteps[currentTourStep].text;
-    activeTarget.appendChild(tip);
-
-    const isLastStep = currentTourStep === tourSteps.length - 1;
-    nextBtn.textContent = isLastStep ? 'Comenzar' : 'Siguiente';
-    textEl.textContent = tourSteps[currentTourStep].text;
-
-    if (badge) {
-        badge.textContent = `Paso ${currentTourStep + 1}`;
     }
 
-    const rect = activeTarget.getBoundingClientRect();
-    const popoverWidth = popover.offsetWidth || 320;
-    const left = Math.min(window.innerWidth - popoverWidth - 24, Math.max(20, rect.left + rect.width + 18));
-    const top = Math.max(20, rect.top + 10);
-    popover.style.left = `${left}px`;
-    popover.style.top = `${top}px`;
+    tarjeta.style.left = `${left}px`;
+    tarjeta.style.top = `${top}px`;
 }
 
-function iniciarTutorial() {
+function siguientePaso() {
+    indicePasoActual++;
+
+    // Si llegamos al final, cerramos
+    if (indicePasoActual >= listaPasosTour.length) {
+        finalizarTour();
+    } else {
+        mostrarPasoActual();
+    }
+}
+
+function saltearTour() {
+    finalizarTour();
+}
+
+function finalizarTour() {
+    // Ocultar tarjeta y overlay
+    const tarjeta = document.getElementById('tour-card');
     const overlay = document.getElementById('tour-overlay');
-    const popover = document.getElementById('tour-popover');
+    const elementoResaltado = document.querySelector('.tour-resaltado');
 
-    if (!overlay || !popover) return;
+    if (tarjeta) tarjeta.classList.add('hidden');
+    if (overlay) overlay.classList.remove('visible');
+    if (elementoResaltado) elementoResaltado.classList.remove('tour-resaltado');
 
-    tourStarted = true;
-    currentTourStep = 0;
-    document.body.classList.add('tour-active');
-    overlay.classList.add('active');
-    popover.classList.add('visible');
-    actualizarPasoTutorial();
+    // Marcar en almacenamiento local para no volver a mostrarlo en este navegador
+    localStorage.setItem('foku_tour_completado', 'true');
 }
 
-function siguientePasoTutorial() {
-    if (!tourStarted) {
-        iniciarTutorial();
-        return;
-    }
-
-    if (currentTourStep < tourSteps.length - 1) {
-        currentTourStep += 1;
-        actualizarPasoTutorial();
-        return;
-    }
-
-    cerrarTutorial();
-}
-
-function cerrarTutorial() {
-    const overlay = document.getElementById('tour-overlay');
-    const popover = document.getElementById('tour-popover');
-    const allTargets = document.querySelectorAll('.tour-target');
-
-    allTargets.forEach((element) => {
-        element.classList.remove('is-highlighted', 'is-dimmed');
-        const tip = element.querySelector('.tour-step-tip');
-        if (tip) tip.remove();
-    });
-
-    document.body.classList.remove('tour-active');
-    if (overlay) overlay.classList.remove('active');
-    if (popover) popover.classList.remove('visible');
-
-    tourStarted = false;
-    currentTourStep = 0;
-    localStorage.setItem('foku-tour-closed', 'true');
-}
-
-function iniciarTutorialSiHaceFalta() {
-    const yaSeCerro = localStorage.getItem('foku-tour-closed');
-    if (yaSeCerro === 'true') return;
-
-    iniciarTutorial();
-}
-
-// ==========================================
-// INICIALIZACIÓN
-// ==========================================
+// Evento al cargar el DOM para inicializar componentes y el tour
 document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('pomodoro-widget');
-    const nextBtn = document.getElementById('tour-next');
-    const skipBtn = document.getElementById('tour-skip');
 
     if (widget) {
         hacerArrastrable(widget);
-    }
-    actualizarAparienciaModo();
-    actualizarPantalla();
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            siguientePasoTutorial();
-        });
+        actualizarAparienciaModo();
+        actualizarPantalla();
     }
 
-    if (skipBtn) {
-        skipBtn.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            cerrarTutorial();
-        });
-    }
-
-    if (document.getElementById('tour-overlay')) {
-        iniciarTutorialSiHaceFalta();
-    }
-
-    window.addEventListener('resize', () => {
-        if (widget) {
-            asegurarDentroDePantalla(widget);
-        }
-    });
+    // Iniciar el tour
+    iniciarTour();
 });
