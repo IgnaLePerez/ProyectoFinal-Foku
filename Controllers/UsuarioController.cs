@@ -62,8 +62,12 @@ public class UsuarioController : Controller
         return BD.NombreUsuarioValido(nombreUsuario);
     }
 
-    public IActionResult WorkSpace()
+    [HttpGet]
+    public IActionResult VerificarSesion()
     {
-        return View();
+        string? id = HttpContext.Session.GetString("id");
+        bool existeSesion = !string.IsNullOrEmpty(id) && id != "-1";
+
+        return Json(new { existeSesion });
     }
 }
