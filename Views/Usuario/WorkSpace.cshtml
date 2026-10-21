@@ -1,6 +1,7 @@
 @{
     ViewData["Title"] = "Foku";
     Layout = null;
+    bool mostrarTour = ViewBag.MostrarTour is bool tour && tour;
 }
 
 <!DOCTYPE html>
@@ -11,18 +12,36 @@
     <title>Foku App</title>
     <link rel="stylesheet" href="~/css/workspace.css">
 </head>
-<body>
+<body data-workspace-tour="@(mostrarTour ? "true" : "false")">
+
+    @if (mostrarTour)
+    {
+        <div id="workspace-tour-overlay" class="workspace-tour-overlay visible"></div>
+        <div id="workspace-tour-panel" class="workspace-tour-panel" aria-live="polite">
+            <div class="workspace-tour-header">
+                <span id="workspace-tour-step" class="workspace-tour-step">Paso 1</span>
+                <button type="button" id="workspace-tour-close" class="workspace-tour-close" aria-label="Cerrar tour">×</button>
+            </div>
+            <h3 id="workspace-tour-title">Documentos</h3>
+            <p id="workspace-tour-text">Aquí podrás acceder a tus documentos y archivos del proyecto.</p>
+            <div class="workspace-tour-actions">
+                <button type="button" id="workspace-tour-skip" class="workspace-tour-btn secondary">Saltar</button>
+                <button type="button" id="workspace-tour-next" class="workspace-tour-btn primary">Entendido</button>
+            </div>
+        </div>
+    }
 
     <!-- Header superior -->
     <header>
         <div>
-            <img src="~/images/logo.png" alt="Foku Logo" class="logo-img" />
+            <img src="~/images/logo.png" alt="Foku Logo" />
             <h1>Foku</h1>
         </div>
 
         <div>
             <div>
-                <p>Número de racha: 67 🔥</p>
+                <h2>67</h2> <!-- NumeroRacha.ViewBag -->
+                <img src="~/images/racha.png">
             </div>
             <div>
                 <p>👤 Nombre de Usuario ▾</p>
@@ -35,26 +54,26 @@
         <aside>
             <nav>
                 <ul>
-                    <li>
-                        <button>
+                    <li data-tour-step="0">
+                        <button type="button" data-tour-target="documentos">
                             <img src="~/images/documents-icon.png" alt="Documents Icon" class="sidebar-icon-img"/>
                             <p>Documentos</p>
                         </button>
                     </li>
-                    <li>
-                        <button id="btn-pomodoro" onclick="abrirPomodoro()">
+                    <li data-tour-step="1">
+                        <button type="button" id="btn-pomodoro" onclick="abrirPomodoro()" data-tour-target="pomodoro">
                             <img src="~/images/pomodoro-icon.png" alt="Pomodoro Icon" class="sidebar-icon-img" />
                             <p>Pomodoro</p>
                         </button>
                     </li>
-                    <li>
-                        <button>
+                    <li data-tour-step="2">
+                        <button type="button" data-tour-target="tareas">
                             <img src="~/images/tasks-icon.png" alt="Tasks Icon" class="sidebar-icon-img" />
                             <p>Tareas</p>
                         </button>
                     </li>
-                    <li>
-                        <button>
+                    <li data-tour-step="3">
+                        <button type="button" data-tour-target="calendario">
                             <img src="~/images/calendar-icon.png" alt="Calendar Icon" class="sidebar-icon-img" />
                             <p>Calendario</p>
                         </button>

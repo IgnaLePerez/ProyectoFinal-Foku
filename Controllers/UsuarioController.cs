@@ -45,7 +45,8 @@ public class UsuarioController : Controller
             if (id != "-1")
             {
                 HttpContext.Session.SetString("id", id);
-                return RedirectToAction("Index", "Home");
+                HttpContext.Session.SetString("workspaceTourActivo", "true");
+                return RedirectToAction("WorkSpace", "Usuario");
             }
 
             ViewBag.msj = "El usuario se creó, pero no se pudo iniciar sesión.";
@@ -64,6 +65,13 @@ public class UsuarioController : Controller
 
     public IActionResult WorkSpace()
     {
+        bool mostrarTour = HttpContext.Session.GetString("workspaceTourActivo") == "true";
+        if (mostrarTour)
+        {
+            HttpContext.Session.SetString("workspaceTourActivo", "false");
+        }
+
+        ViewBag.MostrarTour = mostrarTour;
         return View();
     }
 }
