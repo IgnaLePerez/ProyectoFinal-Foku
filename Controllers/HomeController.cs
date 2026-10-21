@@ -24,7 +24,7 @@ public class HomeController : Controller
             return RedirectToAction("VistaLanding");
         }
         ViewBag.user = BD.GetUsuario(int.Parse(HttpContext.Session.GetString("id")));
-        return View();  
+        return View("WorkSpace");  
     }
 
     public IActionResult Privacy()

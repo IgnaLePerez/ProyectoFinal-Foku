@@ -8,14 +8,14 @@
     </a>
     <div class="contenedorCentrado tarjeta tarjetaLog">
         <h2 class="subtitulo-2">Registrarse</h2>
-        <form method="post" action="@Url.Action("RegistrarDatos", "Usuario")" class="formLog" onsubmit="return validarCampos();">
+        <form method="post" action="@Url.Action("RegistrarDatos", "Usuario")" class="formLog" onsubmit="return validarNombreUsuario();">
         <div>
-            <label for="nombreUsuario">Nombre de Usuario</label>
-            <input type="text" id="nombreUsuario" name="nombreUsuario" required>
+            <label for="inputUserName" id="labelUserName">Nombre de Usuario</label>
+            <input type="text" id="inputUserName" name="nombreUsuario" required>
         </div>
         <div>
-            <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required>
+            <label for="inputPassword" id="labelPassword">Contraseña</label>
+            <input type="password" id="inputPassword" name="contraseña" required>
         </div>
         <div>
             <label for="nombre">Nombre</label>
@@ -38,3 +38,5 @@
     </div>
     <p>¿Ya tienes una cuenta? <a href="@Url.Action(action: "VistaIniciarSesion", controller: "Usuario")">Inicia sesión</a></p>
 </section>
+
+<script src="~/js/Registrarse.js" defer></script>

@@ -2,14 +2,15 @@
     ViewData["Title"] = "Home Page";
 }
 <!-- SACAR ESTO DESPUÉS -->
-<button><a href="@Url.Action("WorkSpace", "Usuario")">Al workspace</a></button>
+<button><a href="@Url.Action("Index", "Home")">Al workspace</a></button>
 <section class="seccionblanca contenedorCentrado">
     <a href='@Url.Action("VistaLanding", "Home")'>
         <button class="btnBlackOutline btnArribaIzquierda">Volver</button>
     </a>
     <div class="contenedorCentrado tarjeta tarjetaLog">
         <h2 class="subtitulo-2">Iniciar Sesión</h2>
-        <form method="post" action="@Url.Action("IniciarSesion", "Usuario")" class="formLog" onsubmit="return validarCampos();">
+        <p id="mensajeSesion" style="display:none; color:red; margin-bottom: 10px;"></p>
+        <form id="formIniciarSesion" method="post" action="@Url.Action("IniciarSesion", "Usuario")" class="formLog">
             <div>
                 <label for="inputUserName" id="labelUserName">Nombre de Usuario</label>
                 <input type="text" id="inputUserName" name="nombreUsuario" required>
@@ -24,4 +25,4 @@
     <p>¿No tienes una cuenta? <a href="@Url.Action(action: "Registrarse", controller: "Usuario")">Regístrate aquí</a></p>
 </section>
 
-<script src="IniciarSesion.js"></script>
+<script src="~/js/InisiarSesion.js" defer></script>
