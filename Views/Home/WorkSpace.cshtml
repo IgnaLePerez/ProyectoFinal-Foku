@@ -145,7 +145,8 @@
     </main>
 
     <!-- Estructura HTML limpia para el Tour -->
-    <div id="tour-overlay" class="tour-overlay"></div>
+
+    <div id="tour-overlay" class="tour-overlay" data-usuario="@(usuario?.Username ?? "invitado")"></div>
     <div id="tour-card" class="tour-card hidden">
         <h3 id="tour-titulo">Paso del Tour</h3>
         <p id="tour-descripcion">Descripción del paso actual.</p>

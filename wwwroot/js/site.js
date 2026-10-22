@@ -292,7 +292,10 @@ function hacerArrastrable(widget) {
     }
 }
 
-// LÓGICA DEL TOUR PASO A PASO (FOKU)
+/* ==========================================
+   LÓGICA DEL TOUR PASO A PASO POR USUARIO
+   ========================================== */
+
 const listaPasosTour = [
     {
         elementoId: 'tour-documentos',
@@ -312,7 +315,7 @@ const listaPasosTour = [
     {
         elementoId: 'tour-calendario',
         titulo: 'Calendario',
-        descripcion: 'Visualiza tu entrega de trabajos, exámenes y eventos importantes.'
+        descripcion: 'Visualiza tus entregas de trabajos, exámenes y eventos importantes.'
     },
     {
         elementoId: 'tour-racha',
@@ -323,19 +326,32 @@ const listaPasosTour = [
 
 let indicePasoActual = 0;
 
+// Obtiene la clave única del usuario logueado
+function obtenerClaveUsuarioTour() {
+    const overlay = document.getElementById('tour-overlay');
+    const usuario = overlay ? overlay.getAttribute('data-usuario') : 'invitado';
+    return `foku_tour_completado_${usuario}`;
+}
+
 function iniciarTour() {
-    if (localStorage.getItem('foku_tour_completado') === 'true') {
+    const claveTour = obtenerClaveUsuarioTour();
+
+    // Si este usuario en específico ya vio el tour, no se ejecuta
+    if (localStorage.getItem(claveTour) === 'true') {
         return;
     }
+
     const overlay = document.getElementById('tour-overlay');
     if (overlay) {
         overlay.classList.add('visible');
     }
+
     indicePasoActual = 0;
     mostrarPasoActual();
 }
 
 function mostrarPasoActual() {
+    // Quitar resaltado anterior
     const elementoPrevio = document.querySelector('.tour-resaltado');
     if (elementoPrevio) {
         elementoPrevio.classList.remove('tour-resaltado');
@@ -349,32 +365,42 @@ function mostrarPasoActual() {
 
     if (!elementoActual || !tarjeta) return;
 
+    // Resaltar elemento activo
     elementoActual.classList.add('tour-resaltado');
+
+    // Actualizar contenido
     tituloEl.innerText = pasoInfo.titulo;
     descEl.innerText = pasoInfo.descripcion;
 
+    // Asegurar visibilidad de la tarjeta
     tarjeta.classList.remove('hidden');
+
+    // Ubicar tarjeta cerca del elemento
     posicionarTarjeta(elementoActual, tarjeta);
 }
 
 function posicionarTarjeta(elemento, tarjeta) {
     const rect = elemento.getBoundingClientRect();
+
     let left = rect.right + 15;
     let top = rect.top;
 
-    if (left + 320 > window.innerWidth) {
+    // Ajustar si se sale por la derecha de la pantalla
+    if (left + 330 > window.innerWidth) {
         left = rect.left - 330;
         if (left < 10) {
             left = 20;
             top = rect.bottom + 15;
         }
     }
-    tarjeta.style.left = `${left}px`;
-    tarjeta.style.top = `${top}px`;
+
+    tarjeta.style.left = `${Math.max(10, left)}px`;
+    tarjeta.style.top = `${Math.max(10, top)}px`;
 }
 
 function siguientePaso() {
     indicePasoActual++;
+
     if (indicePasoActual >= listaPasosTour.length) {
         finalizarTour();
     } else {
@@ -395,23 +421,20 @@ function finalizarTour() {
     if (overlay) overlay.classList.remove('visible');
     if (elementoResaltado) elementoResaltado.classList.remove('tour-resaltado');
 
-    localStorage.setItem('foku_tour_completado', 'true');
+    // Guardar que ESTE usuario en específico ya completó el tour
+    const claveTour = obtenerClaveUsuarioTour();
+    localStorage.setItem(claveTour, 'true');
 }
 
-// INICIALIZACIÓN
+// Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('pomodoro-widget');
+
     if (widget) {
         hacerArrastrable(widget);
         actualizarAparienciaModo();
         actualizarPantalla();
     }
-
-    window.addEventListener('resize', () => {
-        if (widget) {
-            asegurarDentroDePantalla(widget);
-        }
-    });
 
     iniciarTour();
 });
