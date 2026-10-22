@@ -53,7 +53,7 @@
                     <!-- Agregado id="tour-tareas" -->
                     <li>
                         <button id="tour-tareas">
-                            <img src="~/images/tasks-icon.png" alt="Tasks Icon" class="sidebar-icon-img" />
+                            <img src="/images/tasks-icon.png" alt="Tasks Icon" class="sidebar-icon-img" />
                             <p>Tareas</p>
                         </button>
                     </li>
@@ -75,10 +75,12 @@
                 <div class="widget-header">
                     <div class="title-container">
                         <h3>Pomodoro</h3>
-                        <img src="~/images/infoIcon.png" class="info-icon" alt="?InfoIcon"/>
+                        <img src="~/images/infoIcon.png" class="info-icon" alt="?InfoIcon" />
                     </div>
                     <div class="header-actions">
-                        <button class="config-icon" onclick="toggleConfigPanel()" title="Personalizar tiempos"><img src="/images/config.png"/></button>
+                        <button class="config-icon" onclick="toggleConfigPanel()" title="Personalizar tiempos">
+                            <img src="/images/config.png"/>
+                        </button>
                         <button class="close-btn" onclick="cerrarPomodoro()">&times;</button>
                     </div>
                 </div>
@@ -94,7 +96,7 @@
                             <select id="config-mode-select" onchange="cargarTiempoEnInputs()">
                                 <option value="concentracion">Concentración</option>
                                 <option value="pausaCorta">Pausa corta</option>
-                                <option value="pausaLarga">Pausa larga</option>
+                                <option value="pausalarga">Pausa larga</option>
                             </select>
                             <span class="select-arrow"></span>
                         </div>
@@ -112,6 +114,10 @@
                             </div>
                         </div>
                     </div>
+                    <!-- RECOMENDACIÓN CALCULADA AUTOMÁTICAMENTE -->
+                    <p id="config-recommendation" class="config-recommendation-text">
+                        Recomendación: Pausa corta 5m 0s | Pausa larga 20m 0s
+                    </p>
                 </div>
 
                 <div class="widget-body">
@@ -122,21 +128,23 @@
                             <button id="btn-reset-timer" class="btn-reset" onclick="resetTimer()">Reiniciar</button>
                         </div>
                     </div>
+
                     <div class="next-cycle-info">
                         <p id="next-cycle-label" class="next-cycle-text">Próximo ciclo: 5 minutos de descanso</p>
                         <span class="cycle-count-badge" id="cycleBadge">Ciclo #1</span>
                     </div>
+
                     <div class="pomodoro-tabs">
                         <button class="tab-btn active" id="mode-concentracion" onclick="seleccionarModoManual('concentracion')">Concentración</button>
                         <button class="tab-btn" id="mode-pausaCorta" onclick="seleccionarModoManual('pausaCorta')">Pausa corta</button>
-                        <button class="tab-btn" id="mode-pausaLarga" onclick="seleccionarModoManual('pausaLarga')">Pausa larga</button>
+                        <button class="tab-btn" id="mode-pausalarga" onclick="seleccionarModoManual('pausalarga')">Pausa larga</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Estrutura HTML limpia para el Tour -->
+    <!-- Estructura HTML limpia para el Tour -->
     <div id="tour-overlay" class="tour-overlay"></div>
     <div id="tour-card" class="tour-card hidden">
         <h3 id="tour-titulo">Paso del Tour</h3>
