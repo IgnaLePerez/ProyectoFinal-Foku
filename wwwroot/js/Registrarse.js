@@ -19,12 +19,8 @@ function mostrarError(input, label, mensaje) {
     label.innerHTML = mensaje;
 }
 
-function validarUsuario() {
+async function validarUsuario() {
     const username = inputUserName.value.trim();
-    if (!username) {
-        mostrarError(inputUserName, labelUserName, 'Nombre de usuario - Este campo es obligatorio');
-        return false;
-    }
 
     if (username.length < 4 || username.length > 20) {
         mostrarError(inputUserName, labelUserName, 'Nombre de usuario - Debe tener entre 4 y 20 caracteres');
@@ -36,16 +32,28 @@ function validarUsuario() {
         return false;
     }
 
+    fetch('/Usuario/NombreUsuarioValido?nombreUsuario=' + username, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => { console.log(response); return response.json(); })
+    .then(data => {
+        alert(data)
+        if(!data){
+            mostrarError(inputUserName, labelUserName, 'Nombre de usuario - El nombre de usuario ya existe, por favor elija otro');
+            return false;
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+    limpiarError(inputUserName, labelUserName);
     return true;
 }
 
 function validarPassword() {
     const password = inputPassword.value;
-    if (!password) {
-        mostrarError(inputPassword, labelPassword, 'Contraseña - Este campo es obligatorio');
-        return false;
-    }
-
     if (password.length < 8) {
         mostrarError(inputPassword, labelPassword, 'Contraseña - La contraseña debe tener al menos 8 caracteres');
         return false;
@@ -56,87 +64,13 @@ function validarPassword() {
         return false;
     }
 
+    limpiarError(inputPassword, labelPassword);
     return true;
 }
 
-async function validarNombreUsuarioExistente() {
-    const username = inputUserName.value.trim();
-    if (!username) return false;
+async function validarCampos() {
+    const usuarioValido = await validarUsuario();
+    const passwordValida = validarPassword();
 
-    try {
-        const response = await fetch(`/Usuario/NombreUsuarioValido?nombreUsuario=${encodeURIComponent(username)}`, {
-            method: 'GET',
-            headers: { 'Accept': 'application/json' }
-        });
-
-        const data = await response.json();
-        const usuarioValido = data === true;
-
-        if (!usuarioValido) {
-            mostrarError(inputUserName, labelUserName, 'Nombre de usuario - El nombre de usuario ya existe, por favor elija otro');
-            return false;
-        }
-
-        limpiarError(inputUserName, labelUserName);
-        return true;
-    } catch (error) {
-        console.error('Error validando usuario:', error);
-        mostrarError(inputUserName, labelUserName, 'Nombre de usuario - No se pudo validar el usuario');
-        return false;
-    }
+    return usuarioValido && passwordValida;
 }
-
-function validarCampos() {
-    let valido = true;
-
-    if (!validarUsuario()) {
-        valido = false;
-    }
-
-    if (!validarPassword()) {
-        valido = false;
-    }
-
-    return valido;
-}
-
-if (labelUserName) {
-    labelUserName.dataset.originalText = labelUserName.textContent;
-}
-
-if (labelPassword) {
-    labelPassword.dataset.originalText = labelPassword.textContent;
-}
-
-inputUserName?.addEventListener('input', () => {
-    if (inputUserName.value.trim() === '') {
-        limpiarError(inputUserName, labelUserName);
-        return;
-    }
-    if (validarUsuario()) {
-        limpiarError(inputUserName, labelUserName);
-    }
-});
-
-inputPassword?.addEventListener('input', () => {
-    if (inputPassword.value === '') {
-        limpiarError(inputPassword, labelPassword);
-        return;
-    }
-    if (validarPassword()) {
-        limpiarError(inputPassword, labelPassword);
-    }
-});
-
-document.querySelector('.formLog')?.addEventListener('submit', async function (event) {
-    if (!validarCampos()) {
-        event.preventDefault();
-        return;
-    }
-
-    const usuarioDisponible = await validarNombreUsuarioExistente();
-    if (!usuarioDisponible) {
-        event.preventDefault();
-        return;
-    }
-});
