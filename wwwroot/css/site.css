@@ -585,6 +585,7 @@ p, nav, li {
   font-size: clamp(1.8em, 3vw, 2.8em);
   color: var(--black-rest);
   margin-bottom: 1em;
+  margin-top: 1em;
 }
 
 .video-container {
@@ -617,8 +618,9 @@ p, nav, li {
 /* Sobre nosotros */
 .about {
   padding: 7em 0;
-  background: linear-gradient(var(--secundario-i-rest), var(--white-pressed), var(--secundario-ii-pressed));
+  background-color: var(--black-rest);
   color: var(--white-rest);
+  margin-bottom: 1em;
 }
 
 .about-grid {
@@ -745,9 +747,11 @@ p, nav, li {
 
 /* Comentarios */
 .testimonials {
+  margin-top: 1em;
+  margin-bottom: 5em;
   padding-top: 4em;
   padding-bottom: 4em;
-  background-color: #F2F0EB;;
+  background-color: #F2F0EB;
 }
 
 .testimonials h2 {
@@ -812,7 +816,7 @@ p, nav, li {
   font: var(--subtitulo-2);
   font-size: clamp(1.8em, 3vw, 2.8em);
   color: var(--black-rest);
-  margin-bottom: .35em;
+  margin-bottom: 0.5em;
 }
 
 .cta-card p {
@@ -822,10 +826,7 @@ p, nav, li {
   font-size: 1em;
   line-height: 1.5;
   color: var(--black-rest);
-}
-
-.cta-card > .btn {
-  margin-bottom: 1.2em;
+  margin-bottom: 1.75em;
 }
 
 .cta-image-placeholder {
@@ -840,6 +841,9 @@ p, nav, li {
   aspect-ratio: 1.75 / 1;
   object-fit: cover;
   border-radius: 0.3125em;
+  margin: 1em;
+  margin-bottom: 2em;
+  margin-top: 1.75em;
 }
 
 /* Footer */
