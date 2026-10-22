@@ -41,10 +41,10 @@ public static class BD
     }
 
     public static bool NombreUsuarioValido(string nombreUsuario){
-        string query = "SELECT COUNT(Username) FROM Usuarios WHERE Username = @pnombreUsuario";
+        string query = "exec GetCantidadUsuariosConNombre @pUsername";
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            int count = connection.QueryFirstOrDefault<int>(query, new { pnombreUsuario = nombreUsuario });
+            int count = connection.QueryFirstOrDefault<int>(query, new { pUsername = nombreUsuario });
             if (count > 0)
             {
                 return false;
