@@ -614,3 +614,37 @@ ul li button {
   color: #FCFBF8 !important;
   transform: scale(0.96);
 }
+
+/* Agrupador de botones a la derecha */
+.tour-acciones-pasos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Botón "Anterior" */
+.btn-anterior {
+  background-color: transparent;
+  color: var(--grey-rest);
+  font-family: var(--font-commissioner);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--bordes);
+  border-radius: 10px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-anterior:hover {
+  background-color: var(--white-hover);
+  color: var(--black-rest);
+}
+
+.btn-anterior:active {
+  background-color: var(--white-pressed);
+}
+
+.btn-anterior.hidden {
+  display: none !important;
+}

@@ -152,7 +152,10 @@
         <p id="tour-descripcion">Descripción del paso actual.</p>
         <div class="tour-botones">
             <button class="btn-saltear" onclick="saltearTour()">Saltear</button>
-            <button class="btn-entendido" onclick="siguientePaso()">Entendido</button>
+            <div class="tour-acciones-pasos">
+                <button id="btn-anterior-tour" class="btn-anterior hidden" onclick="pasoAnterior()">Anterior</button>
+                <button class="btn-entendido" onclick="siguientePaso()">Entendido</button>
+            </div>
         </div>
     </div>
 
