@@ -1,10 +1,8 @@
-﻿// ==========================================
-// CONFIGURACIÓN Y ESTADO DEL POMODORO
-// ==========================================
+﻿// CONFIGURACIÓN Y ESTADO DEL POMODORO
 let modesConfig = {
     'concentracion': { min: 25, sec: 0 },
     'pausaCorta': { min: 5, sec: 0 },
-    'pausaLarga': { min: 15, sec: 0 }
+    'pausalarga': { min: 15, sec: 0 }
 };
 
 let modoActual = 'concentracion';
@@ -24,15 +22,35 @@ function formatDurationText(min, sec) {
     return parts.join(' y ');
 }
 
-// ==========================================
+// CÁLCULO Y MOSTRADO DE LA RECOMENDACIÓN (20% Pausa Corta y 4x Pausa corta para Pausa Larga)
+function calcularYMostrarRecomendacion() {
+    const recElem = document.getElementById('config-recommendation');
+    if (!recElem) return;
+
+    // Obtener duración total de concentración en segundos
+    const concTotalSec = getModeSeconds('concentracion');
+
+    // Recreo corto = 20% (una quinta parte)
+    const recCortaTotalSec = Math.round(concTotalSec * 0.20);
+    const recCortaMin = Math.floor(recCortaTotalSec / 60);
+    const recCortaSec = recCortaTotalSec % 60;
+
+    // Recreo largo = suma de 4 veces el recreo corto
+    const recLargaTotalSec = recCortaTotalSec * 4;
+    const recLargaMin = Math.floor(recLargaTotalSec / 60);
+    const recLargaSec = recLargaTotalSec % 60;
+
+    recElem.innerText = `Recomendación: Pausa corta ${recCortaMin}m ${recCortaSec}s | Pausa larga ${recLargaMin}m ${recLargaSec}s`;
+}
+
 // PERSONALIZACIÓN VÍA DESPLEGABLE COMPACTO
-// ==========================================
 function toggleConfigPanel() {
     const panel = document.getElementById('configPanel');
     if (panel) {
         panel.classList.toggle('open');
         if (panel.classList.contains('open')) {
             cargarTiempoEnInputs();
+            calcularYMostrarRecomendacion();
         }
     }
 }
@@ -59,6 +77,9 @@ function updateCustomDurations() {
     modesConfig[modoSeleccionado].min = min;
     modesConfig[modoSeleccionado].sec = sec;
 
+    // Calcular y actualizar la recomendación cuando cambia cualquier valor
+    calcularYMostrarRecomendacion();
+
     if (!enEjecucion && modoActual === modoSeleccionado) {
         tiempoRestante = getModeSeconds(modoActual);
         actualizarPantalla();
@@ -66,9 +87,7 @@ function updateCustomDurations() {
     actualizarIndicadorProximo();
 }
 
-// ==========================================
 // FUNCIONES DE INTERFAZ Y ACTUALIZACIÓN
-// ==========================================
 function actualizarPantalla() {
     const minutos = Math.floor(tiempoRestante / 60);
     const segundos = tiempoRestante % 60;
@@ -92,7 +111,7 @@ function actualizarIndicadorProximo() {
 
     if (modoActual === 'concentracion') {
         const proximoEsLargo = (contadorPomodoros + 1) % 4 === 0;
-        const targetMode = proximoEsLargo ? 'pausaLarga' : 'pausaCorta';
+        const targetMode = proximoEsLargo ? 'pausalarga' : 'pausaCorta';
         const durText = formatDurationText(modesConfig[targetMode].min, modesConfig[targetMode].sec);
         
         labelProximo.innerText = `Próximo ciclo: ${durText} de ${proximoEsLargo ? 'pausa larga' : 'descanso'}`;
@@ -106,7 +125,7 @@ function actualizarAparienciaModo() {
     const widget = document.getElementById('pomodoro-widget');
     if (!widget) return;
 
-    if (modoActual === 'pausaCorta' || modoActual === 'pausaLarga') {
+    if (modoActual === 'pausaCorta' || modoActual === 'pausalarga') {
         widget.classList.add('modo-descanso');
     } else {
         widget.classList.remove('modo-descanso');
@@ -117,7 +136,7 @@ function actualizarAparienciaModo() {
 
     let activeTabId = 'mode-concentracion';
     if (modoActual === 'pausaCorta') activeTabId = 'mode-pausaCorta';
-    if (modoActual === 'pausaLarga') activeTabId = 'mode-pausaLarga';
+    if (modoActual === 'pausalarga') activeTabId = 'mode-pausalarga';
 
     const activeElem = document.getElementById(activeTabId);
     if (activeElem) activeElem.classList.add('active');
@@ -125,9 +144,7 @@ function actualizarAparienciaModo() {
     actualizarIndicadorProximo();
 }
 
-// ==========================================
 // CONTROLES Y LÓGICA DE TEMPORIZADOR
-// ==========================================
 function toggleTimer() {
     const btnToggle = document.getElementById('btn-toggle-timer');
 
@@ -156,7 +173,7 @@ function avanzarSiguienteCicloAutomatico() {
     if (modoActual === 'concentracion') {
         contadorPomodoros++;
         if (contadorPomodoros % 4 === 0) {
-            modoActual = 'pausaLarga';
+            modoActual = 'pausalarga';
         } else {
             modoActual = 'pausaCorta';
         }
@@ -198,9 +215,7 @@ function resetTimer() {
     actualizarPantalla();
 }
 
-// ==========================================
 // VENTANA Y ARRASTRE CON LÍMITES
-// ==========================================
 function abrirPomodoro() {
     const widget = document.getElementById('pomodoro-widget');
     if (widget) {
@@ -277,49 +292,7 @@ function hacerArrastrable(widget) {
     }
 }
 
-// ==========================================
-// INICIALIZACIÓN
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    const widget = document.getElementById('pomodoro-widget');
-
-    if (widget) {
-        hacerArrastrable(widget);
-    }
-    actualizarAparienciaModo();
-    actualizarPantalla();
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            siguientePasoTutorial();
-        });
-    }
-
-    if (skipBtn) {
-        skipBtn.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            cerrarTutorial();
-        });
-    }
-
-    if (document.getElementById('tour-overlay')) {
-        iniciarTutorialSiHaceFalta();
-    }
-
-    window.addEventListener('resize', () => {
-        if (widget) {
-            asegurarDentroDePantalla(widget);
-        }
-    });
-});
-/* ==========================================
-   LÓGICA DEL TOUR PASO A PASO (FOKU)
-   ========================================== */
-
-// Configuración de los pasos del tour
+// LÓGICA DEL TOUR PASO A PASO (FOKU)
 const listaPasosTour = [
     {
         elementoId: 'tour-documentos',
@@ -339,7 +312,7 @@ const listaPasosTour = [
     {
         elementoId: 'tour-calendario',
         titulo: 'Calendario',
-        descripcion: 'Visualiza tus entrega de trabajos, exámenes y eventos importantes.'
+        descripcion: 'Visualiza tu entrega de trabajos, exámenes y eventos importantes.'
     },
     {
         elementoId: 'tour-racha',
@@ -351,28 +324,23 @@ const listaPasosTour = [
 let indicePasoActual = 0;
 
 function iniciarTour() {
-    // Verificar si el usuario ya completó o salteó el tour
     if (localStorage.getItem('foku_tour_completado') === 'true') {
         return;
     }
-
     const overlay = document.getElementById('tour-overlay');
     if (overlay) {
         overlay.classList.add('visible');
     }
-
     indicePasoActual = 0;
     mostrarPasoActual();
 }
 
 function mostrarPasoActual() {
-    // Quitar resaltado del paso previo
     const elementoPrevio = document.querySelector('.tour-resaltado');
     if (elementoPrevio) {
         elementoPrevio.classList.remove('tour-resaltado');
     }
 
-    // Obtener datos del paso actual
     const pasoInfo = listaPasosTour[indicePasoActual];
     const elementoActual = document.getElementById(pasoInfo.elementoId);
     const tarjeta = document.getElementById('tour-card');
@@ -381,28 +349,19 @@ function mostrarPasoActual() {
 
     if (!elementoActual || !tarjeta) return;
 
-    // Resaltar elemento objetivo
     elementoActual.classList.add('tour-resaltado');
-
-    // Cargar contenido
     tituloEl.innerText = pasoInfo.titulo;
     descEl.innerText = pasoInfo.descripcion;
 
-    // Mostrar tarjeta
     tarjeta.classList.remove('hidden');
-
-    // Posicionar la tarjeta al lado o cerca del elemento
     posicionarTarjeta(elementoActual, tarjeta);
 }
 
 function posicionarTarjeta(elemento, tarjeta) {
     const rect = elemento.getBoundingClientRect();
-
-    // Posicionamiento lateral (por defecto a la derecha o ajustado si es la racha)
     let left = rect.right + 15;
     let top = rect.top;
 
-    // Si la tarjeta se sale a la derecha, la colocamos debajo o a la izquierda
     if (left + 320 > window.innerWidth) {
         left = rect.left - 330;
         if (left < 10) {
@@ -410,15 +369,12 @@ function posicionarTarjeta(elemento, tarjeta) {
             top = rect.bottom + 15;
         }
     }
-
     tarjeta.style.left = `${left}px`;
     tarjeta.style.top = `${top}px`;
 }
 
 function siguientePaso() {
     indicePasoActual++;
-
-    // Si llegamos al final, cerramos
     if (indicePasoActual >= listaPasosTour.length) {
         finalizarTour();
     } else {
@@ -431,7 +387,6 @@ function saltearTour() {
 }
 
 function finalizarTour() {
-    // Ocultar tarjeta y overlay
     const tarjeta = document.getElementById('tour-card');
     const overlay = document.getElementById('tour-overlay');
     const elementoResaltado = document.querySelector('.tour-resaltado');
@@ -440,20 +395,23 @@ function finalizarTour() {
     if (overlay) overlay.classList.remove('visible');
     if (elementoResaltado) elementoResaltado.classList.remove('tour-resaltado');
 
-    // Marcar en almacenamiento local para no volver a mostrarlo en este navegador
     localStorage.setItem('foku_tour_completado', 'true');
 }
 
-// Evento al cargar el DOM para inicializar componentes y el tour
+// INICIALIZACIÓN
 document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('pomodoro-widget');
-
     if (widget) {
         hacerArrastrable(widget);
         actualizarAparienciaModo();
         actualizarPantalla();
     }
 
-    // Iniciar el tour
+    window.addEventListener('resize', () => {
+        if (widget) {
+            asegurarDentroDePantalla(widget);
+        }
+    });
+
     iniciarTour();
 });
