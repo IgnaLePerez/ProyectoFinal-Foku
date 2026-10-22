@@ -300,17 +300,17 @@ const listaPasosTour = [
     {
         elementoId: 'tour-documentos',
         titulo: 'Documentos',
-        descripcion: 'Aquí podrás gestionar, organizar y acceder a todos tus archivos de estudio.'
+        descripcion: 'Acá podrás gestionar, organizar y acceder a todos tus archivos de estudio y trabajo.'
     },
     {
         elementoId: 'btn-pomodoro',
         titulo: 'Pomodoro',
-        descripcion: 'Utiliza esta herramienta para mantener tus sesiones de concentración y descansos.'
+        descripcion: 'Utiliza esta herramienta para mantener tus sesiones de concentración y descansos controlados.'
     },
     {
         elementoId: 'tour-tareas',
         titulo: 'Tareas',
-        descripcion: 'Organiza tus pendientes día a día para no olvidar nada importante.'
+        descripcion: 'Organizá tus pendientes día a día para no olvidar nada importante. Podrás anotar, borar, agregar o eliminar las tareas que necesites. ¡También podrás agregar etiquetas en las tareas para tenerlas maás organizadas!.'
     },
     {
         elementoId: 'tour-calendario',
