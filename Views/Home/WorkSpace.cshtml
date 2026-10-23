@@ -81,7 +81,9 @@
                         <button class="config-icon" onclick="toggleConfigPanel()" title="Personalizar tiempos">
                             <img src="/images/config.png"/>
                         </button>
-                        <button class="close-btn" onclick="cerrarPomodoro()">&times;</button>
+                        <button class="minimize-btn" onclick="minimizarPomodoro()" title="Minimizar">–</button>
+                        <button class="close-btn" onclick="cerrarPomodoro()" title="Cerrar">&times;</button>
+                        <button class="open-btn" onclick="restaurarPomodoro()" title="Abrir">+</button>
                     </div>
                 </div>
 
@@ -122,7 +124,12 @@
 
                 <div class="widget-body">
                     <div class="timer-main-row">
-                        <h2 id="timer-display">25:00</h2>
+                        <div class="timer-display-block">
+                            <h2 id="timer-display">25:00</h2>
+                            <div class="timer-progress" aria-label="Progreso del pomodoro">
+                                <div id="timer-progress-fill" class="timer-progress-fill"></div>
+                            </div>
+                        </div>
                         <div class="actions-col">
                             <button id="btn-toggle-timer" class="btn-main-action" onclick="toggleTimer()">Empezar</button>
                             <button id="btn-reset-timer" class="btn-reset" onclick="resetTimer()">Reiniciar</button>

@@ -97,6 +97,24 @@ function actualizarPantalla() {
     if (display) {
         display.innerText = textoTiempo;
     }
+
+    actualizarBarraProgreso();
+}
+
+function actualizarBarraProgreso() {
+    const progressFill = document.getElementById('timer-progress-fill');
+    if (!progressFill) return;
+
+    const totalSegundos = getModeSeconds(modoActual);
+    const progreso = totalSegundos === 0 ? 0 : ((totalSegundos - tiempoRestante) / totalSegundos) * 100;
+    const porcentaje = Math.min(Math.max(progreso, 0), 100);
+
+    const esModoDescanso = modoActual === 'pausaCorta' || modoActual === 'pausalarga';
+    const colorInicio = esModoDescanso ? '#4F6D9A' : '#FF9509';
+    const colorFinal = esModoDescanso ? '#6C8EC2' : '#FFAD42';
+
+    progressFill.style.width = `${porcentaje}%`;
+    progressFill.style.background = `linear-gradient(90deg, ${colorInicio} 0%, ${colorFinal} 100%)`;
 }
 
 function actualizarIndicadorProximo() {
@@ -424,6 +442,30 @@ function finalizarTour() {
     // Guardar que ESTE usuario en específico ya completó el tour
     const claveTour = obtenerClaveUsuarioTour();
     localStorage.setItem(claveTour, 'true');
+}
+
+// Minimizar y restaurar widget
+function minimizarPomodoro() {
+    const widget = document.getElementById('pomodoro-widget');
+    const panel = document.getElementById('configPanel');
+    if (!widget) return;
+
+    if (panel && panel.classList.contains('open')) {
+        panel.classList.remove('open');
+    }
+
+    widget.classList.add('minimized');
+    widget.classList.remove('hidden');
+    actualizarPantalla();
+}
+
+function restaurarPomodoro() {
+    const widget = document.getElementById('pomodoro-widget');
+    if (!widget) return;
+
+    widget.classList.remove('minimized');
+    widget.classList.remove('hidden');
+    actualizarPantalla();
 }
 
 // Inicialización

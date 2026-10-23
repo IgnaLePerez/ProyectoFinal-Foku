@@ -225,6 +225,20 @@ ul li button {
   gap: 10px;
 }
 
+.minimize-btn,
+.open-btn,
+.close-btn {
+  order: 0;
+}
+
+.close-btn {
+  order: 1;
+}
+
+.open-btn {
+  order: 2;
+}
+
 .config-icon {
   background: none;
   border: none;
@@ -408,6 +422,32 @@ ul li button {
   width: 100%;
 }
 
+.timer-display-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.timer-progress {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  height: 10px;
+  border-radius: 999px;
+  background-color: rgba(33, 34, 37, 0.1);
+  overflow: hidden;
+}
+
+.timer-progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--acento-rest) 0%, #ffad42 100%);
+  transition: width 0.9s ease, background 0.3s ease;
+}
+
 .timer-main-row {
   display: flex;
   justify-content: space-between;
@@ -418,6 +458,7 @@ ul li button {
 .timer-main-row h2 {
   font: var(--timer-num);
   color: var(--black-rest);
+  line-height: 1;
 }
 
 .actions-col {
@@ -647,4 +688,105 @@ ul li button {
 
 .btn-anterior.hidden {
   display: none !important;
+}
+
+.minimize-btn,
+.open-btn {
+  background: none;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--black-rest);
+  border-radius: 6px;
+  transition: color 0.25s ease, text-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.minimize-btn:hover,
+.open-btn:hover {
+  color: var(--white-rest);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.123);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.floating-widget.minimized {
+  width: 260px;
+  padding: 14px 16px;
+}
+
+.floating-widget.minimized .widget-header {
+  padding-bottom: 8px;
+  border-bottom: none;
+}
+
+.floating-widget.minimized .config-icon,
+.floating-widget.minimized .minimize-btn,
+.floating-widget.minimized .info-icon,
+.floating-widget.minimized .widget-body > *:not(.timer-main-row),
+.floating-widget.minimized .timer-main-row .actions-col,
+.floating-widget.minimized .timer-main-row .timer-display-block h2 {
+  display: none !important;
+}
+
+.floating-widget.minimized .timer-main-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+}
+
+.floating-widget.minimized .timer-display-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.floating-widget.minimized .timer-progress {
+  display: block !important;
+  max-width: none;
+  width: 100%;
+}
+
+.floating-widget.minimized .header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  width: auto;
+}
+
+.floating-widget.minimized .title-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.floating-widget.minimized .close-btn,
+.floating-widget.minimized .open-btn {
+  width: 28px;
+  height: 28px;
+  font-size: 35px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.floating-widget.minimized .close-btn {
+  order: 1;
+}
+
+.floating-widget.minimized .open-btn {
+  order: 0;
+}
+
+.floating-widget:not(.minimized) .open-btn {
+  display: none;
 }
