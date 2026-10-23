@@ -19,25 +19,37 @@ function mostrarError(input, label, mensaje) {
     label.innerHTML = mensaje;
 }
 
-async function verificarSesion() {
+async function verificarSesion(event) {
+    event.preventDefault();
+
     const username = inputUserName.value.trim();
 
-    fetch('/Usuario/NombreUsuarioValido?nombreUsuario=' + username, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-    })
-    .then(response => { console.log(response); return response.json(); })
-    .then(data => {
-        alert(data)
-        if(data){
-            mostrarError(inputUserName, labelUserName, 'Nombre de usuario - El nombre de usuario no existe, por favor elija otro');
-            return false;
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+    if (!username) {
+        mostrarError(inputUserName, labelUserName, 'Nombre de usuario - Campo obligatorio');
+        return;
+    }
 
-    limpiarError(inputUserName, labelUserName);
-    return true;
+    try {
+        const response = await fetch('/Usuario/NombreUsuarioValido?nombreUsuario=' + encodeURIComponent(username), {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        const data = await response.json();
+
+        if (data) {
+            mostrarError(inputUserName, labelUserName, 'Nombre de usuario - El nombre de usuario no existe, por favor elija otro');
+            return;
+        }
+
+        limpiarError(inputUserName, labelUserName);
+        event.target.submit();
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+const formIniciarSesion = document.getElementById('formIniciarSesion');
+if (formIniciarSesion) {
+    formIniciarSesion.addEventListener('submit', verificarSesion);
 }

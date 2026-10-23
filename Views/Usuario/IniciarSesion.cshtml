@@ -10,7 +10,7 @@
     <div class="contenedorCentrado tarjeta tarjetaLog">
         <h2 class="subtitulo-2">Iniciar Sesión</h2>
         <p id="mensajeSesion" style="display:none; color:red; margin-bottom: 10px;"></p>
-        <form id="formIniciarSesion" method="post" action="@Url.Action("IniciarSesion", "Usuario")" class="formLog" onsubmit="return verificarSesion()">
+        <form id="formIniciarSesion" method="post" action="@Url.Action("IniciarSesion", "Usuario")" class="formLog">
             <div>
                 <label for="inputUserName" id="labelUserName">Nombre de Usuario</label>
                 <input type="text" id="inputUserName" name="nombreUsuario" required>

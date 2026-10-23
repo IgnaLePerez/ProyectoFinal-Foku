@@ -32,24 +32,25 @@ async function validarUsuario() {
         return false;
     }
 
-    fetch('/Usuario/NombreUsuarioValido?nombreUsuario=' + username, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-    })
-    .then(response => { console.log(response); return response.json(); })
-    .then(data => {
-        alert(data)
-        if(!data){
+    try {
+        const response = await fetch('/Usuario/NombreUsuarioValido?nombreUsuario=' + encodeURIComponent(username), {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        const data = await response.json();
+
+        if (!data) {
             mostrarError(inputUserName, labelUserName, 'Nombre de usuario - El nombre de usuario ya existe, por favor elija otro');
             return false;
         }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
 
-    limpiarError(inputUserName, labelUserName);
-    return true;
+        limpiarError(inputUserName, labelUserName);
+        return true;
+    } catch (error) {
+        console.error('Error:', error);
+        return false;
+    }
 }
 
 function validarPassword() {
@@ -68,9 +69,20 @@ function validarPassword() {
     return true;
 }
 
-async function validarCampos() {
+async function validarCampos(event) {
+    event.preventDefault();
+
     const usuarioValido = await validarUsuario();
     const passwordValida = validarPassword();
 
-    return usuarioValido && passwordValida;
+    if (!usuarioValido || !passwordValida) {
+        return;
+    }
+
+    event.target.submit();
+}
+
+const formRegistrarse = document.getElementById('formRegistrarse');
+if (formRegistrarse) {
+    formRegistrarse.addEventListener('submit', validarCampos);
 }
