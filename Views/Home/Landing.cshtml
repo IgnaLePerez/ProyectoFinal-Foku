@@ -14,7 +14,7 @@
     <body>
         <header class="navbar">
             <div class="container nav-container">
-                <a asp-controller="Usuario" asp-action="VistaLanding" class="logo" aria-label="Foku - Inicio"><img src="~/images/LogoCompleto.png" alt="Foku"></a>
+                <a asp-controller="Home" asp-action="VistaLanding" class="logo" aria-label="Foku - Inicio"><img src="~/images/LogoCompleto.png" alt="Foku"></a>
                 <nav class="nav-links" aria-label="Navegación principal">
                     <a href="#inicio">Inicio</a>
                     <a href="#tutorial">Tutorial</a>
@@ -103,22 +103,22 @@
                 </div>
             </section>
 
-            <section id="experiencias" class="testimonials container">
+            <section id="experiencias" class="testimonials">
                 <h2 class="text-center">Nuestros usuarios</h2>
                 <div class="testimonials-grid">
                     <article class="testimonial-card">
                         <img src="~/images/Usuario1.png" alt="Usuario 1">
-                        <h3>Usuario 1</h3>
+                        <h3>Benjamin</h3>
                         <p>“Por fin una app que entiende cómo estudio yo. Me ayudó muchísimo a organizarme y concentrarme.”</p>
                     </article>
                     <article class="testimonial-card">
-                        <img src="~/images/Usuario2.png" alt="Usuario 2">
-                        <h3>Usuario 2</h3>
+                        <img src="~/images/Usuario2.webp" alt="Usuario 2">
+                        <h3>Timoteo</h3>
                         <p>“Me ayudó a estudiar mejor, organizarme y dejar de sentir que todo se me viene encima. 10/10.”</p>
                     </article>
                     <article class="testimonial-card">
                         <img src="~/images/Usuario3.png" alt="Usuario 3">
-                        <h3>Usuario 3</h3>
+                        <h3>Susana</h3>
                         <p>“Ahora estudiar se siente mucho más simple. Me organizo mejor y puedo concentrarme de verdad.”</p>
                     </article>
                 </div>
@@ -128,7 +128,7 @@
                 <div class="cta-card">
                     <h2>¿Qué estás esperando?</h2>
                     <p>¡Únete ya a nuestra comunidad y descubre un mundo de posibilidades!</p>
-                    <a class="btn btnAcento" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
+                    <a class="btnAcento" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
                     <div class="cta-image-placeholder">
                         <img src="~/images/Foto2.png" alt="Grupo de graduados celebrando">
                     </div>

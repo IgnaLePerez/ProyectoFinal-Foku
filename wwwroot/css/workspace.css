@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Average&family=Commissioner:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=MuseoModerno:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Average&family=Commissioner:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=MuseoModerno:wght@300;400;500;600;700&display=swap');
 
 * {
   box-sizing: border-box;
@@ -45,7 +45,6 @@ html {
   --texto-modos: 400 18px/1.4 var(--font-commissioner);
   --texto-boton: 500 16px/1.5 var(--font-commissioner);
   --texto-workspace-lateral: 700 14px/1.4 var(--font-commissioner);
-
 }
 
 body {
@@ -94,7 +93,7 @@ header h1 {
   margin-left: 1rem;
 }
 
-header h2{
+header h2 {
   font: 500 32px/1 var(--font-commissioner);
   margin-right: 9px;
 }
@@ -107,7 +106,7 @@ main {
 }
 
 main aside {
-  margin-top: 6rem; 
+  margin-top: 6rem;
   margin-left: 2.6%;
 }
 
@@ -117,8 +116,8 @@ ul {
   border-radius: var(--border-radius-cards);
   padding: 4rem 0.2rem;
   display: flex;
-  flex-direction: column; 
-  gap: 2rem;        
+  flex-direction: column;
+  gap: 2rem;
 }
 
 ul li {
@@ -145,14 +144,11 @@ ul li button {
   height: 100%;
 }
 
-.sidebar-icon-img{
+.sidebar-icon-img {
   width: 48px;
 }
 
-/* ===================================================
-   WIDGET POMODORO
-   =================================================== */
-
+/* WIDGET POMODORO */
 .floating-widget {
   position: absolute;
   top: 40px;
@@ -230,6 +226,7 @@ ul li button {
 }
 
 .config-icon {
+  background: none;
   border: none;
   cursor: pointer;
   opacity: 0.7;
@@ -241,7 +238,7 @@ ul li button {
   transform: rotate(30deg);
 }
 
-.config-icon img{
+.config-icon img {
   width: 23px;
   height: 23px;
 }
@@ -271,10 +268,9 @@ ul li button {
   transition: color 0.25s ease, text-shadow 0.25s ease, background-color 0.25s ease;
 }
 
-.close-btn:hover{
+.close-btn:hover {
   color: var(--white-rest);
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.123);
-
 }
 
 /* DESPLEGABLE COMPACTO DE CONFIGURACIÓN */
@@ -392,6 +388,17 @@ ul li button {
   color: var(--grey-rest);
 }
 
+/* RECOMENDACIÓN EN EL PANEL DE CONFIGURACIÓN */
+.config-recommendation-text {
+  font: var(--texto-boton);
+  font-size: 12.5px;
+  color: var(--grey-rest);
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  line-height: 1.3;
+}
+
 /* Cuerpo principal del timer */
 .widget-body {
   padding-top: 15px;
@@ -442,9 +449,10 @@ ul li button {
   font: var(--texto-boton);
   font-size: 13px;
   cursor: pointer;
+  text-decoration: underline;
 }
 
-/* INFORMACIÓN DEL PRÓXIMO CICLO (CORREGIDO EN BLOQUE VERTICAL) */
+/* INFORMACIÓN DEL PRÓXIMO CICLO */
 .next-cycle-info {
   display: flex;
   flex-direction: column;
@@ -494,100 +502,149 @@ ul li button {
   border-bottom-color: var(--black-rest);
 }
 
-/* ONBOARDING TOUR*/
-
-/* Fondo oscuro opaco */
+/* ONBOARDING TOUR */
 .tour-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(33, 34, 37, 0.75);
-    z-index: 2000;
-    display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(33, 34, 37, 0.75);
+  z-index: 2000;
+  display: none;
 }
 
 .tour-overlay.visible {
-    display: block;
+  display: block;
 }
 
-/* Resaltado del elemento actual */
 .tour-resaltado {
-    position: relative !important;
-    z-index: 2001 !important;
-    box-shadow: 0 0 0 4px var(--acento-rest), 0 0 15px rgba(255, 149, 9, 0.5) !important;
-    border-radius: 12px !important;
-    background-color: var(--cards) !important;
-    transition: all 0.3s ease;
+  position: relative !important;
+  z-index: 2001 !important;
+  box-shadow: 0 0 0 4px var(--acento-rest), 0 0 15px rgba(255, 149, 9, 0.5) !important;
+  border-radius: 12px !important;
+  background-color: var(--cards) !important;
+  transition: all 0.3s ease;
 }
 
-/* Tarjeta explicativa flotante */
 .tour-card {
-    position: fixed;
-    z-index: 2002;
-    width: 320px;
-    background-color: #FFFFFF;
-    border: 2px solid var(--acento-rest);
-    border-radius: var(--border-radius-cards);
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: all 0.3s ease;
+  position: fixed !important;
+  z-index: 2002 !important;
+  width: 320px;
+  background-color: var(--white-rest);
+  border: 2px solid var(--acento-rest);
+  border-radius: var(--border-radius-cards);
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px;
+  transition: left 0.2s ease, top 0.2s ease;
 }
 
 .tour-card.hidden {
-    display: none;
+  display: none !important;
 }
 
 .tour-card h3 {
-    font: var(--titulo-pomodoro);
-    font-size: 20px;
-    color: var(--black-rest);
-    margin: 0;
+  font: var(--titulo-pomodoro);
+  font-size: 20px;
+  color: var(--black-rest);
+  margin: 0;
 }
 
 .tour-card p {
-    font-size: 14px;
-    line-height: 1.4;
-    color: var(--grey-rest);
-    margin: 0;
+  font: var(--texto-label);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--grey-rest);
+  margin: 0;
 }
 
 .tour-botones {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .btn-saltear {
-    background: transparent;
-    border: none;
-    color: var(--grey-rest);
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: underline;
+  background: transparent;
+  border: none;
+  color: var(--grey-rest);
+  font: var(--text-buttons);
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
 }
 
 .btn-saltear:hover {
-    color: var(--black-rest);
+  color: var(--black-rest);
 }
 
 .btn-entendido {
-    background-color: var(--acento-rest);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  background-color: var(--acento-rest) !important; /* #FF9509 */
+  color: #FCFBF8 !important;
+  font-family: var(--font-commissioner);
+  font-size: 14px;
+  font-weight: 600;
+  border: none !important;
+  border-radius: 10px;
+  padding: 8px 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .btn-entendido:hover {
-    background-color: var(--acento-hover);
+  background-color: #DA7000 !important;
+  color: #FCFBF8 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Pressed/Active usando variable base */
+.btn-entendido:active {
+  background-color: #9C5901 !important;
+  color: #FCFBF8 !important;
+  transform: scale(0.96);
+}
+
+/* Agrupador de botones a la derecha */
+.tour-acciones-pasos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Botón "Anterior" */
+.btn-anterior {
+  background-color: transparent;
+  color: var(--grey-rest);
+  font-family: var(--font-commissioner);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--bordes);
+  border-radius: 10px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-anterior:hover {
+  background-color: var(--white-hover);
+  color: var(--black-rest);
+}
+
+.btn-anterior:active {
+  background-color: var(--white-pressed);
+}
+
+.btn-anterior.hidden {
+  display: none !important;
 }
