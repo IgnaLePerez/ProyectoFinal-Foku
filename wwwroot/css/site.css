@@ -105,7 +105,6 @@ body {
   --texto-grafico: 400 10px/1.4 var(--font-commissioner);
 }
 
-
 .seccionblanca{
   background-color: var(--white-rest);
   height: 100vh;
@@ -123,6 +122,10 @@ body {
   background-color: var(--cards);
   padding: 43px;
   border-radius: var(--border-radius-cards);
+}
+
+p a{
+  color: var(--info);
 }
 
 .tarjetaLog{

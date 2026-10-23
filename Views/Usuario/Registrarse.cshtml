@@ -8,7 +8,7 @@
     </a>
     <div class="contenedorCentrado tarjeta tarjetaLog">
         <h2 class="subtitulo-2">Registrarse</h2>
-        <form method="post" action="@Url.Action("RegistrarDatos", "Usuario")" class="formLog" onsubmit="return validarNombreUsuario();">
+        <form id="formRegistrarse" method="post" action="@Url.Action("RegistrarDatos", "Usuario")" class="formLog">
         <div>
             <label for="inputUserName" id="labelUserName">Nombre de Usuario</label>
             <input type="text" id="inputUserName" name="nombreUsuario" required>
@@ -33,7 +33,7 @@
             <input type="checkbox" id="aceptoTerminos" name="aceptoTerminos" required>
             <label for="aceptoTerminos">Acepto los términos y condiciones</label>
         </div>
-        <button type="submit" class="btnAcento">Registrarse</button>
+        <input type="submit" class="btnAcento" value="Registrarse">
         </form>
     </div>
     <p>¿Ya tienes una cuenta? <a href="@Url.Action(action: "VistaIniciarSesion", controller: "Usuario")">Inicia sesión</a></p>

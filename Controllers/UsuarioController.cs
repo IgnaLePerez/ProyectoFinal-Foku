@@ -34,33 +34,22 @@ public class UsuarioController : Controller
     [HttpPost]
     public IActionResult RegistrarDatos(string nombreUsuario, string contraseña, string nombre, string apellido, string email)
     {
-        if (BD.NombreUsuarioValido(nombreUsuario))
-        {
-            Usuario user = new Usuario(0, nombreUsuario, nombre, apellido, email, contraseña, 0);
+        Usuario user = new Usuario(0, nombreUsuario, nombre, apellido, email, contraseña, 0);
 
-            BD.CrearUsuario(user);
+        BD.CrearUsuario(user);
 
-            string id = BD.BuscarSesion(nombreUsuario, contraseña);
-
-            if (id != "-1")
-            {
-                HttpContext.Session.SetString("id", id);
-                return RedirectToAction("Index", "Home");
-            }
-
-            ViewBag.msj = "El usuario se creó, pero no se pudo iniciar sesión.";
-            return View("Registrarse");
-        }
-
-        ViewBag.msj = "El nombre de usuario ya existe, por favor elija otro";
-        return View("Registrarse");
+        string id = BD.BuscarSesion(nombreUsuario, contraseña);
+        HttpContext.Session.SetString("id", id);
+        Console.WriteLine(HttpContext.Session.GetString("id"));
+        return RedirectToAction("Index", "Home");
     }
 
-    [HttpGet]
-    public bool NombreUsuarioValido(string nombreUsuario)
-    {
-        return BD.NombreUsuarioValido(nombreUsuario);
-    }
+[HttpGet]
+public bool NombreUsuarioValido(string nombreUsuario)
+{
+    bool valido = BD.NombreUsuarioValido(nombreUsuario);
+    return valido;
+}
 
     [HttpGet]
     public IActionResult VerificarSesion()
