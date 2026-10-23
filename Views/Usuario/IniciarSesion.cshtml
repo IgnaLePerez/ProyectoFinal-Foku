@@ -10,7 +10,7 @@
     <div class="contenedorCentrado tarjeta tarjetaLog">
         <h2 class="subtitulo-2">Iniciar Sesión</h2>
         <p id="mensajeSesion" style="display:none; color:red; margin-bottom: 10px;"></p>
-        <form id="formIniciarSesion" method="post" action="@Url.Action("IniciarSesion", "Usuario")" class="formLog">
+        <form id="formIniciarSesion" method="post" action="@Url.Action("IniciarSesion", "Usuario")" class="formLog" onsubmit="return verificarSesion()">
             <div>
                 <label for="inputUserName" id="labelUserName">Nombre de Usuario</label>
                 <input type="text" id="inputUserName" name="nombreUsuario" required>
@@ -19,10 +19,10 @@
                 <label for="inputPassword" id="labelPassword">Contraseña</label>
                 <input type="password" id="inputPassword" name="contraseña" required>
             </div>
-            <button type="submit" class="btnAcento">Iniciar Sesión</button>
+            <input type="submit" class="btnAcento" value="Iniciar Sesión">
         </form>
     </div>
     <p>¿No tienes una cuenta? <a href="@Url.Action(action: "Registrarse", controller: "Usuario")">Regístrate aquí</a></p>
 </section>
 
-<script src="~/js/InisiarSesion.js" defer></script>
+<script src="~/js/IniciarSesion.js" defer></script>
