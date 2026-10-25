@@ -12,12 +12,6 @@ html {
   min-height: 100%;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
 :root {
   /* Fuentes */
   --font-museomoderno: 'MuseoModerno', 'Segoe UI', sans-serif;
@@ -170,30 +164,29 @@ ul li button {
   display: none !important;
 }
 
-/* CUADRO TOOLTIP DE 424x64px */
-.pomodoro-info-tooltip {
+/* CUADRO TOOLTIP */
+.info-tooltip {
   display: none;
   position: absolute;
-  top: -76px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 424px;
-  height: 64px;
+  bottom: 100%; /* Para q este justo encima del elemento padre */
+  width: max-content;
+  max-width: 350px; 
+  height: auto;
   background-color: #F2F0EB;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 10px 16px;
   font: var(--font-commissioner);
   font-size: 15px;
   color: var(--grey-rest);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.07);
   align-items: center;
   justify-content: center;
   text-align: center;
-  z-index: 1010;
-  pointer-events: none;
+  pointer-events: none; /* El mouse lo ignora si le pasa por encima p/q no interfiera con los clicks de lo de abajo */
+  margin-bottom: 13px;
 }
 
-.pomodoro-info-tooltip::after {
+.info-tooltip::after {  /* Triangulo abajo del tooltip */
   content: "";
   position: absolute;
   bottom: -6px;
@@ -204,9 +197,9 @@ ul li button {
   background-color: #F2F0EB;
 }
 
-.title-container:hover ~ .pomodoro-info-tooltip,
-.info-icon:hover ~ .pomodoro-info-tooltip,
-.widget-header:has(.info-icon:hover) ~ .pomodoro-info-tooltip {
+.title-container:hover ~ .info-tooltip,
+.info-icon:hover ~ .info-tooltip,
+.widget-header:has(.info-icon:hover) ~ .info-tooltip {  /* Ocaciones en las q se muestra el tooltip */
   display: flex;
 }
 
@@ -223,20 +216,6 @@ ul li button {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.minimize-btn,
-.open-btn,
-.close-btn {
-  order: 0;
-}
-
-.close-btn {
-  order: 1;
-}
-
-.open-btn {
-  order: 2;
 }
 
 .config-icon {
@@ -267,22 +246,28 @@ ul li button {
   font: var(--titulo-pomodoro);
   color: var(--black-rest);
 }
+.header-actions button:not(:first-child) {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+  width: 28px;
+  height: 28px;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--black-rest);
+  border-radius: 6px;
+}
 
 .info-icon {
   width: 20px;
   height: 20px;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 35px;
-  cursor: pointer;
-  color: var(--black-rest);
-  transition: color 0.25s ease, text-shadow 0.25s ease, background-color 0.25s ease;
-}
-
-.close-btn:hover {
+.header-actions button:not(:first-child):hover {
   color: var(--white-rest);
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.123);
 }
@@ -315,21 +300,18 @@ ul li button {
   align-items: center;
 }
 
-.config-title {
+.config-header h1 {
   font: var(--texto-boton);
   font-size: 14px;
   font-weight: 600;
   color: var(--black-rest);
 }
 
-.select-wrapper {
+
+.config-header select {
   position: relative;
   display: inline-block;
-}
-
-.select-wrapper select {
   appearance: none;
-  -webkit-appearance: none;
   background-color: #FFFFFF;
   border: 1px solid #D6D2CA;
   border-radius: 10px;
@@ -342,11 +324,11 @@ ul li button {
   transition: border-color 0.2s;
 }
 
-.select-wrapper select:focus {
+.config-header select:focus {
   border-color: var(--acento-rest);
 }
 
-.select-arrow {
+.config-arrow {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -368,7 +350,7 @@ ul li button {
   gap: 6px;
 }
 
-.config-input-group {
+.config-inputs div {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -391,13 +373,13 @@ ul li button {
   border-color: var(--acento-rest);
 }
 
-.config-inputs span {
+.config-inputs p {
   font: var(--texto-boton);
   font-size: 13px;
   color: var(--grey-rest);
 }
 
-.input-separator {
+.config-inputs span {
   font-weight: 700;
   color: var(--grey-rest);
 }
@@ -690,68 +672,59 @@ ul li button {
   display: none !important;
 }
 
-.minimize-btn,
-.open-btn {
-  background: none;
-  border: none;
-  font-size: 26px;
-  line-height: 1;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--black-rest);
-  border-radius: 6px;
-  transition: color 0.25s ease, text-shadow 0.25s ease, background-color 0.25s ease;
-}
-
-.minimize-btn:hover,
-.open-btn:hover {
-  color: var(--white-rest);
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.123);
-  background-color: rgba(0, 0, 0, 0.04);
-}
 
 .floating-widget.minimized {
-  width: 260px;
-  padding: 14px 16px;
-}
-
-.floating-widget.minimized .widget-header {
-  padding-bottom: 8px;
-  border-bottom: none;
+  width: fit-content;
+  padding: 18px 30px;
 }
 
 .floating-widget.minimized .config-icon,
 .floating-widget.minimized .minimize-btn,
 .floating-widget.minimized .info-icon,
 .floating-widget.minimized .widget-body > *:not(.timer-main-row),
-.floating-widget.minimized .timer-main-row .actions-col,
-.floating-widget.minimized .timer-main-row .timer-display-block h2 {
+.floating-widget.minimized .timer-main-row .btn-reset {
   display: none !important;
 }
 
 .floating-widget.minimized .timer-main-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  column-gap: 8px;
+  row-gap: 8px;
+  width: 220px;
   min-height: 0;
 }
 
 .floating-widget.minimized .timer-display-block {
+  display: contents;
+}
+
+
+.floating-widget.minimized .timer-main-row h2 {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
   width: 100%;
+  font: 400 40px/1 var(--font-commissioner);
+  color: var(--black-rest);
+  letter-spacing: -1px;
+  text-align: center;
+}
+
+.floating-widget.minimized .actions-col {
+  grid-column: 2;
+  grid-row: 1;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  width: max-content;
+  justify-self: end;
 }
 
 .floating-widget.minimized .timer-progress {
   display: block !important;
-  max-width: none;
-  width: 100%;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  max-width: 220px;
+  width: 220px;
 }
 
 .floating-widget.minimized .header-actions {
@@ -762,29 +735,17 @@ ul li button {
   width: auto;
 }
 
+
 .floating-widget.minimized .title-container {
   flex: 1;
   min-width: 0;
+  margin-right: 20px;
 }
 
-.floating-widget.minimized .close-btn,
-.floating-widget.minimized .open-btn {
-  width: 28px;
-  height: 28px;
-  font-size: 35px;
-  line-height: 1;
+.floating-widget.minimized .widget-body{
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  margin: 0;
-}
-
-.floating-widget.minimized .close-btn {
-  order: 1;
-}
-
-.floating-widget.minimized .open-btn {
-  order: 0;
 }
 
 .floating-widget:not(.minimized) .open-btn {

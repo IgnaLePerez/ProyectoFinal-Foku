@@ -82,41 +82,39 @@
                             <img src="/images/config.png"/>
                         </button>
                         <button class="minimize-btn" onclick="minimizarPomodoro()" title="Minimizar">–</button>
-                        <button class="close-btn" onclick="cerrarPomodoro()" title="Cerrar">&times;</button>
                         <button class="open-btn" onclick="restaurarPomodoro()" title="Abrir">+</button>
+                        <button class="close-btn" onclick="cerrarPomodoro()" title="Cerrar">&times;</button>
                     </div>
                 </div>
 
-                <div class="pomodoro-info-tooltip">
-                    El pomodoro es una técnica donde hay 25 minutos de concentración y 5 minutos de descanso
-                </div>
+                <p class="info-tooltip">
+                    El pomodoro es una técnica donde hay 25 minutos de concentración y 5 minutos de descanso. Con 4 ciclos de concentración hay un descanso largo.
+                </p>
 
                 <div class="config-dropdown" id="configPanel">
                     <div class="config-header">
-                        <span class="config-title">Configurar modo:</span>
-                        <div class="select-wrapper">
-                            <select id="config-mode-select" onchange="cargarTiempoEnInputs()">
-                                <option value="concentracion">Concentración</option>
-                                <option value="pausaCorta">Pausa corta</option>
-                                <option value="pausalarga">Pausa larga</option>
-                            </select>
-                            <span class="select-arrow"></span>
-                        </div>
+                        <h1>Configurar modo:</h1>
+                        <select id="config-mode-select" onchange="cargarTiempoEnInputs()">
+                            <option value="concentracion">Concentración</option>
+                            <option value="pausaCorta">Pausa corta</option>
+                            <option value="pausalarga">Pausa larga</option>
+                        </select>
+                        <span class="config-arrow"></span>
                     </div>
                     <div class="config-body">
                         <div class="config-inputs">
-                            <div class="config-input-group">
+                            <div>
                                 <input type="number" id="input-custom-min" value="25" min="0" max="99" oninput="updateCustomDurations()">
-                                <span>m</span>
+                                <p>m</p>
                             </div>
-                            <span class="input-separator">:</span>
-                            <div class="config-input-group">
+                            <span>:</span>
+                            <div>
                                 <input type="number" id="input-custom-sec" value="0" min="0" max="59" oninput="updateCustomDurations()">
-                                <span>s</span>
+                                <p>s</p>
                             </div>
                         </div>
                     </div>
-                    <!-- RECOMENDACIÓN CALCULADA AUTOMÁTICAMENTE -->
+                    <!-- RECOMENDACIÓN TIEMPO -->
                     <p id="config-recommendation" class="config-recommendation-text">
                         Recomendación: Pausa corta 5m 0s | Pausa larga 20m 0s
                     </p>
