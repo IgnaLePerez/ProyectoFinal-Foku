@@ -106,7 +106,7 @@ body {
 }
 
 .seccionblanca{
-  background-color: var(--white-rest);
+  background-image: url(/images/FondoPuntos.png);
   height: 100vh;
 }
 
