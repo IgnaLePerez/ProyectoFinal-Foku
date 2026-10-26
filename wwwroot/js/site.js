@@ -328,7 +328,7 @@ const listaPasosTour = [
     {
         elementoId: 'tour-tareas',
         titulo: 'Tareas',
-        descripcion: 'Organizá tus pendientes día a día para no olvidar nada importante. Podrás anotar, borar, agregar o eliminar las tareas que necesites. ¡También podrás agregar etiquetas en las tareas para tenerlas maás organizadas!.'
+        descripcion: 'Organizá tus pendientes día a día para no olvidar nada importante. Podrás anotar, borar, agregar o eliminar las tareas que necesites. ¡También podrás agregar etiquetas en las tareas para tenerlas más organizadas!.'
     },
     {
         elementoId: 'tour-calendario',
@@ -351,10 +351,10 @@ function obtenerClaveUsuarioTour() {
     return `foku_tour_completado_${usuario}`;
 }
 
+// Inicia el tour si el usuario actual no lo vio
 function iniciarTour() {
     const claveTour = obtenerClaveUsuarioTour();
 
-    // Si este usuario en específico ya vio el tour, no se ejecuta
     if (localStorage.getItem(claveTour) === 'true') {
         return;
     }
@@ -368,8 +368,9 @@ function iniciarTour() {
     mostrarPasoActual();
 }
 
+// Muestra la tarjeta y resalta el elemento del paso actual
 function mostrarPasoActual() {
-    // Quitar resaltado anterior
+    // Quitar resaltado del paso anterior
     const elementoPrevio = document.querySelector('.tour-resaltado');
     if (elementoPrevio) {
         elementoPrevio.classList.remove('tour-resaltado');
@@ -380,30 +381,40 @@ function mostrarPasoActual() {
     const tarjeta = document.getElementById('tour-card');
     const tituloEl = document.getElementById('tour-titulo');
     const descEl = document.getElementById('tour-descripcion');
+    const btnAnterior = document.getElementById('btn-anterior-tour');
 
     if (!elementoActual || !tarjeta) return;
 
     // Resaltar elemento activo
     elementoActual.classList.add('tour-resaltado');
 
-    // Actualizar contenido
+    // Actualizar textos
     tituloEl.innerText = pasoInfo.titulo;
     descEl.innerText = pasoInfo.descripcion;
 
-    // Asegurar visibilidad de la tarjeta
+    // Ocultar botón Anterior en el primer paso (paso 0) y mostrarlo en los demás
+    if (btnAnterior) {
+        if (indicePasoActual > 0) {
+            btnAnterior.classList.remove('hidden');
+        } else {
+            btnAnterior.classList.add('hidden');
+        }
+    }
+
+    // Mostrar tarjeta
     tarjeta.classList.remove('hidden');
 
-    // Ubicar tarjeta cerca del elemento
+    // Posicionar tarjeta cerca del elemento
     posicionarTarjeta(elementoActual, tarjeta);
 }
 
+// Calcula la posición de la tarjeta para que no se salga de la pantalla
 function posicionarTarjeta(elemento, tarjeta) {
     const rect = elemento.getBoundingClientRect();
 
     let left = rect.right + 15;
     let top = rect.top;
 
-    // Ajustar si se sale por la derecha de la pantalla
     if (left + 330 > window.innerWidth) {
         left = rect.left - 330;
         if (left < 10) {
@@ -416,6 +427,7 @@ function posicionarTarjeta(elemento, tarjeta) {
     tarjeta.style.top = `${Math.max(10, top)}px`;
 }
 
+// Avanzar al siguiente paso o finalizar
 function siguientePaso() {
     indicePasoActual++;
 
@@ -425,11 +437,18 @@ function siguientePaso() {
         mostrarPasoActual();
     }
 }
-
+// Volver al paso anterior
+function pasoAnterior() {
+    if (indicePasoActual > 0) {
+        indicePasoActual--;
+        mostrarPasoActual();
+    }
+}
 function saltearTour() {
     finalizarTour();
 }
 
+// Cierra el tour y guarda la preferencia en localStorage para este usuario
 function finalizarTour() {
     const tarjeta = document.getElementById('tour-card');
     const overlay = document.getElementById('tour-overlay');
@@ -439,36 +458,11 @@ function finalizarTour() {
     if (overlay) overlay.classList.remove('visible');
     if (elementoResaltado) elementoResaltado.classList.remove('tour-resaltado');
 
-    // Guardar que ESTE usuario en específico ya completó el tour
     const claveTour = obtenerClaveUsuarioTour();
     localStorage.setItem(claveTour, 'true');
 }
 
-// Minimizar y restaurar widget
-function minimizarPomodoro() {
-    const widget = document.getElementById('pomodoro-widget');
-    const panel = document.getElementById('configPanel');
-    if (!widget) return;
-
-    if (panel && panel.classList.contains('open')) {
-        panel.classList.remove('open');
-    }
-
-    widget.classList.add('minimized');
-    widget.classList.remove('hidden');
-    actualizarPantalla();
-}
-
-function restaurarPomodoro() {
-    const widget = document.getElementById('pomodoro-widget');
-    if (!widget) return;
-
-    widget.classList.remove('minimized');
-    widget.classList.remove('hidden');
-    actualizarPantalla();
-}
-
-// Inicialización
+// Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     const widget = document.getElementById('pomodoro-widget');
 
