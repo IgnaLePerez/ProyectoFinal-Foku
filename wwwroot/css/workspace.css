@@ -296,8 +296,9 @@ ul li button {
 
 .config-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
 }
 
 .config-header h1 {
@@ -308,34 +309,34 @@ ul li button {
 }
 
 
-.config-header select {
-  position: relative;
-  display: inline-block;
-  appearance: none;
-  background-color: #FFFFFF;
-  border: 1px solid #D6D2CA;
+.config-mode-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.config-mode-btn {
+  min-height: 36px;
+  padding: 6px 8px;
+  border: 1px solid #6C8EC2;
   border-radius: 10px;
-  padding: 6px 30px 6px 12px;
-  font: var(--texto-boton);
-  font-size: 13px;
-  color: var(--black-rest);
+  background-color: #FFFFFF;
+  color: #4F6D9A;
+  font: 500 12px/1.2 var(--font-commissioner);
   cursor: pointer;
-  outline: none;
-  transition: border-color 0.2s;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.config-header select:focus {
-  border-color: var(--acento-rest);
+.config-mode-btn:hover,
+.config-mode-btn.active {
+  border-color: #4F6D9A;
+  background-color: #4F6D9A;
+  color: #FFFFFF;
 }
 
-.config-arrow {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  font-size: 10px;
-  color: var(--grey-rest);
+.config-mode-btn:focus-visible {
+  outline: 2px solid #6C8EC2;
+  outline-offset: 2px;
 }
 
 .config-body {
@@ -359,7 +360,7 @@ ul li button {
 .config-inputs input {
   width: 52px;
   padding: 6px 8px;
-  border: 1px solid #D6D2CA;
+  border: 1px solid #6C8EC2;
   border-radius: 8px;
   text-align: center;
   font: var(--texto-boton);
@@ -370,7 +371,8 @@ ul li button {
 }
 
 .config-inputs input:focus {
-  border-color: var(--acento-rest);
+  border-color: #4F6D9A;
+  box-shadow: 0 0 0 2px rgba(79, 109, 154, 0.16);
 }
 
 .config-inputs p {
@@ -709,6 +711,7 @@ ul li button {
   color: var(--black-rest);
   letter-spacing: -1px;
   text-align: center;
+  cursor: pointer;
 }
 
 .floating-widget.minimized .actions-col {
@@ -725,6 +728,7 @@ ul li button {
   grid-row: 2;
   max-width: 220px;
   width: 220px;
+  cursor: pointer;
 }
 
 .floating-widget.minimized .header-actions {

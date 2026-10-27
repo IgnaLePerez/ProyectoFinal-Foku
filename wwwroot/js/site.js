@@ -10,6 +10,7 @@ let tiempoRestante = getModeSeconds('concentracion');
 let timerId = null;
 let enEjecucion = false;
 let contadorPomodoros = 0;
+let modoConfiguracion = 'concentracion';
 
 function getModeSeconds(mode) {
     return (modesConfig[mode].min * 60) + modesConfig[mode].sec;
@@ -49,28 +50,36 @@ function toggleConfigPanel() {
     if (panel) {
         panel.classList.toggle('open');
         if (panel.classList.contains('open')) {
-            cargarTiempoEnInputs();
+            seleccionarModoConfiguracion(modoConfiguracion);
             calcularYMostrarRecomendacion();
         }
     }
 }
 
+function seleccionarModoConfiguracion(modo) {
+    if (!modesConfig[modo]) return;
+
+    modoConfiguracion = modo;
+    document.querySelectorAll('.config-mode-btn').forEach(button => {
+        const seleccionado = button.dataset.mode === modo;
+        button.classList.toggle('active', seleccionado);
+        button.setAttribute('aria-pressed', seleccionado);
+    });
+    cargarTiempoEnInputs();
+}
+
 function cargarTiempoEnInputs() {
-    const select = document.getElementById('config-mode-select');
-    if (!select) return;
+    const config = modesConfig[modoConfiguracion];
+    const inputMinutos = document.getElementById('input-custom-min');
+    const inputSegundos = document.getElementById('input-custom-sec');
+    if (!config || !inputMinutos || !inputSegundos) return;
 
-    const modoSeleccionado = select.value;
-    const config = modesConfig[modoSeleccionado];
-
-    document.getElementById('input-custom-min').value = config.min;
-    document.getElementById('input-custom-sec').value = config.sec;
+    inputMinutos.value = config.min;
+    inputSegundos.value = config.sec;
 }
 
 function updateCustomDurations() {
-    const select = document.getElementById('config-mode-select');
-    if (!select) return;
-
-    const modoSeleccionado = select.value;
+    const modoSeleccionado = modoConfiguracion;
     const min = parseInt(document.getElementById('input-custom-min').value) || 0;
     const sec = parseInt(document.getElementById('input-custom-sec').value) || 0;
 
@@ -245,6 +254,25 @@ function abrirPomodoro() {
 function cerrarPomodoro() {
     const widget = document.getElementById('pomodoro-widget');
     if (widget) widget.classList.add('hidden');
+}
+
+function minimizarPomodoro() {
+    const widget = document.getElementById('pomodoro-widget');
+    const panel = document.getElementById('configPanel');
+    if (!widget) return;
+
+    if (panel) panel.classList.remove('open');
+
+    widget.classList.add('minimized');
+    asegurarDentroDePantalla(widget);
+}
+
+function restaurarPomodoro() {
+    const widget = document.getElementById('pomodoro-widget');
+    if (!widget) return;
+
+    widget.classList.remove('minimized');
+    asegurarDentroDePantalla(widget);
 }
 
 function asegurarDentroDePantalla(widget) {
@@ -470,6 +498,17 @@ document.addEventListener('DOMContentLoaded', () => {
         hacerArrastrable(widget);
         actualizarAparienciaModo();
         actualizarPantalla();
+
+        const restaurarAlInteractuar = () => {
+            if (widget.classList.contains('minimized')) restaurarPomodoro();
+        };
+        const display = document.getElementById('timer-display');
+        const progress = widget.querySelector('.timer-progress');
+        if (display) display.addEventListener('click', restaurarAlInteractuar);
+        if (progress) {
+            progress.addEventListener('click', restaurarAlInteractuar);
+            progress.addEventListener('pointerup', restaurarAlInteractuar);
+        }
     }
 
     iniciarTour();

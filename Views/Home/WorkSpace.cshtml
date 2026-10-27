@@ -94,12 +94,11 @@
                 <div class="config-dropdown" id="configPanel">
                     <div class="config-header">
                         <h1>Configurar modo:</h1>
-                        <select id="config-mode-select" onchange="cargarTiempoEnInputs()">
-                            <option value="concentracion">Concentración</option>
-                            <option value="pausaCorta">Pausa corta</option>
-                            <option value="pausalarga">Pausa larga</option>
-                        </select>
-                        <span class="config-arrow"></span>
+                        <div class="config-mode-options" role="group" aria-label="Seleccionar modo para configurar">
+                            <button type="button" class="config-mode-btn active" data-mode="concentracion" aria-pressed="true" onclick="seleccionarModoConfiguracion('concentracion')">Concentración</button>
+                            <button type="button" class="config-mode-btn" data-mode="pausaCorta" aria-pressed="false" onclick="seleccionarModoConfiguracion('pausaCorta')">Pausa corta</button>
+                            <button type="button" class="config-mode-btn" data-mode="pausalarga" aria-pressed="false" onclick="seleccionarModoConfiguracion('pausalarga')">Pausa larga</button>
+                        </div>
                     </div>
                     <div class="config-body">
                         <div class="config-inputs">
