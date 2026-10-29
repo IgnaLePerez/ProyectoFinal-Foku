@@ -61,4 +61,14 @@ public static class BD
         }
         return true;
     }
+
+    public static List<Tarea> GetTareasPorUsuario(int id){
+        List<Tarea> tareas = new List<Tarea>();
+        string query = "select * from Tareas where IdUsuario = @pId";
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            tareas = connection.Query<Tarea>(query, new { pId = id }).ToList();
+        }
+        return tareas;
+    }
 } 

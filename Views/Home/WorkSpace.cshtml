@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foku App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" />
     <link rel="stylesheet" href="~/css/workspace.css">
     <style>
         .workspace-user-group {
@@ -69,6 +70,29 @@
         .workspace-user-popover form button:hover {
             background: #f6f3ee;
         }
+
+        /* Estilos para el widget del calendario */
+        .calendar-widget {
+            /* Estilos generales para el widget del calendario */
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+        }
+
+        .calendar-controls select {
+            padding: 0.25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+        }
+
+        #calendar-container {
+            /* Estilos para el contenedor del calendario */
+        }
     </style>
 </head>
 <body>
@@ -126,7 +150,7 @@
                     </li>
                     <!-- Agregado id="tour-calendario" -->
                     <li>
-                        <button id="tour-calendario">
+                        <button id="tour-calendario" onclick="abrirCalendario()">
                             <img src="~/images/calendar-icon.png" alt="Calendar Icon" class="sidebar-icon-img" />
                             <p>Calendario</p>
                         </button>
@@ -137,6 +161,38 @@
 
         <!-- Zona de trabajo -->
         <div class="workspace-area">
+            <!-- Widget Flotante: Calendario -->
+            <div id="calendar-widget" class="floating-widget calendar-widget hidden">
+                <div class="widget-header">
+                    <div class="title-container">
+                        <h3>Calendario</h3>
+                    </div>
+                    <div class="header-actions">
+                        <button class="close-btn" onclick="cerrarCalendario()" title="Cerrar">&times;</button>
+                    </div>
+                </div>
+
+                <div class="calendar-controls">
+                    <select id="mesCalendario" aria-label="Mes del calendario">
+                        <option value="0">Enero</option>
+                        <option value="1">Febrero</option>
+                        <option value="2">Marzo</option>
+                        <option value="3">Abril</option>
+                        <option value="4">Mayo</option>
+                        <option value="5">Junio</option>
+                        <option value="6">Julio</option>
+                        <option value="7">Agosto</option>
+                        <option value="8">Septiembre</option>
+                        <option value="9">Octubre</option>
+                        <option value="10">Noviembre</option>
+                        <option value="11">Diciembre</option>
+                    </select>
+                    <select id="anioCalendario" aria-label="Año del calendario"></select>
+                </div>
+
+                <div id="calendar-container"></div>
+            </div>
+
             <!-- Widget Flotante: Pomodoro -->
             <div id="pomodoro-widget" class="floating-widget hidden">
                 <div class="widget-header">
@@ -231,7 +287,9 @@
     </div>
 
     <!-- Script del cliente -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <script src="~/js/site.js"></script>
+    <script src="~/js/Calendario.js"></script>
     <script>
         function toggleWorkspaceUserMenu() {
             const menu = document.getElementById('workspaceUserMenu');
@@ -245,6 +303,14 @@
             if (!menu || !button) return;
             if (!menu.contains(event.target) && !button.contains(event.target)) {
                 menu.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const widget = document.getElementById('calendar-widget');
+            if (widget) {
+                widget.style.left = '40px';
+                widget.style.top = '40px';
             }
         });
     </script>
