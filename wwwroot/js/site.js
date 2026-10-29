@@ -513,3 +513,496 @@ document.addEventListener('DOMContentLoaded', () => {
 
     iniciarTour();
 });
+
+function abrirTareas() {
+    const widget = document.getElementById('tasks-widget');
+    if (widget) {
+        widget.classList.remove('hidden');
+        asegurarDentroDePantalla(widget);
+        if (!widget.dataset.ready) {
+            widget.dataset.ready = 'true';
+            cargarEtiquetasTareas();
+            cargarTareas();
+        }
+    }
+}
+
+function cerrarTareas() {
+    const widget = document.getElementById('tasks-widget');
+    if (widget) widget.classList.add('hidden');
+}
+
+async function cargarEtiquetasTareas() {
+    const select = document.getElementById('task-tag-filter');
+    if (!select) return;
+
+    try {
+        const response = await fetch('/Home/GetEtiquetasTareas');
+        if (!response.ok) throw new Error('No se pudieron cargar las etiquetas');
+        const etiquetas = await response.json();
+        select.innerHTML = '<option value="">Tags</option>' + etiquetas.map(tag => 
+            `<option value="${tag.id}">${tag.nombre}</option>`
+        ).join('');
+    } catch (error) {
+        console.error(error);
+        select.innerHTML = '<option value="">Tags</option>';
+    }
+}
+
+async function cargarTareas() {
+    const container = document.getElementById('tasks-list-container');
+    const searchInput = document.getElementById('task-search');
+    const etiquetaSelect = document.getElementById('task-tag-filter');
+    const estadoSelect = document.getElementById('task-status-filter');
+
+    if (!container) return;
+
+    const params = new URLSearchParams();
+    params.set('buscar', searchInput ? searchInput.value.trim() : '');
+    params.set('idEtiqueta', etiquetaSelect ? (etiquetaSelect.value || '') : '');
+    params.set('terminada', estadoSelect ? (estadoSelect.value || '') : '');
+
+    try {
+        const response = await fetch(`/Home/GetTareas?${params.toString()}`);
+        if (!response.ok) throw new Error('No se pudieron cargar las tareas');
+        const tareas = await response.json();
+        renderizarTareas(tareas);
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = '<div class="task-empty">No se pudieron cargar las tareas.</div>';
+    }
+}
+
+function renderizarTareas(tareas) {
+    const container = document.getElementById('tasks-list-container');
+    if (!container) return;
+
+    if (!Array.isArray(tareas) || tareas.length === 0) {
+        container.innerHTML = '<div class="task-empty">No hay tareas.</div>';
+        return;
+    }
+
+    const tareasPendientes = tareas.filter(t => !t.terminada);
+    const tareasTerminadas = tareas.filter(t => t.terminada);
+    const grupos = [tareasPendientes, tareasTerminadas];
+
+    const html = grupos.map((grupo, grupoIndex) => {
+        if (grupo.length === 0) return '';
+
+        const titulo = grupoIndex === 0 ? '' : '<div class="task-divider">Terminadas</div>';
+        return `
+            ${titulo}
+            <div class="task-list-group">
+                ${grupo.map(tarea => `
+                    <div class="task-item ${tarea.terminada ? 'completed' : ''}" data-id="${tarea.id}">
+                        <input type="checkbox" ${tarea.terminada ? 'checked' : ''} data-toggle-task="${tarea.id}" aria-label="Marcar tarea como ${tarea.terminada ? 'no terminada' : 'terminada'}" />
+                        <div class="task-main">
+                            <div class="task-title-row">
+                                <span class="task-name">${escapeHtml(tarea.nombre || 'Sin nombre')}</span>
+                            </div>
+                            <div class="task-description">${escapeHtml(tarea.descripcion || 'Sin descripción')}</div>
+                            <div class="task-tags">
+                                ${(tarea.tags || []).map(tag => `
+                                    <span class="task-tag" style="background:${tag.color || '#e8e5e0'};">
+                                        ${escapeHtml(tag.nombre)}
+                                        <button type="button" class="task-tag-remove" data-remove-tag="${tag.id}" data-task-id="${tarea.id}" aria-label="Quitar etiqueta ${escapeHtml(tag.nombre)}">×</button>
+                                    </span>
+                                `).join('') || '<span class="task-tag" style="background:#e8e5e0;">Sin tags</span>'}
+                                <button type="button" class="task-tag-add" data-open-tag-modal="${tarea.id}" aria-label="Agregar etiquetas a la tarea">Agregar etiquetas</button>
+                            </div>
+                        </div>
+                        <button type="button" class="task-delete-btn" data-delete-task="${tarea.id}" aria-label="Eliminar tarea">Eliminar</button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = html;
+
+    document.querySelectorAll('[data-delete-task]').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            const idTarea = Number(button.dataset.deleteTask);
+            await eliminarTarea(idTarea);
+        });
+    });
+
+    document.querySelectorAll('[data-open-tag-modal]').forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            abrirModalEtiquetas(Number(button.dataset.openTagModal));
+        });
+    });
+
+    document.querySelectorAll('[data-remove-tag]').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            const idTarea = Number(button.dataset.taskId);
+            const idEtiqueta = Number(button.dataset.removeTag);
+            await quitarEtiquetaDeTarea(idTarea, idEtiqueta);
+        });
+    });
+
+    document.querySelectorAll('[data-toggle-task]').forEach(checkbox => {
+        checkbox.addEventListener('change', async (event) => {
+            const id = Number(event.target.dataset.toggleTask);
+            const checked = event.target.checked;
+            await fetch('/Home/ToggleTarea', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, terminada: checked })
+            });
+            await cargarTareas();
+        });
+    });
+}
+
+async function eliminarTarea(idTarea) {
+    if (!idTarea || Number.isNaN(idTarea)) return;
+
+    const confirmed = window.confirm('¿Seguro que querés eliminar esta tarea?');
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch('/Home/DeleteTarea', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idTarea })
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo eliminar la tarea');
+        }
+
+        await cargarTareas();
+    } catch (error) {
+        console.error(error);
+        alert('No se pudo eliminar la tarea.');
+    }
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function abrirFormularioTarea() {
+    const form = document.getElementById('task-add-form');
+    if (!form) return;
+    form.classList.remove('hidden');
+}
+
+function cerrarFormularioTarea() {
+    const form = document.getElementById('task-add-form');
+    if (!form) return;
+    form.classList.add('hidden');
+    const nameInput = document.getElementById('new-task-name');
+    const descInput = document.getElementById('new-task-description');
+    if (nameInput) nameInput.value = '';
+    if (descInput) descInput.value = '';
+}
+
+async function guardarNuevaTarea() {
+    const nombre = document.getElementById('new-task-name')?.value?.trim();
+    const descripcion = document.getElementById('new-task-description')?.value?.trim();
+
+    if (!nombre) {
+        alert('Debe completar el nombre de la tarea');
+        return;
+    }
+
+    try {
+        const response = await fetch('/Home/AddTarea', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, descripcion })
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo crear la tarea');
+        }
+
+        cerrarFormularioTarea();
+        await cargarTareas();
+    } catch (error) {
+        console.error(error);
+        alert('No se pudo guardar la tarea.');
+    }
+}
+
+function inicializarWidgetTareas() {
+    const widget = document.getElementById('tasks-widget');
+    if (!widget) return;
+
+    const searchInput = document.getElementById('task-search');
+    const tagFilter = document.getElementById('task-tag-filter');
+    const statusFilter = document.getElementById('task-status-filter');
+    const addButton = document.getElementById('task-add-button');
+    const cancelButton = document.querySelector('.task-form-cancel');
+    const saveButton = document.querySelector('.task-form-save');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', () => cargarTareas());
+    }
+
+    if (tagFilter) {
+        tagFilter.addEventListener('change', () => cargarTareas());
+    }
+
+    if (statusFilter) {
+        statusFilter.addEventListener('change', () => cargarTareas());
+    }
+
+    if (addButton) {
+        addButton.addEventListener('click', abrirFormularioTarea);
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener('click', cerrarFormularioTarea);
+    }
+
+    if (saveButton) {
+        saveButton.addEventListener('click', guardarNuevaTarea);
+    }
+
+    inicializarModalEtiquetas();
+    hacerArrastrable(widget);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    inicializarWidgetTareas();
+    const widget = document.getElementById('pomodoro-widget');
+
+    if (widget) {
+        hacerArrastrable(widget);
+        actualizarAparienciaModo();
+        actualizarPantalla();
+
+        const restaurarAlInteractuar = () => {
+            if (widget.classList.contains('minimized')) restaurarPomodoro();
+        };
+        const display = document.getElementById('timer-display');
+        const progress = widget.querySelector('.timer-progress');
+        if (display) display.addEventListener('click', restaurarAlInteractuar);
+        if (progress) {
+            progress.addEventListener('click', restaurarAlInteractuar);
+            progress.addEventListener('pointerup', restaurarAlInteractuar);
+        }
+    }
+
+    iniciarTour();
+});
+
+async function quitarEtiquetaDeTarea(idTarea, idEtiqueta) {
+    try {
+        const response = await fetch('/Home/RemoveEtiquetaTarea', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idTarea, idEtiqueta })
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo quitar la etiqueta');
+        }
+
+        await cargarTareas();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function agregarEtiquetaATarea(idTarea, idEtiqueta) {
+    try {
+        const response = await fetch('/Home/AddEtiquetaTarea', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idTarea, idEtiqueta })
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo asociar la etiqueta');
+        }
+
+        await cargarTareas();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function crearEtiquetaDesdeModal() {
+    const inputNombre = document.getElementById('task-tag-new-name');
+    const inputColor = document.getElementById('task-tag-new-color');
+    const modal = document.getElementById('task-tag-modal');
+    const taskId = modal ? Number(modal.dataset.taskId) : 0;
+
+    if (!inputNombre || !inputColor || !taskId) return;
+
+    const nombre = inputNombre.value.trim();
+    const color = inputColor.value;
+    if (!nombre) {
+        inputNombre.focus();
+        return;
+    }
+
+    try {
+        const response = await fetch('/Home/CrearEtiqueta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, color })
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo crear la etiqueta');
+        }
+
+        const nuevaEtiqueta = await response.json();
+        inputNombre.value = '';
+        inputColor.value = '#7c5cff';
+
+        await cargarOpcionesEtiquetasParaTarea(taskId);
+
+        if (nuevaEtiqueta && nuevaEtiqueta.id) {
+            await agregarEtiquetaATarea(taskId, nuevaEtiqueta.id);
+        }
+    } catch (error) {
+        console.error(error);
+        alert('No se pudo crear la etiqueta.');
+    }
+}
+
+function abrirModalEtiquetas(idTarea) {
+    const modal = document.getElementById('task-tag-modal');
+    const options = document.getElementById('task-tag-modal-options-list');
+    if (!modal || !options) return;
+
+    modal.dataset.taskId = String(idTarea);
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+
+    cargarOpcionesEtiquetasParaTarea(idTarea);
+}
+
+function cerrarModalEtiquetas() {
+    const modal = document.getElementById('task-tag-modal');
+    if (!modal) return;
+
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.dataset.taskId = '';
+}
+
+async function cargarOpcionesEtiquetasParaTarea(idTarea) {
+    const options = document.getElementById('task-tag-modal-options-list');
+    if (!options) return;
+
+    try {
+        const response = await fetch('/Home/GetEtiquetasTareas');
+        if (!response.ok) throw new Error('No se pudieron cargar las etiquetas');
+
+        const etiquetas = await response.json();
+        const tareaResponse = await fetch(`/Home/GetTareas`);
+        if (!tareaResponse.ok) throw new Error('No se pudo obtener la tarea');
+
+        const tareas = await tareaResponse.json();
+        const tareaActual = tareas.find(t => Number(t.id) === Number(idTarea));
+        const asignadas = new Set((tareaActual?.tags || []).map(tag => Number(tag.id)));
+
+        options.innerHTML = etiquetas.map(tag => `
+            <button type="button" class="task-tag-option ${asignadas.has(Number(tag.id)) ? 'selected' : ''}" data-tag-option-id="${tag.id}" data-tag-option-name="${escapeHtml(tag.nombre)}" data-tag-option-color="${tag.color || '#e8e5e0'}" data-tag-id="${tag.id}">
+                <span class="task-tag-option-dot" style="background:${tag.color || '#e8e5e0'}; display:inline-block; width:12px; height:12px; border-radius:50%;"></span>
+                <span>${escapeHtml(tag.nombre)}</span>
+                <button type="button" class="task-tag-option-remove" data-delete-tag="${tag.id}" aria-label="Eliminar etiqueta ${escapeHtml(tag.nombre)}">Eliminar</button>
+            </button>
+        `).join('');
+
+        options.querySelectorAll('[data-tag-option-id]').forEach(button => {
+            const tagId = Number(button.dataset.tagOptionId);
+            const isSelected = asignadas.has(tagId);
+
+            button.classList.toggle('selected', isSelected);
+            if (isSelected) {
+                button.style.outline = '2px solid rgba(89,183,107,0.5)';
+                button.style.background = 'rgba(89,183,107,0.09)';
+            } else {
+                button.style.outline = '';
+                button.style.background = '';
+            }
+
+            button.addEventListener('click', async (event) => {
+                if (event.target.closest('.task-tag-option-remove')) {
+                    event.stopPropagation();
+                    await eliminarEtiqueta(tagId);
+                    return;
+                }
+
+                if (asignadas.has(tagId)) {
+                    await quitarEtiquetaDeTarea(idTarea, tagId);
+                    asignadas.delete(tagId);
+                } else {
+                    await agregarEtiquetaATarea(idTarea, tagId);
+                    asignadas.add(tagId);
+                }
+
+                await cargarOpcionesEtiquetasParaTarea(idTarea);
+            });
+        });
+    } catch (error) {
+        console.error(error);
+        options.innerHTML = '<span class="task-empty">No se pudieron cargar las etiquetas.</span>';
+    }
+}
+
+async function eliminarEtiqueta(idEtiqueta) {
+    if (!idEtiqueta || Number.isNaN(idEtiqueta)) return;
+
+    const confirmed = window.confirm('¿Seguro que querés eliminar esta etiqueta?');
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch('/Home/DeleteEtiqueta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idEtiqueta })
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo eliminar la etiqueta');
+        }
+
+        const modal = document.getElementById('task-tag-modal');
+        if (modal && !modal.classList.contains('hidden')) {
+            const taskId = Number(modal.dataset.taskId);
+            await cargarOpcionesEtiquetasParaTarea(taskId);
+        }
+        await cargarTareas();
+    } catch (error) {
+        console.error(error);
+        alert('No se pudo eliminar la etiqueta.');
+    }
+}
+
+function inicializarModalEtiquetas() {
+    document.addEventListener('click', (event) => {
+        const modal = document.getElementById('task-tag-modal');
+        if (!modal || modal.classList.contains('hidden')) return;
+
+        const backdrop = event.target.closest('[data-close-tag-modal="true"]');
+        const closeButton = event.target.closest('.task-tag-modal-close');
+        const modalDialog = event.target.closest('.task-tag-modal-dialog');
+        const tagCreatorButton = event.target.closest('#task-tag-create-button');
+
+        if (tagCreatorButton) {
+            crearEtiquetaDesdeModal();
+            return;
+        }
+
+        if (backdrop || closeButton || (!modalDialog && !event.target.closest('[data-open-tag-modal]'))) {
+            cerrarModalEtiquetas();
+        }
+    });
+}
