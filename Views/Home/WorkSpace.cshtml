@@ -88,6 +88,314 @@
         .workspace-user-popover form button:hover {
             background: #f6f3ee;
         }
+<<<<<<< HEAD
+
+        /* Estilos para el widget del calendario */
+        .calendar-widget {
+            /* Estilos generales para el widget del calendario */
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+        }
+
+        .calendar-controls select {
+            padding: 0.25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+        }
+
+        #calendar-container {
+            /* Estilos para el contenedor del calendario */
+        }
+
+        /* Estilos para el widget de tareas */
+        .tasks-widget {
+            /* Estilos generales para el widget de tareas */
+        }
+
+        .task-widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e7e2d8;
+        }
+
+        .task-header-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .task-header-controls select {
+            padding: 0.25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+        }
+
+        .tasks-widget-body {
+            padding: 0.5rem;
+        }
+
+        .task-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        #task-search {
+            flex: 1;
+            padding: 0.25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+        }
+
+        .task-add-button {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .task-add-button:hover {
+            background: #0056b3;
+        }
+
+        .task-add-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-add-form input,
+        .task-add-form textarea {
+            padding: 0.25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+            width: 100%;
+        }
+
+        .task-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .task-form-cancel,
+        .task-form-save {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task-form-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .task-form-cancel:hover {
+            background: #5a6268;
+        }
+
+        .task-form-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .task-form-save:hover {
+            background: #218838;
+        }
+
+        .tasks-list-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .task-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #e7e2d8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item.completed {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+
+        .task-item .task-info {
+            flex: 1;
+            margin-right: 0.5rem;
+        }
+
+        .task-item .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .task-action-btn {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+
+        .task-action-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Estilos para el modal de etiquetas */
+        .task-tag-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .task-tag-modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .task-tag-modal-dialog {
+            position: relative;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-tag-modal-header {
+            padding: 1rem;
+            background: #f1f1f1;
+            border-bottom: 1px solid #e7e2d8;
+        }
+
+        .task-tag-modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .task-tag-modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .task-tag-modal-options {
+            padding: 1rem;
+        }
+
+        .task-tag-creator {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border: 1px solid #e7e2d8;
+            border-radius: 8px;
+            background: #faf8f5;
+        }
+
+        .task-tag-form-row {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .task-tag-new-name {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d9d2c8;
+            border-radius: 6px;
+        }
+
+        .task-tag-new-color {
+            width: 52px;
+            height: 38px;
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .task-tag-create-button {
+            width: 100%;
+            border: none;
+            border-radius: 6px;
+            background: #28a745;
+            color: white;
+            padding: 0.6rem 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .task-tag-create-button:hover {
+            background: #218838;
+        }
+
+        .task-tag-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .task-tag-option {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-align: left;
+            background: transparent;
+            width: 100%;
+        }
+
+        .task-tag-option:hover {
+            background: #f6f3ee;
+        }
     </style>
 </head>
 <body>
@@ -138,7 +446,7 @@
                     </li>
                     <!-- Agregado id="tour-tareas" -->
                     <li>
-                        <button id="tour-tareas">
+                        <button id="tour-tareas" onclick="abrirTareas()">
                             <img src="/images/tasks-icon.png" alt="Tasks Icon" class="sidebar-icon-img" />
                             <p>Tareas</p>
                         </button>
@@ -231,13 +539,71 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Widget Flotante: Tareas -->
+            <div id="tasks-widget" class="floating-widget tasks-widget hidden">
+                <div class="widget-header task-widget-header">
+                    <div class="title-container">
+                        <h3>Tareas</h3>
+                    </div>
+                    <div class="task-header-controls">
+                        <select id="task-tag-filter" aria-label="Filtrar por tags">
+                            <option value="">Tags</option>
+                        </select>
+                        <select id="task-status-filter" aria-label="Filtrar por estado">
+                            <option value="">Filters</option>
+                            <option value="false">Sin terminar</option>
+                            <option value="true">Terminadas</option>
+                        </select>
+                        <button class="close-btn" onclick="cerrarTareas()" title="Cerrar">&times;</button>
+                    </div>
+                </div>
+
+                <div class="tasks-widget-body">
+                    <div class="task-toolbar">
+                        <input id="task-search" type="text" placeholder="Buscar por nombre o descripción" aria-label="Buscar tarea" />
+                        <button id="task-add-button" type="button" class="btn-main-action task-add-button">Agregar tarea</button>
+                    </div>
+
+                    <div id="task-add-form" class="task-add-form hidden">
+                        <input id="new-task-name" type="text" placeholder="Nombre de la tarea" maxlength="255" />
+                        <textarea id="new-task-description" rows="3" placeholder="Descripcion"></textarea>
+                        <div class="task-form-actions">
+                            <button type="button" class="task-form-cancel">Cancelar</button>
+                            <button type="button" class="task-form-save">Guardar</button>
+                        </div>
+                    </div>
+
+                    <div id="task-tag-modal" class="task-tag-modal hidden" aria-hidden="true">
+                        <div class="task-tag-modal-backdrop" data-close-tag-modal="true"></div>
+                        <div class="task-tag-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="task-tag-modal-title">
+                            <div class="task-tag-modal-header">
+                                <h4 id="task-tag-modal-title">Etiquetas</h4>
+                                <button type="button" class="task-tag-modal-close" aria-label="Cerrar" data-close-tag-modal="true">&times;</button>
+                            </div>
+                            <div class="task-tag-modal-options">
+                                <div class="task-tag-creator">
+                                    <div class="task-tag-form-row">
+                                        <input id="task-tag-new-name" class="task-tag-new-name" type="text" maxlength="50" placeholder="Nombre de la etiqueta" />
+                                        <input id="task-tag-new-color" class="task-tag-new-color" type="color" value="#7c5cff" aria-label="Color de la etiqueta" />
+                                    </div>
+                                    <button type="button" id="task-tag-create-button" class="task-tag-create-button">Crear etiqueta</button>
+                                </div>
+                                <div id="task-tag-modal-options-list" class="task-tag-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tasks-list-container" class="tasks-list-container" aria-live="polite"></div>
+                </div>
+            </div>
         </div>
     </main>
 
     <!-- Estructura HTML limpia para el Tour -->
 
-    <div id="tour-overlay" class="tour-overlay" data-usuario="@(usuario?.Username ?? "invitado")"></div>
-    <div id="tour-card" class="tour-card hidden">
+    <div id="tour-overlay" class="tour-overlay" data-usuario="@(usuario?.Id.ToString() ?? "invitado")"></div>
+        <div id="tour-card" class="tour-card hidden">
         <h3 id="tour-titulo">Paso del Tour</h3>
         <p id="tour-descripcion">Descripción del paso actual.</p>
         <div class="tour-botones">
