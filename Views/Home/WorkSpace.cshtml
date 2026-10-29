@@ -1,8 +1,25 @@
 @using Foku.Models
+@using System.Text.Json
 @{
     ViewData["Title"] = "Foku";
     Layout = null;
     Usuario usuario = ViewBag.user as Usuario;
+    var tareasCalendario = ViewBag.tareas as IEnumerable<Foku.Models.Tarea> ?? new List<Foku.Models.Tarea>();
+    var tareasJson = tareasCalendario
+        .Where(t => t != null && !string.IsNullOrWhiteSpace(t.Nombre))
+        .Select(t => new {
+            id = t.Id,
+            title = t.Nombre,
+            start = (t.FechaLimite ?? t.Fecha ?? DateTime.Today).ToString("yyyy-MM-dd"),
+            allDay = true,
+            backgroundColor = t.Terminada ? "#76c893" : "#FF9509",
+            borderColor = t.Terminada ? "#76c893" : "#FF9509",
+            extendedProps = new {
+                descripcion = t.Descripcion ?? string.Empty,
+                terminada = t.Terminada
+            }
+        })
+        .ToList();
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -12,6 +29,7 @@
     <title>Foku App</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" />
     <link rel="stylesheet" href="~/css/workspace.css">
+    <link rel="stylesheet" href="~/css/workspace-calendario.css">
     <style>
         .workspace-user-group {
             position: relative;
@@ -162,7 +180,7 @@
         <!-- Zona de trabajo -->
         <div class="workspace-area">
             <!-- Widget Flotante: Calendario -->
-            <div id="calendar-widget" class="floating-widget calendar-widget hidden">
+            <div id="calendar-widget" class="floating-widget calendar-widget hidden" data-tareas='@Html.Raw(JsonSerializer.Serialize(tareasJson))'>
                 <div class="widget-header">
                     <div class="title-container">
                         <h3>Calendario</h3>
@@ -287,7 +305,7 @@
     </div>
 
     <!-- Script del cliente -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="~/js/site.js"></script>
     <script src="~/js/Calendario.js"></script>
     <script>

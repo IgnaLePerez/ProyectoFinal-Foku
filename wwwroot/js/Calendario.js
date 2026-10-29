@@ -12,6 +12,7 @@
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
 
+        // Llenar selector de años
         for (let year = currentYear - 5; year <= currentYear + 10; year++) {
             const option = document.createElement('option');
             option.value = String(year);
@@ -22,49 +23,69 @@
 
         monthSelect.value = String(currentDate.getMonth());
 
-        if (window.FullCalendar) {
-            const calendar = new FullCalendar.Calendar(calendarContainer, {
-                initialView: 'dayGridMonth',
-                locale: 'es',
-                headerToolbar: {
-                    left: 'prev,next',
-                    center: 'title',
-                    right: 'today'
-                },
-                buttonText: {
-                    today: 'Hoy'
-                },
-                fixedWeekCount: false,
-                height: 'auto',
-                dayMaxEvents: true,
-                events: [],
-                dateClick: function (info) {
-                    const clickedDate = new Date(info.date);
-                    const selectedDate = clickedDate.toISOString().slice(0, 10);
-                    const existing = calendar.getEventById(selectedDate);
+        // Obtener tareas desde el ViewBag (suponiendo que están en formato JSON en un atributo data-)
+        const tareasDesdeVista = (() => {
+            try {
+                const raw = widget.dataset.tareas || '[]';
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                return [];
+            }
+        })();
 
-                    if (existing) {
-                        existing.remove();
-                        return;
-                    }
+        // Función para renderizar la lista vertical de todos los días del mes
+        function renderizarCalendarioVertical() {
+            const mes = parseInt(monthSelect.value, 10);
+            const anio = parseInt(yearSelect.value, 10);
 
-                    calendar.addEvent({
-                        id: selectedDate,
-                        title: 'Evento',
-                        start: selectedDate,
-                        allDay: true,
-                        backgroundColor: '#FF9509',
-                        borderColor: '#FF9509'
-                    });
-                }
-            });
+            // Obtener el total de días del mes seleccionado
+            const diasEnMes = new Date(anio, mes + 1, 0).getDate();
+            
+            const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-            calendar.render();
-            actualizarCalendarioMes(calendar, monthSelect, yearSelect);
-            monthSelect.addEventListener('change', () => actualizarCalendarioMes(calendar, monthSelect, yearSelect));
-            yearSelect.addEventListener('change', () => actualizarCalendarioMes(calendar, monthSelect, yearSelect));
-            hacerArrastrableCalendario(widget);
+            let html = '<div class="calendario-vertical-list">';
+
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const fechaObj = new Date(anio, mes, dia);
+                const nombreDia = diasSemana[fechaObj.getDay()];
+                
+                // Formato de fecha ISO: YYYY-MM-DD
+                const mesStr = String(mes + 1).padStart(2, '0');
+                const diaStr = String(dia).padStart(2, '0');
+                const fechaClave = `${anio}-${mesStr}-${diaStr}`;
+
+                // Filtrar tareas del día correspondiente
+                const tareasDelDia = tareasDesdeVista.filter((tarea) => tarea.start === fechaClave);
+
+                html += `
+                    <div class="fila-dia" data-fecha="${fechaClave}">
+                        <div class="col-fecha">
+                            <span class="num-dia">${diaStr}</span>
+                            <span class="nom-dia">${nombreDia}</span>
+                        </div>
+                        <div class="col-tareas">
+                            ${tareasDelDia.length ? tareasDelDia.map((tarea) => `
+                                <div class="badge-tarea" data-id="${tarea.id}" style="background:${tarea.backgroundColor}; border-color:${tarea.borderColor};">
+                                    ${tarea.title}
+                                </div>
+                            `).join('') : '<span class="sin-tareas">Sin tareas</span>'}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            calendarContainer.innerHTML = html;
         }
+
+        // Eventos de selección de mes y año
+        monthSelect.addEventListener('change', renderizarCalendarioVertical);
+        yearSelect.addEventListener('change', renderizarCalendarioVertical);
+
+        // Inicializar renderizado
+        renderizarCalendarioVertical();
+        hacerArrastrableCalendario(widget);
     }
 
     if (document.readyState === 'loading') {
@@ -73,15 +94,6 @@
         setupCalendar();
     }
 })();
-
-function actualizarCalendarioMes(calendar, monthSelect, yearSelect) {
-    if (!calendar || !monthSelect || !yearSelect) return;
-
-    const mesSeleccionado = parseInt(monthSelect.value, 10);
-    const anioSeleccionado = parseInt(yearSelect.value, 10);
-    const fecha = new Date(anioSeleccionado, mesSeleccionado, 1);
-    calendar.gotoDate(fecha);
-}
 
 function abrirCalendario() {
     const widget = document.getElementById('calendar-widget');

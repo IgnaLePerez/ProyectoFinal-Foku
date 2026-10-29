@@ -41,6 +41,13 @@ public class HomeController : Controller
 
     public IActionResult WorkSpace()
     {
+        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
+        {
+            return RedirectToAction("VistaLanding");
+        }
+
+        ViewBag.user = BD.GetUsuario(int.Parse(HttpContext.Session.GetString("id")));
+        ViewBag.tareas = BD.GetTareasPorUsuario(int.Parse(HttpContext.Session.GetString("id")));
         return View();
     }
 }
