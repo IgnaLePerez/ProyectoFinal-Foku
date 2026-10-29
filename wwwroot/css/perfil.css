@@ -220,3 +220,135 @@ body.perfil-page {
         align-items: flex-start;
     }
 }
+.perfil-mensaje {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.perfil-mensaje-exito {
+    color: #23643a;
+    background: #eaf6ed;
+    border: 1px solid #b9e2c2;
+}
+
+.perfil-mensaje-error {
+    color: #b42318;
+    background: #fff0ef;
+    border: 1px solid #f2b8b5;
+}
+
+.perfil-field input.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+/* Datos del usuario a la izquierda */
+.perfil-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Nombre y nombre de usuario */
+.perfil-user-meta h1 {
+    margin: 0;
+}
+
+.perfil-user-meta p {
+    margin: 0.4rem 0 0;
+}
+
+/* Tarjeta del perfil */
+.perfil-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+/* Botón para editar */
+.perfil-edit-button {
+    border: none;
+    background: #ff9509;
+    color: white;
+    border-radius: 999px;
+    padding: 0.7rem 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.perfil-edit-button:hover {
+    background: #f58b00;
+}
+
+/* popup */
+.perfil-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+.perfil-modal-backdrop.open {
+    display: flex;
+}
+
+.perfil-modal {
+    background: #fcfbf8;
+    width: 100%;
+    max-width: 520px;
+    border: 1px solid #e8e6e1;
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.perfil-modal h3 {
+    margin: 0 0 1rem;
+    font-family: inherit;
+}
+
+.perfil-modal-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.perfil-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* Mensajes de éxito y error */
+.perfil-mensaje {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.perfil-mensaje-exito {
+    color: #23643a;
+    background: #eaf6ed;
+    border: 1px solid #b9e2c2;
+}
+
+.perfil-mensaje-error {
+    color: #b42318;
+    background: #fff0ef;
+    border: 1px solid #f2b8b5;
+}
+
+/* Error en el nombre de usuario */
+.perfil-field input.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
