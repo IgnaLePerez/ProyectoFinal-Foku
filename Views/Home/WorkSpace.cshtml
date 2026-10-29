@@ -236,8 +236,8 @@
 
     <!-- Estructura HTML limpia para el Tour -->
 
-    <div id="tour-overlay" class="tour-overlay" data-usuario="@(usuario?.Username ?? "invitado")"></div>
-    <div id="tour-card" class="tour-card hidden">
+    <div id="tour-overlay" class="tour-overlay" data-usuario="@(usuario?.Id.ToString() ?? "invitado")"></div>
+        <div id="tour-card" class="tour-card hidden">
         <h3 id="tour-titulo">Paso del Tour</h3>
         <p id="tour-descripcion">Descripción del paso actual.</p>
         <div class="tour-botones">

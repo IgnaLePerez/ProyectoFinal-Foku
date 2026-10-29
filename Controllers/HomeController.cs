@@ -22,12 +22,17 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1"){
+        string? idSesion = HttpContext.Session.GetString("id");
+
+        if (string.IsNullOrEmpty(idSesion) || idSesion == "-1")
+        {
             return RedirectToAction("VistaLanding");
         }
-        ViewBag.eventos = await _calendar.GetEventos();
-        ViewBag.tareas = BD.GetTareasPorUsuario(int.Parse(HttpContext.Session.GetString("id")));
-        return View("WorkSpace");  
+
+        ViewBag.user = BD.GetUsuario(int.Parse(idSesion));
+        ViewBag.tareas = BD.GetTareasPorUsuario(int.Parse(idSesion));
+
+        return View("WorkSpace");
     }
 
     public IActionResult Privacy()

@@ -383,19 +383,26 @@ function obtenerClaveUsuarioTour() {
 function iniciarTour() {
     const claveTour = obtenerClaveUsuarioTour();
 
+    // Comprueba si el tour ya fue completado con el ID actual
     if (localStorage.getItem(claveTour) === 'true') {
         return;
     }
 
-    const overlay = document.getElementById('tour-overlay');
-    if (overlay) {
-        overlay.classList.add('visible');
+    // Recupera el progreso guardado con el nombre de usuario anterior
+    const claveAnterior = 'foku_tour_completado_CamiTesteoPerfil3';
+
+    if (localStorage.getItem(claveAnterior) === 'true') {
+        localStorage.setItem(claveTour, 'true');
+        return;
     }
+
+    const overlay = document.getElementById('tour-overlay');
+
+    if (overlay) overlay.classList.add('visible');
 
     indicePasoActual = 0;
     mostrarPasoActual();
 }
-
 // Muestra la tarjeta y resalta el elemento del paso actual
 function mostrarPasoActual() {
     // Quitar resaltado del paso anterior
