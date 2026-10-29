@@ -272,4 +272,7 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/
 
-# End of https://www.toptal.com/developers/gitignore/api/aspnetcore
+# Secret credentials
+/wwwroot/client_secrets.json
+
+# End of https://www.toptal.com/developers/gitignore/api/aspnetcore"wwwroot/client_secrets.json" 
