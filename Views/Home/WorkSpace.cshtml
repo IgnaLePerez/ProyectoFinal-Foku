@@ -11,13 +11,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foku App</title>
     <link rel="stylesheet" href="~/css/workspace.css">
+    <style>
+        .workspace-user-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .workspace-user-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font: inherit;
+            color: #212225;
+            font-weight: 700;
+            padding: 0.4rem 0.6rem;
+            border-radius: 999px;
+        }
+
+        .workspace-user-button:hover {
+            background: rgba(33, 34, 37, 0.04);
+        }
+
+        .workspace-user-popover {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            border: 1px solid #e7e2d8;
+            border-radius: 14px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+            min-width: 180px;
+            display: none;
+            z-index: 30;
+        }
+
+        .workspace-user-popover.open {
+            display: block;
+        }
+
+        .workspace-user-popover a,
+        .workspace-user-popover form button {
+            display: block;
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: left;
+            text-decoration: none;
+            color: #212225;
+            padding: 0.8rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .workspace-user-popover a:hover,
+        .workspace-user-popover form button:hover {
+            background: #f6f3ee;
+        }
+    </style>
 </head>
 <body>
     <!-- Header superior -->
     <header>
         <div>
-            <img src="/images/logo.png" alt="Foku Logo" />
-            <h1>Foku</h1>
+            <a asp-controller="Home" asp-action="VistaLanding" aria-label="Ir a la landing" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+                <img src="/images/logo.png" alt="Foku Logo" />
+                <h1>Foku</h1>
+            </a>
         </div>
         <div>
             <!-- Agregado id="tour-racha" -->
@@ -25,8 +86,14 @@
                 <h2>@(usuario?.Racha ?? 0)</h2>
                 <img src="/images/racha.png" alt="Racha">
             </div>
-            <div>
-                <p>@(usuario?.Username ?? "Usuario")</p>
+            <div class="workspace-user-group">
+                <button type="button" class="workspace-user-button" onclick="toggleWorkspaceUserMenu()">@(usuario?.Username ?? "Usuario")</button>
+                <div id="workspaceUserMenu" class="workspace-user-popover">
+                    <a asp-controller="Usuario" asp-action="Perfil">Ir al perfil</a>
+                    <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
+                        <button type="submit">Cerrar sesión</button>
+                    </form>
+                </div>
             </div>
         </div>
     </header>
@@ -165,5 +232,21 @@
 
     <!-- Script del cliente -->
     <script src="~/js/site.js"></script>
+    <script>
+        function toggleWorkspaceUserMenu() {
+            const menu = document.getElementById('workspaceUserMenu');
+            if (!menu) return;
+            menu.classList.toggle('open');
+        }
+
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('workspaceUserMenu');
+            const button = document.querySelector('.workspace-user-button');
+            if (!menu || !button) return;
+            if (!menu.contains(event.target) && !button.contains(event.target)) {
+                menu.classList.remove('open');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,193 @@
+@model Foku.Models.Usuario
+@{
+    ViewData["Title"] = "Perfil";
+    Layout = null;
+    var nombreInicial = !string.IsNullOrWhiteSpace(Model?.Nombre) ? Model.Nombre : "Usuario";
+    var usernameInicial = !string.IsNullOrWhiteSpace(Model?.Username) ? Model.Username : "usuario";
+    var mensajeExito = TempData["SuccessPerfil"] as string;
+    var mensajeError = TempData["ErrorPerfil"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil | Foku</title>
+    <link rel="stylesheet" href="~/css/perfil.css" asp-append-version="true" />
+</head>
+<body class="perfil-page">
+    <header class="perfil-header">
+        <div class="perfil-brand">
+            <a asp-controller="Home" asp-action="VistaLanding" aria-label="Ir a la landing">
+                <img src="~/images/LogoCompleto.png" alt="Foku" />
+            </a>
+        </div>
+
+        <nav class="perfil-nav" aria-label="Navegación del perfil">
+            <a class="perfil-btn-secondary" asp-controller="Home" asp-action="Index">Volver al workspace</a>
+            <a class="perfil-btn-secondary" asp-controller="Home" asp-action="VistaLanding">Landing</a>
+        </nav>
+    </header>
+
+    <main class="perfil-main">
+        <section class="perfil-card" aria-label="Información del usuario">
+            <div class="perfil-avatar" aria-hidden="true">@((nombreInicial.Substring(0, 1)).ToUpperInvariant())</div>
+            <div class="perfil-user-meta">
+                <div class="perfil-header-row">
+                    <h1>@nombreInicial</h1>
+                    <button type="button" class="perfil-edit-button" onclick="openPerfilModal()">Editar perfil</button>
+                </div>
+                <p>@usernameInicial</p>
+            </div>
+        </section>
+
+
+
+        <div id="perfilModal" class="perfil-modal-backdrop" aria-hidden="true">
+            <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="perfilModalTitle">
+                <h3 id="perfilModalTitle">Editar perfil</h3>
+                <form asp-controller="Usuario" asp-action="EditarPerfil" method="post" class="perfil-modal-form" id="modalPerfilForm">
+                    <div class="perfil-field">
+                        <label for="modalNombre">Nombre</label>
+                        <input id="modalNombre" name="nombre" type="text" value="@Model.Nombre" required />
+                    </div>
+
+                    <div class="perfil-field">
+                        <label for="modalUsuario">Nombre de usuario</label>
+                        <input id="modalUsuario" name="nombreUsuario" type="text" value="@Model.Username" required />
+                    </div>
+
+                    <div class="perfil-modal-actions">
+                        <button type="button" class="perfil-btn-secondary" onclick="closePerfilModal()">Cancelar</button>
+                        <button type="submit" class="perfil-submit-btn">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <form class="perfil-logout-form" asp-controller="Usuario" asp-action="CerrarSesion" method="post">
+            <button type="submit" class="perfil-logout-btn">Cerrar sesión</button>
+        </form>
+    </main>
+
+    <script>
+        function openPerfilModal() {
+            const modal = document.getElementById('perfilModal');
+            if (modal) modal.classList.add('open');
+        }
+
+        function closePerfilModal() {
+            const modal = document.getElementById('perfilModal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        document.addEventListener('click', function (event) {
+            const modal = document.getElementById('perfilModal');
+            if (!modal) return;
+            if (event.target === modal) {
+                closePerfilModal();
+            }
+        });
+
+        const modalForm = document.getElementById('modalPerfilForm');
+        if (modalForm) {
+            modalForm.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                const nombre = document.getElementById('modalNombre').value.trim();
+                const usuario = document.getElementById('modalUsuario').value.trim();
+                const usuarioActual = '@Model.Username';
+
+                if (!nombre || !usuario) {
+                    alert('Nombre y nombre de usuario son obligatorios.');
+                    return;
+                }
+
+                if (usuario.length < 4 || usuario.length > 20 || !/^[a-zA-Z0-9_]+$/.test(usuario)) {
+                    alert('El nombre de usuario debe tener entre 4 y 20 caracteres y solo letras, números o guion bajo.');
+                    return;
+                }
+
+                if (usuario.toLowerCase() !== usuarioActual.toLowerCase()) {
+                    try {
+                        const response = await fetch('/Usuario/NombreUsuarioValido?nombreUsuario=' + encodeURIComponent(usuario), {
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        const data = await response.json();
+                        if (!data) {
+                            alert('Ese nombre de usuario ya está en uso.');
+                            return;
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        alert('No se pudo verificar el nombre de usuario.');
+                        return;
+                    }
+                }
+
+                document.getElementById('nombre').value = nombre;
+                document.getElementById('nombreUsuario').value = usuario;
+                document.getElementById('formPerfil').submit();
+            });
+        }
+    </script>
+</body>
+</html>
+
+<style>
+    .perfil-header-row {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .perfil-edit-button {
+        border: none;
+        background: #ff9509;
+        color: white;
+        border-radius: 999px;
+        padding: 0.6rem 1rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .perfil-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(17, 17, 17, 0.35);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .perfil-modal-backdrop.open {
+        display: flex;
+    }
+
+    .perfil-modal {
+        background: white;
+        width: min(520px, calc(100% - 2rem));
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        padding: 1.5rem;
+    }
+
+    .perfil-modal h3 {
+        margin: 0 0 1rem;
+    }
+
+    .perfil-modal-form {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .perfil-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+</style>

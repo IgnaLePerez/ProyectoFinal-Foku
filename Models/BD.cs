@@ -40,6 +40,15 @@ public static class BD
         }
     }
 
+    public static void ActualizarUsuario(int id, string nombre, string username)
+    {
+        string query = "UPDATE Usuarios SET Nombre = @pNombre, Username = @pUsername WHERE ID = @pId";
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Execute(query, new { pId = id, pNombre = nombre, pUsername = username });
+        }
+    }
+
     public static bool NombreUsuarioValido(string nombreUsuario){
         string query = "exec GetCantidadUsuariosConNombre @pUsername";
         using (SqlConnection connection = new SqlConnection(_connectionString))

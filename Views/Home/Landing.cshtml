@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Foku";
+    var usuarioLogueado = Context.Session.GetString("id");
+    var usuarioActual = string.IsNullOrEmpty(usuarioLogueado) || usuarioLogueado == "-1" ? null : Foku.Models.BD.GetUsuario(int.Parse(usuarioLogueado));
 }
 
 
@@ -10,6 +12,62 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Foku | Home</title>
         <link rel="stylesheet" href="~/css/estilo.css" asp-append-version="true">
+        <style>
+            .user-menu-wrapper {
+                position: relative;
+                display: inline-block;
+            }
+
+            .user-menu-button {
+                background: #f0f0f0;
+                border: 1px solid #ddd;
+                border-radius: 999px;
+                padding: 0.7rem 1.1rem;
+                cursor: pointer;
+                font-weight: 700;
+                color: #212225;
+            }
+
+            .user-menu {
+                position: absolute;
+                top: calc(100% + 10px);
+                right: 0;
+                background: white;
+                border: 1px solid #e7e2d8;
+                border-radius: 16px;
+                box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+                min-width: 220px;
+                display: none;
+                z-index: 20;
+            }
+
+            .user-menu.open {
+                display: block;
+            }
+
+            .user-menu a,
+            .user-menu form button {
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: transparent;
+                border: none;
+                padding: 0.9rem 1rem;
+                color: #212225;
+                text-decoration: none;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .user-menu a:hover,
+            .user-menu form button:hover {
+                background: #f8f5f0;
+            }
+
+            .user-menu form {
+                margin: 0;
+            }
+        </style>
     </head>
     <body>
         <header class="navbar">
@@ -22,8 +80,24 @@
                     <a href="#experiencias">Experiencias</a>
                 </nav>
                 <div class="nav-auth">
-                    <a class="btnGrey" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
-                    <a class="btnAcento" asp-controller="Usuario" asp-action="VistaIniciarSesion">Iniciar sesión</a>
+                    @if (usuarioActual != null)
+                    {
+                        <div class="user-menu-wrapper">
+                            <button type="button" class="user-menu-button" onclick="toggleUserMenu()">@usuarioActual.Username</button>
+                            <div class="user-menu" id="userMenu">
+                                <a asp-controller="Home" asp-action="Index">Ir al workspace</a>
+                                <a asp-controller="Usuario" asp-action="Perfil">Ir al perfil</a>
+                                <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
+                                    <button type="submit">Cerrar sesión</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="btnGrey" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
+                        <a class="btnAcento" asp-controller="Usuario" asp-action="VistaIniciarSesion">Iniciar sesión</a>
+                    }
                 </div>
             </div>
         </header>
@@ -179,5 +253,22 @@
                 <p>© 2026 Foku. Todos los derechos reservados. | <a href="#">Política de privacidad</a></p>
             </div>
         </footer>
+
+        <script>
+            function toggleUserMenu() {
+                const menu = document.getElementById('userMenu');
+                if (!menu) return;
+                menu.classList.toggle('open');
+            }
+
+            document.addEventListener('click', function (event) {
+                const menu = document.getElementById('userMenu');
+                const button = document.querySelector('.user-menu-button');
+                if (!menu || !button) return;
+                if (!menu.contains(event.target) && !button.contains(event.target)) {
+                    menu.classList.remove('open');
+                }
+            });
+        </script>
     </body>
 </html>
