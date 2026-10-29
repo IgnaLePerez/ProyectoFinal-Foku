@@ -1,8 +1,12 @@
+using Foku.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSession();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<Calendar>();
 
 var app = builder.Build();
 

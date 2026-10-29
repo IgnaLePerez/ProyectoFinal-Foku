@@ -7,10 +7,12 @@ namespace Foku.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly Calendar _calendar;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, Calendar calendar)
     {
         _logger = logger;
+        _calendar = calendar;
     }
 
     public IActionResult VistaLanding()
@@ -18,12 +20,12 @@ public class HomeController : Controller
         return View("Landing");
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1"){
             return RedirectToAction("VistaLanding");
         }
-        ViewBag.user = BD.GetUsuario(int.Parse(HttpContext.Session.GetString("id")));
+        ViewBag.eventos = await _calendar.GetEventos();
         ViewBag.tareas = BD.GetTareasPorUsuario(int.Parse(HttpContext.Session.GetString("id")));
         return View("WorkSpace");  
     }
