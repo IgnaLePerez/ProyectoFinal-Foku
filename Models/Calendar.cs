@@ -20,13 +20,14 @@ public class Calendar{
         {
             // El FileDataStore guardará los tokens localmente en una carpeta para no pedir login cada vez
             string credPath = "token.json";
-            
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 GoogleClientSecrets.FromStream(stream).Secrets,
                 new[] { CalendarService.Scope.CalendarReadonly }, // Permiso de solo lectura
                 "user", // ID del usuario actual en tu sistema (puedes dinamizarlo)
                 CancellationToken.None,
                 new FileDataStore(credPath, true));
+
+                Console.WriteLine(credential);
         }
 
         // 2. Inicializar el servicio de la API de Google Calendar
