@@ -755,3 +755,122 @@ ul li button {
 .floating-widget:not(.minimized) .open-btn {
   display: none;
 }
+
+/* WIDGET CALENDARIO */
+.calendar-widget {
+  width: 560px;
+  max-width: calc(100vw - 80px);
+  min-height: 520px;
+  background-color: #F2F0EB;
+}
+
+.calendar-widget .widget-header {
+  margin-bottom: 16px;
+}
+
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+.calendar-controls select {
+  flex: 1;
+  min-height: 40px;
+  border: 1px solid #D9D5CE;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 0 12px;
+  color: #212225;
+  font: 500 16px/1.2 var(--font-commissioner);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #212225 50%), linear-gradient(135deg, #212225 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+#calendar-container {
+  width: 100%;
+  min-height: 360px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+#calendar-container .fc {
+  background: transparent;
+  color: #212225;
+  font-family: var(--font-commissioner);
+}
+
+#calendar-container .fc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 0 4px;
+}
+
+#calendar-container .fc-toolbar-title {
+  font: 700 20px/1.2 var(--font-jost);
+  color: #212225;
+}
+
+#calendar-container .fc-button {
+  background: #F7F4EF;
+  border: 1px solid #D9D5CE;
+  color: #212225;
+  border-radius: 10px;
+  padding: 6px 10px;
+  text-transform: capitalize;
+  font: 600 13px/1 var(--font-commissioner);
+  box-shadow: none;
+}
+
+#calendar-container .fc-button:hover {
+  background: #F1EDE5;
+}
+
+#calendar-container .fc-daygrid-day {
+  border-color: rgba(33, 34, 37, 0.08);
+}
+
+#calendar-container .fc-daygrid-day-number {
+  color: #212225;
+  font: 600 14px/1.2 var(--font-commissioner);
+  padding: 8px;
+}
+
+#calendar-container .fc-col-header-cell {
+  background: rgba(255,255,255,0.18);
+  color: #5D5E65;
+  font: 600 13px/1.2 var(--font-commissioner);
+  text-transform: uppercase;
+  padding: 8px 0;
+}
+
+#calendar-container .fc-day-today {
+  background: rgba(255, 149, 9, 0.08) !important;
+}
+
+@media (max-width: 768px) {
+  .calendar-widget {
+    width: min(92vw, 420px);
+    min-height: 480px;
+  }
+
+  .calendar-controls {
+    flex-direction: column;
+  }
+
+  #calendar-container .fc-toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
