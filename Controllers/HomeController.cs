@@ -49,15 +49,17 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
-    public IActionResult WorkSpace()
+    public async Task<IActionResult> WorkSpace()
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
             return RedirectToAction("VistaLanding");
         }
 
-        ViewBag.user = BD.GetUsuario(int.Parse(HttpContext.Session.GetString("id")));
-        ViewBag.tareas = BD.GetTareasPorUsuario(int.Parse(HttpContext.Session.GetString("id")));
+        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
+        ViewBag.user = BD.GetUsuario(usuarioId);
+        ViewBag.tareas = BD.GetTareasPorUsuario(usuarioId);
+        ViewBag.eventos = await _calendar.GetEventos();
         return View();
     }
 

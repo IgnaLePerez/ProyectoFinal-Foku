@@ -295,9 +295,10 @@ function asegurarDentroDePantalla(widget) {
 }
 
 function hacerArrastrable(widget) {
+    let dragging = false;
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     const header = widget.querySelector('.widget-header');
-    
+
     if (header) {
         header.onmousedown = arrastrarMouseDown;
     }
@@ -305,6 +306,7 @@ function hacerArrastrable(widget) {
     function arrastrarMouseDown(e) {
         if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
 
+        dragging = true;
         e.preventDefault();
         pos3 = e.clientX;
         pos4 = e.clientY;
@@ -313,28 +315,30 @@ function hacerArrastrable(widget) {
     }
 
     function elementoArrastrado(e) {
+        if (!dragging) return;
+
         e.preventDefault();
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
         pos4 = e.clientY;
 
-        let nuevoTop = widget.offsetTop - pos2;
-        let nuevoLeft = widget.offsetLeft - pos1;
+        const currentLeft = widget.offsetLeft;
+        const currentTop = widget.offsetTop;
+        const nuevoTop = currentTop - pos2;
+        const nuevoLeft = currentLeft - pos1;
 
-        const maxLeft = window.innerWidth - widget.offsetWidth;
-        const maxTop = window.innerHeight - widget.offsetHeight;
+        widget.style.left = `${Math.max(0, Math.min(nuevoLeft, window.innerWidth - widget.offsetWidth))}px`;
+        widget.style.top = `${Math.max(0, Math.min(nuevoTop, window.innerHeight - widget.offsetHeight))}px`;
 
-        nuevoLeft = Math.max(0, Math.min(nuevoLeft, maxLeft));
-        nuevoTop = Math.max(0, Math.min(nuevoTop, maxTop));
-
-        widget.style.top = `${nuevoTop}px`;
-        widget.style.left = `${nuevoLeft}px`;
+        asegurarDentroDePantalla(widget);
     }
 
     function cerrarArrastre() {
+        dragging = false;
         document.onmousemove = null;
         document.onmouseup = null;
+        asegurarDentroDePantalla(widget);
     }
 }
 

@@ -1,5 +1,6 @@
 @using Foku.Models
 @using System.Text.Json
+@using Google.Apis.Calendar.v3.Data
 @{
     ViewData["Title"] = "Foku";
     Layout = null;
@@ -20,6 +21,28 @@
             }
         })
         .ToList();
+
+    var eventosModel = ViewBag.eventos as Events;
+    var eventosJson = eventosModel?.Items != null
+        ? JsonSerializer.Serialize(eventosModel.Items.Select(e => {
+            var startValue = e.Start != null
+                ? (e.Start.DateTime.HasValue ? e.Start.DateTime.Value.ToString("yyyy-MM-ddTHH:mm:ss") : e.Start.Date ?? DateTime.MinValue.ToString("yyyy-MM-dd"))
+                : DateTime.MinValue.ToString("yyyy-MM-dd");
+
+            var endValue = e.End != null
+                ? (e.End.DateTime.HasValue ? e.End.DateTime.Value.ToString("yyyy-MM-ddTHH:mm:ss") : e.End.Date ?? DateTime.MinValue.ToString("yyyy-MM-dd"))
+                : DateTime.MinValue.ToString("yyyy-MM-dd");
+
+            return new {
+                id = e.Id,
+                title = e.Summary ?? "Evento",
+                start = startValue,
+                end = endValue,
+                allDay = e.Start?.Date != null || e.End?.Date != null,
+                color = "#7c80ff"
+            };
+        }))
+        : "[]";
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -88,7 +111,6 @@
         .workspace-user-popover form button:hover {
             background: #f6f3ee;
         }
-<<<<<<< HEAD
 
         /* Estilos para el widget del calendario */
         .calendar-widget {
@@ -396,6 +418,165 @@
         .task-tag-option:hover {
             background: #f6f3ee;
         }
+
+        /* Estilos para el popup del calendario */
+        #calendar-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        #calendar-popup.hidden {
+            display: none !important;
+        }
+
+        #calendar-popup-header {
+            padding: 1rem;
+            background: #f1f1f1;
+            border-bottom: 1px solid #e7e2d8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #calendar-popup-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        #calendar-popup-close {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        #calendar-popup-body {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        #calendar-event-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        #calendar-event-form input,
+        #calendar-event-form textarea {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+            width: 100%;
+        }
+
+        #calendar-event-form button {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+
+        #calendar-event-form button:hover {
+            background: #0056b3;
+        }
+
+        /* Estilos para el fondo del popup del calendario */
+        .calendar-popup-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+        }
+
+        /* Estilos específicos para el widget de calendario en el popup */
+        .calendar-widget {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e7e2d8;
+        }
+
+        .calendar-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .calendar-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .calendar-controls select {
+            padding: 0.25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            color: #333;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-day {
+            padding: 0.5rem;
+            border: 1px solid transparent;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .calendar-day:hover {
+            background: #f6f3ee;
+        }
+
+        .calendar-event {
+            background: #007bff;
+            color: white;
+            padding: 0.25rem;
+            border-radius: 4px;
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .calendar-event:hover {
+            background: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -597,6 +778,35 @@
                     <div id="tasks-list-container" class="tasks-list-container" aria-live="polite"></div>
                 </div>
             </div>
+
+            <!-- Popup del calendario -->
+            <div id="calendar-popup" class="floating-widget calendar-widget hidden">
+                <div class="widget-header">
+                    <div class="title-container">
+                        <h3>Calendario</h3>
+                    </div>
+                    <div class="header-actions">
+                        <button class="close-btn" onclick="cerrarCalendario()" title="Cerrar">&times;</button>
+                    </div>
+                </div>
+
+                <div class="calendar-controls">
+                    <select id="calendar-month" aria-label="Mes del calendario"></select>
+                    <input id="calendar-year" type="number" min="2006" step="1" aria-label="Año del calendario" />
+                </div>
+
+                <div class="calendar-weekdays">
+                    <span>Dom</span>
+                    <span>Lun</span>
+                    <span>Mar</span>
+                    <span>Mié</span>
+                    <span>Jue</span>
+                    <span>Vie</span>
+                    <span>Sáb</span>
+                </div>
+
+                <div id="calendar-grid" class="calendar-grid"></div>
+            </div>
         </div>
     </main>
 
@@ -642,6 +852,8 @@
                 widget.style.top = '40px';
             }
         });
+
+        window.calendarEventosRaw = @Html.Raw(eventosJson);
     </script>
 </body>
 </html>
