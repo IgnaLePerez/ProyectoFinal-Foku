@@ -154,3 +154,15 @@ if (
 ) {
     openPerfilModal();
 }
+// Cambiar foto de perfil
+
+const inputFotoPerfil = document.getElementById('inputFotoPerfil');
+const formFotoPerfil = document.getElementById('formFotoPerfil');
+
+if (inputFotoPerfil && formFotoPerfil) {
+    inputFotoPerfil.addEventListener('change', function () {
+        if (inputFotoPerfil.files.length > 0) {
+            formFotoPerfil.submit();
+        }
+    });
+}
