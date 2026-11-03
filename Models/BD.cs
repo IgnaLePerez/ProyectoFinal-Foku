@@ -40,12 +40,34 @@ public static class BD
         }
     }
 
-    public static void ActualizarUsuario(int id, string nombre, string username)
+    public static int ActualizarUsuario(int id, string nombre, string username)
     {
         string query = "UPDATE Usuarios SET Nombre = @pNombre, Username = @pUsername WHERE ID = @pId";
+
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            connection.Execute(query, new { pId = id, pNombre = nombre, pUsername = username });
+            int filasModificadas = connection.Execute(query, new
+            {
+                pId = id,
+                pNombre = nombre,
+                pUsername = username
+            });
+
+            return filasModificadas;
+        }
+    }
+
+    public static void ActualizarFotoPerfil(int id, string fotoPerfil)
+    {
+        string query = "UPDATE Usuarios SET FotoPerfil = @pFotoPerfil WHERE ID = @pId";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Execute(query, new
+            {
+                pId = id,
+                pFotoPerfil = fotoPerfil
+            });
         }
     }
 

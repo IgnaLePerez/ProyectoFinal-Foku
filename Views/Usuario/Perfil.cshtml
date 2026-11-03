@@ -15,8 +15,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil | Foku</title>
     <link rel="stylesheet" href="~/css/perfil.css" asp-append-version="true" />
+    <script src="~/js/Perfil.js" asp-append-version="true" defer></script>
 </head>
-<script src="~/js/Perfil.js" asp-append-version="true"></script>
+
 <body class="perfil-page">
     <header class="perfil-header">
         <div class="perfil-brand">
@@ -47,19 +48,36 @@
     }
         <section class="perfil-card" aria-label="Información del usuario">
         <div class="perfil-user-info">
-            <div class="perfil-avatar" aria-hidden="true">
+        <div class="perfil-avatar">
+            @if (!string.IsNullOrWhiteSpace(Model.FotoPerfil))
+            {
+                <img src="@Model.FotoPerfil" alt="Foto de perfil" />
+            }
+            else
+            {
                 @nombreInicial.Substring(0, 1).ToUpperInvariant()
+            }
             </div>
             <div class="perfil-user-meta">
                 <h1>@nombreInicial</h1>
                 <p>@@@usernameInicial</p>
+                <form asp-controller="Usuario"
+                    asp-action="CambiarFotoPerfil"
+                    method="post"
+                    enctype="multipart/form-data"
+                    id="formFotoPerfil"
+                    class="perfil-foto-form">
+                    <label for="inputFotoPerfil" class="perfil-btn-secondary">Cambiar foto</label>
+                    <input type="file"
+                        id="inputFotoPerfil"
+                        name="foto"
+                        accept="image/*"
+                        hidden />
+                </form>
             </div>
         </div>
         <button type="button" class="perfil-edit-button" onclick="openPerfilModal()"> Editar perfil</button>
     </section>
-
-
-
         <div id="perfilModal" class="perfil-modal-backdrop" aria-hidden="true">
             <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="perfilModalTitle">
                 <h3 id="perfilModalTitle">Editar perfil</h3>

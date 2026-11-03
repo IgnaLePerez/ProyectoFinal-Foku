@@ -31,10 +31,37 @@
         </div>
         <div class="checkbox-container">
             <input type="checkbox" id="aceptoTerminos" name="aceptoTerminos" required>
-            <label for="aceptoTerminos">Acepto los términos y condiciones</label>
+            <label for="aceptoTerminos">
+                Acepto los
+                <a href="#" id="abrirTerminos">términos y condiciones</a>
+            </label>
         </div>
         <input type="submit" class="btnAcento" value="Registrarse">
         </form>
+        <div id="modalTerminos" class="terminos-modal-fondo" aria-hidden="true">
+        <div class="terminos-modal" role="dialog" aria-modal="true" aria-labelledby="tituloTerminos">
+            <h2 id="tituloTerminos">Términos y condiciones</h2>
+            <div class="terminos-contenido">
+                <h3>1. Sobre Foku</h3>
+                <p>Foku es una plataforma digital diseñada para acompañar a estudiantes universitarios con TDAH, ofreciendo herramientas que facilitan la organización, la gestión del tiempo y el seguimiento de actividades académicas.</p>
+                <h3>2. Registro y cuenta de usuario</h3>
+                <p> Para utilizar la plataforma, el usuario deberá proporcionar información verdadera y mantener la confidencialidad de sus datos de acceso. Cada usuario es responsable del uso de su cuenta.</p>
+                <h3>3. Uso de las herramientas</h3>
+                <p>Las herramientas de Foku están destinadas a facilitar la organización y el estudio. La plataforma funciona como un apoyo complementario y no reemplaza el acompañamiento académico, profesional o institucional.</p>
+                <h3>4. Privacidad y datos personales</h3>
+                <p>La información proporcionada por los usuarios será utilizada para el funcionamiento de la plataforma. Foku se compromete a tratar esos datos de manera responsable y a no utilizarlos para finalidades ajenas al servicio sin la debida autorización.</p>
+                <h3>5. Uso responsable</h3>
+                <p>Los usuarios se comprometen a utilizar Foku de manera adecuada, sin realizar acciones que perjudiquen el funcionamiento de la plataforma o afecten a otros usuarios.</p>
+                <h3>6. Modificaciones</h3>
+                <p>Foku podrá actualizar sus herramientas y estos términos cuando sea necesario. Los cambios importantes deberán comunicarse a los usuarios.</p>
+                <h3>7. Aceptación</h3>
+                <p>Al marcar la casilla de aceptación durante el registro, el usuario declara haber leído y aceptado estos términos y condiciones.</p>
+            </div>
+            <div class="terminos-acciones">
+                <button type="button" id="continuarTerminos" class="btnAcento">Continuar</button>
+            </div>
+        </div>
+        </div>
     </div>
     <p>¿Ya tienes una cuenta? <a href="@Url.Action(action: "VistaIniciarSesion", controller: "Usuario")">Inicia sesión</a></p>
 </section>

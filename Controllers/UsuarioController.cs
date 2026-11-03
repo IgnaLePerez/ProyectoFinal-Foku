@@ -6,6 +6,12 @@ namespace Foku.Controllers;
 
 public class UsuarioController : Controller
 {
+    private readonly IWebHostEnvironment _environment;
+    public UsuarioController(IWebHostEnvironment environment)
+    {
+        _environment = environment;
+    }
+
     public IActionResult VistaIniciarSesion()
     {
         return View("IniciarSesion");
@@ -116,6 +122,82 @@ public class UsuarioController : Controller
 
         BD.ActualizarUsuario(usuarioActual.Id, nuevoNombre, nuevoUsuario);
         TempData["SuccessPerfil"] = "Perfil actualizado correctamente.";
+        return RedirectToAction("Perfil");
+    }
+
+    [HttpPost]
+public IActionResult CambiarFotoPerfil(IFormFile foto)
+{
+    string? idSesion = HttpContext.Session.GetString("id");
+
+    if (string.IsNullOrEmpty(idSesion) || idSesion == "-1")
+    {
+        return RedirectToAction("VistaLanding", "Home");
+    }
+
+    Usuario usuario = BD.GetUsuario(int.Parse(idSesion));
+
+    if (usuario == null)
+    {
+        HttpContext.Session.Clear();
+        return RedirectToAction("VistaLanding", "Home");
+    }
+
+    if (foto == null || foto.Length == 0)
+    {
+        TempData["ErrorPerfil"] = "Seleccioná una imagen.";
+        return RedirectToAction("Perfil");
+    }
+
+    if (foto.Length > 5 * 1024 * 1024)
+    {
+        TempData["ErrorPerfil"] = "La imagen no puede superar los 5 MB.";
+        return RedirectToAction("Perfil");
+    }
+
+    string extension = Path.GetExtension(foto.FileName).ToLowerInvariant();
+
+    if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+    {
+        TempData["ErrorPerfil"] = "Solo se permiten imágenes JPG, JPEG o PNG.";
+        return RedirectToAction("Perfil");
+    }
+
+    string carpeta = Path.Combine(_environment.WebRootPath, "uploads", "perfiles");
+
+    if (!Directory.Exists(carpeta))
+    {
+        Directory.CreateDirectory(carpeta);
+    }
+
+    string nombreArchivo = Guid.NewGuid().ToString() + extension;
+    string rutaArchivo = Path.Combine(carpeta, nombreArchivo);
+
+    using (var stream = new FileStream(rutaArchivo, FileMode.Create))
+    {
+        foto.CopyTo(stream);
+    }
+
+    string rutaFoto = "/uploads/perfiles/" + nombreArchivo;
+
+    // Eliminar la foto anterior, si existe
+    if (!string.IsNullOrWhiteSpace(usuario.FotoPerfil))
+    {
+            string rutaAnterior = Path.Combine(
+                _environment.WebRootPath,
+                usuario.FotoPerfil.TrimStart('/').Replace('/', Path.DirectorySeparatorChar)
+            );
+
+            if (System.IO.File.Exists(rutaAnterior))
+            {
+                System.IO.File.Delete(rutaAnterior);
+            }
+        }
+
+        BD.ActualizarFotoPerfil(usuario.Id, rutaFoto);
+
+        TempData["SuccessPerfil"] = "Foto de perfil actualizada correctamente.";
+
         return RedirectToAction("Perfil");
     }
 }

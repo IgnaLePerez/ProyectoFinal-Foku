@@ -9,6 +9,7 @@ public class Usuario{
     public string Email { get; set; }
     public string Contraseña { get; set; }
     public int Racha { get; set; }
+    public string? FotoPerfil { get; set; }
 
     public Usuario(){}
 
