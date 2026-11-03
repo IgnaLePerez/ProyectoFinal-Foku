@@ -57,6 +57,20 @@ public static class BD
         }
     }
 
+    public static void ActualizarFotoPerfil(int id, string fotoPerfil)
+    {
+        string query = "UPDATE Usuarios SET FotoPerfil = @pFotoPerfil WHERE ID = @pId";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Execute(query, new
+            {
+                pId = id,
+                pFotoPerfil = fotoPerfil
+            });
+        }
+    }
+
     public static bool NombreUsuarioValido(string nombreUsuario){
         string query = "exec GetCantidadUsuariosConNombre @pUsername";
         using (SqlConnection connection = new SqlConnection(_connectionString))
