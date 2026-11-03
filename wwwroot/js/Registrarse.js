@@ -86,3 +86,54 @@ const formRegistrarse = document.getElementById('formRegistrarse');
 if (formRegistrarse) {
     formRegistrarse.addEventListener('submit', validarCampos);
 }
+// POPUP DE TÉRMINOS Y CONDICIONES
+
+const modalTerminos = document.getElementById('modalTerminos');
+const abrirTerminos = document.getElementById('abrirTerminos');
+const cancelarTerminos = document.getElementById('cancelarTerminos');
+const continuarTerminos = document.getElementById('continuarTerminos');
+
+// Abrir el popup
+if (abrirTerminos) {
+    abrirTerminos.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        modalTerminos.classList.add('abierto');
+        modalTerminos.setAttribute('aria-hidden', 'false');
+    });
+}
+
+// Cerrar el popup
+function cerrarTerminos() {
+    if (modalTerminos) {
+        modalTerminos.classList.remove('abierto');
+        modalTerminos.setAttribute('aria-hidden', 'true');
+    }
+}
+
+// Botón Cancelar
+if (cancelarTerminos) {
+    cancelarTerminos.addEventListener('click', cerrarTerminos);
+}
+
+// Botón Continuar
+if (continuarTerminos) {
+    continuarTerminos.addEventListener('click', cerrarTerminos);
+}
+
+// Cerrar al hacer clic fuera del rectángulo
+if (modalTerminos) {
+    modalTerminos.addEventListener('click', function (event) {
+        if (event.target === modalTerminos) {
+            cerrarTerminos();
+        }
+    });
+}
+
+// Cerrar al presionar Escape
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        cerrarTerminos();
+    }
+});
