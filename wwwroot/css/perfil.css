@@ -537,3 +537,46 @@ body.perfil-page {
     background: #9C5901;
     border-color: #9C5901;
 }
+
+
+
+
+
+
+
+
+
+
+
+.profile-squares {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.profile-square {
+    aspect-ratio: 1 / 1;
+    background: #F1EFEA;
+    border-radius: 18px;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.profile-square-content {
+    width: 100%;
+    height: 100%;
+    background: #FCFBF8;
+    border-radius: 14px;
+    padding: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.profile-square-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
