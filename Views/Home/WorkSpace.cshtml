@@ -106,7 +106,7 @@
             position: absolute;
             top: calc(100% + 10px);
             right: 0;
-            background: white;
+            background: #FCFBF8;
             border: 1px solid #e7e2d8;
             border-radius: 14px;
             box-shadow: 0 12px 24px rgba(0,0,0,0.12);
@@ -122,7 +122,9 @@
         .workspace-user-popover a,
         .workspace-user-popover form button {
             display: block;
-            width: 100%;
+            width: calc(100% - 12px);
+            margin: 3px 6px;
+            box-sizing: border-box;
             border: none;
             background: transparent;
             text-align: left;
@@ -130,18 +132,26 @@
             color: #212225;
             padding: 0.8rem 1rem;
             font-weight: 600;
+            border-radius: 9px;
             cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .workspace-user-popover form {
+            margin: 0;
         }
 
         .workspace-user-popover a:hover,
         .workspace-user-popover form button:hover {
-            background: #f6f3ee;
+            background: #EAEAEA;
+        }
+
+        .workspace-user-popover a:active,
+        .workspace-user-popover form button:active {
+            background: #CCCCCC;
         }
 
         /* Estilos para el widget del calendario */
-        .calendar-widget {
-            /* Estilos generales para el widget del calendario */
-        }
 
         .calendar-controls {
             display: flex;

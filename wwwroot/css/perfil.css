@@ -1,15 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Average&family=Commissioner:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=MuseoModerno:wght@300;400;500;600;700&display=swap');
+
 * {
     box-sizing: border-box;
+}
+
+:root{
+      /* Fuentes */
+  --font-museomoderno: 'MuseoModerno';
+  --font-commissioner: 'Commissioner';
+  --font-jost: 'Jost';
+  --font-average: 'Average';
+      /* Tipografías por estilo */
+  --landing-header: 300 70px/1.2 var(--font-museomoderno);
+  --workspace-foku: 400 40px/1.2 var(--font-museomoderno);
+  --text-buttons: 400 16px/1.5 var(--font-commissioner);
+  --text-buttons-medium: 500 16px/1.5 var(--font-commissioner);
+  --text-buttons-regular: 400 16px/1.5 var(--font-commissioner);
+  --text-buttons-desplegables: 400 16px/1.5 var(--font-commissioner);
+  --titulo-pagina: 400 116px/1.2 var(--font-jost);
+  --titulo-tarjetas: 400 40px/1.2 var(--font-jost);
+  --titulo-popups: 400 40px/1.2 var(--font-jost);
+  --subtitulo-1: 400 85px/1.2 var(--font-average);
+  --subtitulo-2: 400 45px/1.2 var(--font-average);
+  --texto: 400 20px/1.5 var(--font-commissioner);
+  --texto-label: 400 15px/1.5 var(--font-commissioner);
+  --texto-workspace-lateral: 700 14px/1.4 var(--font-commissioner);
+  --tipografia-grandes-popups: 400 96px/1.2 var(--font-commissioner);
+  --texto-grafico: 400 10px/1.4 var(--font-commissioner);
 }
 
 body.perfil-page {
     margin: 0;
     min-height: 100vh;
     background: #FCFBF8;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-commissioner);
     color: #212225;
 }
 
+/* Header de la marca y botones superiores */
 .perfil-header {
     display: flex;
     justify-content: space-between;
@@ -26,6 +54,7 @@ body.perfil-page {
     display: flex;
     align-items: center;
     gap: 1rem;
+    font-family: var(--font-museomoderno), sans-serif;
 }
 
 .perfil-brand img {
@@ -41,21 +70,47 @@ body.perfil-page {
     flex-wrap: wrap;
 }
 
+/* Cerrar sesión al pie */
+.perfil-logout-form {
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.perfil-logout-btn {
+    background: transparent;
+    border: none;
+    font-family: var(--font-commissioner), sans-serif;
+    color: #9C9C9C;
+    font-size: 0.85rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.perfil-logout-btn:hover {
+    color: #E53935;
+}
+
+.perfil-logout-btn:active {
+    color: #800020;
+}
+
+/* Botones general */
 .perfil-btn,
 .perfil-btn-secondary,
-.perfil-logout-btn,
 .perfil-submit-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    padding: 0.9rem 1.4rem;
-    font-weight: 700;
+    padding: 0.6rem 1.2rem;
+    font-family: var(--font-commissioner), sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
     border: none;
-    font-size: 0.96rem;
     background: #FCFBF8;
     color: #212225;
 }
@@ -67,15 +122,15 @@ body.perfil-page {
     box-shadow: 0 10px 20px rgba(255, 149, 9, 0.2);
 }
 
-.perfil-btn-secondary {
-    background: #f1efe9;
-    color: #212225;
-    border: 1px solid #e3e0da;
+.perfil-btn-secondary:hover {
+    background-color: #EAEAEA;
+}
+.perfil-btn-secondary:active{
+    background-color: #CCCCCC;
 }
 
 .perfil-btn:hover,
 .perfil-btn-secondary:hover,
-.perfil-logout-btn:hover,
 .perfil-submit-btn:hover {
     transform: translateY(-1px);
 }
@@ -118,28 +173,42 @@ body.perfil-page {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: var(--font-average), serif;
     font-size: 2.4rem;
-    font-weight: 800;
+    font-weight: 400;
 }
 
+/* Tipografía de nombre de usuario (Timoteo) */
 .perfil-user-meta h1 {
     margin: 0;
-    font-size: 2.3rem;
+    font-family: var(--font-average), serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #000;
 }
 
+/* Handle (@Timoteo36527) */
 .perfil-user-meta p {
-    margin: 0.5rem 0 0;
-    color: #5d5e65;
-    font-size: 1.2rem;
+    margin: 0.3rem 0 0;
+    color: #212225;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
 }
 
 .perfil-form-card {
     padding: 2rem;
 }
 
-.perfil-form-card h2 {
+/* Titulares de tarjetas y secciones */
+.perfil-form-card h2,
+.cerrar-sesion-modal h3,
+.perfil-modal h3 {
     margin: 0 0 1.2rem;
-    font-size: 1.9rem;
+    font-family: var(--font-jost), sans-serif;
+    font-size: 1.6rem;
+    font-weight: 500;
 }
 
 .perfil-alert {
@@ -149,6 +218,8 @@ body.perfil-page {
     color: #8b4b00;
     padding: 0.9rem 1rem;
     margin-bottom: 1rem;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.95rem;
     font-weight: 600;
 }
 
@@ -163,7 +234,9 @@ body.perfil-page {
 }
 
 .perfil-field label {
-    font-weight: 700;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
     color: #2d2f33;
 }
 
@@ -173,6 +246,7 @@ body.perfil-page {
     border-radius: 14px;
     border: 1px solid #d6d0c5;
     background: #faf9f7;
+    font-family: var(--font-commissioner), sans-serif;
     font-size: 1rem;
     color: #212225;
 }
@@ -192,46 +266,15 @@ body.perfil-page {
 
 .perfil-logout-form {
     margin-top: 2rem;
-    text-align: center;
+    text-align: left;
 }
 
-.perfil-logout-btn {
-    background: #212225;
-    color: white;
-}
-
-@media (max-width: 640px) {
-    .perfil-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-        padding: 1rem 1.2rem;
-    }
-
-    .perfil-brand img {
-        width: 140px;
-    }
-
-    .perfil-nav {
-        width: 100%;
-    }
-
-    .perfil-btn,
-    .perfil-btn-secondary,
-    .perfil-logout-btn,
-    .perfil-submit-btn {
-        width: 100%;
-    }
-
-    .perfil-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
 .perfil-mensaje {
     padding: 0.8rem 1rem;
     border-radius: 12px;
     margin-bottom: 1rem;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.95rem;
     font-weight: 600;
 }
 
@@ -251,39 +294,36 @@ body.perfil-page {
     border-color: #dc3545;
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
 }
+
 /* Datos del usuario a la izquierda */
 .perfil-user-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
 }
 
-/* Tarjeta del perfil */
-.perfil-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-}
-
-/* Botón para editar */
+/* Botón Editar Perfil */
 .perfil-edit-button {
     border: none;
-    background: #ff9509;
+    background: #FF9509;
     color: white;
-    border-radius: 999px;
-    padding: 0.7rem 1.1rem;
-    font-weight: 700;
+    border-radius: 8px;
+    padding: 0.65rem 1.2rem;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
 }
 
 .perfil-edit-button:hover {
-    background: #f58b00;
+    background: #DA7C00;
 }
 
-/* popup */
+.perfil-edit-button:active {
+    background: #9C5901;
+}
+
+/* Modales */
 .perfil-modal-backdrop {
     position: fixed;
     inset: 0;
@@ -309,11 +349,6 @@ body.perfil-page {
     box-sizing: border-box;
 }
 
-.perfil-modal h3 {
-    margin: 0 0 1rem;
-    font-family: inherit;
-}
-
 .perfil-modal-form {
     display: grid;
     gap: 1rem;
@@ -326,34 +361,6 @@ body.perfil-page {
     margin-top: 0.5rem;
 }
 
-/* Mensajes de éxito y error */
-.perfil-mensaje {
-    padding: 0.8rem 1rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.perfil-mensaje-exito {
-    color: #23643a;
-    background: #eaf6ed;
-    border: 1px solid #b9e2c2;
-}
-
-.perfil-mensaje-error {
-    color: #b42318;
-    background: #fff0ef;
-    border: 1px solid #f2b8b5;
-}
-
-/* Error en el nombre de usuario */
-.perfil-field input.error {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
-}
-
-/* Foto de perfil */
-
 .perfil-avatar img {
     width: 100%;
     height: 100%;
@@ -363,6 +370,7 @@ body.perfil-page {
 
 .perfil-foto-form {
     margin-top: 0.8rem;
+    margin-bottom: 0.5rem;
 }
 
 .perfil-foto-form label {
@@ -370,12 +378,13 @@ body.perfil-page {
     align-items: center;
     justify-content: center;
     padding: 0.5rem 0.9rem;
-    border-radius: 999px;
+    border-radius: 8px;
     background: #f1efe9;
     color: #212225;
     border: 1px solid #e3e0da;
+    font-family: var(--font-commissioner), sans-serif;
     font-size: 0.85rem;
-    font-weight: 700;
+    font-weight: 500;
     cursor: pointer;
 }
 
@@ -383,7 +392,7 @@ body.perfil-page {
     background: #e8e6e1;
 }
 
-/* Información del usuario dentro del modal */
+/* Información dentro del modal */
 .perfil-modal-user {
     display: flex;
     align-items: center;
@@ -402,8 +411,8 @@ body.perfil-page {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: var(--font-average), serif;
     font-size: 1.6rem;
-    font-weight: 800;
 }
 
 .perfil-modal-avatar img {
@@ -416,37 +425,19 @@ body.perfil-page {
 .perfil-modal-user-info {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.2rem;
 }
 
 .perfil-modal-user-info strong {
-    font-size: 1.1rem;
+    font-family: var(--font-average), serif;
+    font-size: 1.2rem;
+    font-weight: 400;
 }
 
 .perfil-modal-user-info span {
     color: #5d5e65;
-}
-
-.perfil-foto-form {
-    margin-bottom: 0.5rem;
-}
-
-.perfil-foto-form label {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem 0.9rem;
-    border-radius: 999px;
-    background: #f1efe9;
-    color: #212225;
-    border: 1px solid #e3e0da;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.perfil-foto-form label:hover {
-    background: #e8e6e1;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.9rem;
 }
 
 .perfil-card {
@@ -461,11 +452,88 @@ body.perfil-page {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 2.5px;
-    background: #D9D9D9;
+    height: 1px;
+    background: #E3E0DA;
 }
 
-.perfil-edit-button,
-.perfil-foto-form label {
+/* Pop-up Cerrar Sesión */
+.cerrar-sesion-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(33, 34, 37, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 1100;
+}
+
+.cerrar-sesion-backdrop.open {
+    display: flex;
+}
+
+.cerrar-sesion-modal {
+    background: #FCFBF8;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    border: 3px solid #E3E0DA;
+    border-radius: 25px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.cerrar-sesion-modal p {
+    color: #5D5E65;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.cerrar-sesion-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #E3E0DA;
+    padding-top: 18px;
+    margin-top: 24px;
+}
+
+.cerrar-sesion-cancelar,
+.cerrar-sesion-continuar {
+    min-width: 120px;
+    padding: 0.8rem 1.3rem;
     border-radius: 8px;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.cerrar-sesion-cancelar {
+    background: transparent;
+    color: #212225;
+    border: 2px solid #212225;
+}
+
+.cerrar-sesion-cancelar:hover {
+    background: #212225;
+    color: #FFFFFF;
+}
+
+.cerrar-sesion-continuar {
+    background: #FF9509;
+    color: #FFFFFF;
+    border: 2px solid #FF9509;
+}
+
+.cerrar-sesion-continuar:hover {
+    background: #DA7C00;
+    border-color: #DA7C00;
+}
+
+.cerrar-sesion-continuar:active {
+    background: #9C5901;
+    border-color: #9C5901;
 }
