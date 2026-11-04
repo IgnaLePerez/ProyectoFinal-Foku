@@ -47,63 +47,95 @@
         </p>
     }
         <section class="perfil-card" aria-label="Información del usuario">
-        <div class="perfil-user-info">
-        <div class="perfil-avatar">
-            @if (!string.IsNullOrWhiteSpace(Model.FotoPerfil))
-            {
-                <img src="@Model.FotoPerfil" alt="Foto de perfil" />
-            }
-            else
-            {
-                @nombreInicial.Substring(0, 1).ToUpperInvariant()
-            }
+            <div class="perfil-user-info">
+            <div class="perfil-avatar">
+                @if (!string.IsNullOrWhiteSpace(Model.FotoPerfil))
+                {
+                    <img src="@Model.FotoPerfil" alt="Foto de perfil" />
+                }
+                else
+                {
+                    @nombreInicial.Substring(0, 1).ToUpperInvariant()
+                }
+                </div>
+                <div class="perfil-user-meta">
+                    <h1>@nombreInicial</h1>
+                    <p>@@@usernameInicial</p>
+                </div>
             </div>
-            <div class="perfil-user-meta">
-                <h1>@nombreInicial</h1>
-                <p>@@@usernameInicial</p>
-                <form asp-controller="Usuario"
-                    asp-action="CambiarFotoPerfil"
-                    method="post"
-                    enctype="multipart/form-data"
-                    id="formFotoPerfil"
-                    class="perfil-foto-form">
-                    <label for="inputFotoPerfil" class="perfil-btn-secondary">Cambiar foto</label>
-                    <input type="file"
-                        id="inputFotoPerfil"
-                        name="foto"
-                        accept="image/*"
-                        hidden />
-                </form>
-            </div>
-        </div>
-        <button type="button" class="perfil-edit-button" onclick="openPerfilModal()"> Editar perfil</button>
-    </section>
+            <button type="button" class="perfil-edit-button" onclick="openPerfilModal()"> Editar perfil</button>
+        </section>
         <div id="perfilModal" class="perfil-modal-backdrop" aria-hidden="true">
-            <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="perfilModalTitle">
-                <h3 id="perfilModalTitle">Editar perfil</h3>
-                <form asp-controller="Usuario" asp-action="EditarPerfil" method="post" class="perfil-modal-form" id="modalPerfilForm" data-usuario-actual="@Model.Username">
-                <div class="perfil-field">
-                        <label for="modalNombre">Nombre</label>
-                        <input id="modalNombre" name="nombre" type="text" value="@Model.Nombre" required />
-                    </div>
+        <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="perfilModalTitle">
+            <h3 id="perfilModalTitle">Editar perfil</h3>
 
-                    <div class="perfil-field">
-                        <label for="modalUsuario">Nombre de usuario</label>
-                        <input id="modalUsuario" name="nombreUsuario" type="text" value="@Model.Username" required />
-                    </div>
-                    
-                    @if (!string.IsNullOrEmpty(mensajeError))
+            <!-- Foto y datos actuales -->
+            <div class="perfil-modal-user">
+                <div class="perfil-modal-avatar">
+                    @if (!string.IsNullOrWhiteSpace(Model.FotoPerfil))
                     {
-                        <p class="perfil-mensaje perfil-mensaje-error">
-                            @mensajeError
-                        </p>
+                        <img src="@Model.FotoPerfil" alt="Foto de perfil" />
                     }
-                    <div class="perfil-modal-actions">
-                        <button type="button" class="perfil-btn-secondary" onclick="closePerfilModal()">Cancelar</button>
-                        <button type="submit" class="perfil-submit-btn">Guardar</button>
-                    </div>
-                </form>
+                    else
+                    {
+                        @nombreInicial.Substring(0, 1).ToUpperInvariant()
+                    }
+                </div>
+
+                <div class="perfil-modal-user-info">
+                    <strong>@nombreInicial</strong>
+                    <span>@@@usernameInicial</span>
+                </div>
             </div>
+
+            <!-- Formulario para cambiar foto -->
+            <form asp-controller="Usuario"
+                asp-action="CambiarFotoPerfil"
+                method="post"
+                enctype="multipart/form-data"
+                id="formFotoPerfil"
+                class="perfil-foto-form">
+
+                <label for="inputFotoPerfil" class="perfil-btn-secondary">Cambiar foto</label>
+
+                <input type="file"
+                    id="inputFotoPerfil"
+                    name="foto"
+                    accept="image/*"
+                    hidden />
+            </form>
+
+            <!-- Único formulario para editar nombre y usuario -->
+            <form asp-controller="Usuario"
+                asp-action="EditarPerfil"
+                method="post"
+                class="perfil-modal-form"
+                id="modalPerfilForm"
+                data-usuario-actual="@Model.Username">
+
+                <div class="perfil-field">
+                    <label for="modalNombre">Nombre</label>
+                    <input id="modalNombre" name="nombre" type="text" value="@Model.Nombre" required />
+                </div>
+
+                <div class="perfil-field">
+                    <label for="modalUsuario">Nombre de usuario</label>
+                    <input id="modalUsuario" name="nombreUsuario" type="text" value="@Model.Username" required />
+                </div>
+
+                @if (!string.IsNullOrEmpty(mensajeError))
+                {
+                    <p class="perfil-mensaje perfil-mensaje-error">
+                        @mensajeError
+                    </p>
+                }
+
+                <div class="perfil-modal-actions">
+                    <button type="button" class="perfil-btn-secondary" onclick="closePerfilModal()">Cancelar</button>
+                    <button type="submit" class="perfil-submit-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
         </div>
 
         <form class="perfil-logout-form" asp-controller="Usuario" asp-action="CerrarSesion" method="post">
