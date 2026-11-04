@@ -577,6 +577,32 @@
         .calendar-event:hover {
             background: #0056b3;
         }
+
+        .workspace-user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .workspace-user-avatar {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #FF9509;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .workspace-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -595,7 +621,19 @@
                 <img src="/images/racha.png" alt="Racha">
             </div>
             <div class="workspace-user-group">
-                <button type="button" class="workspace-user-button" onclick="toggleWorkspaceUserMenu()">@(usuario?.Username ?? "Usuario")</button>
+                <button type="button" class="workspace-user-button" onclick="toggleWorkspaceUserMenu()">
+                    <span class="workspace-user-avatar">
+                        @if (!string.IsNullOrWhiteSpace(usuario?.FotoPerfil))
+                        {
+                            <img src="@usuario.FotoPerfil" alt="Foto de perfil" />
+                        }
+                        else
+                        {
+                            @(string.IsNullOrWhiteSpace(usuario?.Username) ? "U" : usuario.Username.Substring(0, 1).ToUpperInvariant())
+                        }
+                    </span>
+                    <span>@(usuario?.Username ?? "Usuario")</span>
+                </button>
                 <div id="workspaceUserMenu" class="workspace-user-popover">
                     <a asp-controller="Usuario" asp-action="Perfil">Ir al perfil</a>
                     <form asp-controller="Usuario" asp-action="CerrarSesion" method="post">
