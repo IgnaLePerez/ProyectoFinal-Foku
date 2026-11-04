@@ -913,7 +913,6 @@ ul li button {
 
 .calendar-event {
   display: block;
-  background: #7c80ff;
   color: white;
   border-radius: 6px;
   padding: 4px 6px;
@@ -1433,7 +1432,6 @@ ul li button {
 
 .calendar-event {
   display: block;
-  background: #7c80ff;
   color: white;
   border-radius: 6px;
   padding: 4px 6px;
@@ -1466,4 +1464,45 @@ ul li button {
   .calendar-day {
     min-height: 68px;
   }
+}
+
+@keyframes hoverDay {
+  from { 
+    background-color: transparent; 
+    }
+  to { 
+    background-color: #e6e4de; 
+    }
+}
+
+@keyframes hoverDayToday {
+  from { 
+    background-color: #ACC5F1; 
+    }
+  to { 
+    background-color: #A2BAE3; 
+    }
+}
+
+.calendar-day {
+  padding: 0.5rem;
+  border: 1px solid transparent;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+}
+
+.calendar-day:hover {
+  background-color: #e6e4de !important;
+}
+
+.calendar-day-today {
+  background: #ACC5F1 !important;
+  color: var(--white-rest);
+  border-radius: 8px;
+  transition: background-color 0.1s ease-in-out;
+}
+
+.calendar-day-today:hover {
+  background-color: #A2BAE3 !important;
 }

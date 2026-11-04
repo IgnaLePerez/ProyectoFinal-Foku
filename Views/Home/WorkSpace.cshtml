@@ -78,6 +78,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" />
     <link rel="stylesheet" href="~/css/workspace.css">
     <link rel="stylesheet" href="~/css/workspace-calendario.css">
+    <link rel="stylesheet" href="~/css/site.css">
     <style>
         .workspace-user-group {
             position: relative;
@@ -721,10 +722,6 @@
             font-weight: 600;
         }
 
-        #calendar-event-form button:hover {
-            background: #0056b3;
-        }
-
         /* Estilos para el fondo del popup del calendario */
         .calendar-popup-backdrop {
             position: fixed;
@@ -791,29 +788,9 @@
             margin-bottom: 0.5rem;
         }
 
-        .calendar-day {
-            padding: 0.5rem;
-            border: 1px solid transparent;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .calendar-day:hover {
-            background: transparent !important;
-        }
-
-        .calendar-day-today {
-            background: #6F8FBF !important;
-            color: var(--white-rest);
-            border-radius: 8px;
-        }
-
-        .calendar-day-today:hover {
-            background: #6F8FBF !important;
-        }
+        
 
         .calendar-event {
-            background: var(--secundario-i-rest);
             color: var(--black-rest);
             padding: 0.25rem;
             border-radius: 4px;
@@ -823,7 +800,6 @@
         }
 
         .calendar-event:hover {
-            background: var(--secundario-i-rest);
             color: var(--black-rest);
         }
 

@@ -85,7 +85,9 @@ html {
 
   /* Superficies */
   --bordes: #E3E0DA;
+  --bordes-hover: #c7c4be;
   --cards: #F2F0EB;
+  --cards-hover: #e6e4de;
   --border-radius-cards: 25px;
 
   /* Tipografías por estilo */
@@ -1070,6 +1072,8 @@ li {
 .checkbox-container label a:hover {
   color: var(--secundario-i-hover);
 }
+
+
 
 /* Adaptación a pantallas pequeñas */
 @media (max-width: 600px) {
