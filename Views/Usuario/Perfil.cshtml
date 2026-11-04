@@ -95,9 +95,7 @@
                 enctype="multipart/form-data"
                 id="formFotoPerfil"
                 class="perfil-foto-form">
-
                 <label for="inputFotoPerfil" class="perfil-btn-secondary">Cambiar foto</label>
-
                 <input type="file"
                     id="inputFotoPerfil"
                     name="foto"
@@ -144,12 +142,7 @@
             asp-action="CerrarSesion"
             method="post"
             id="formCerrarSesion">
-
-            <button type="button"
-                    class="perfil-logout-btn"
-                    onclick="openCerrarSesionModal()">
-                Cerrar sesión
-            </button>
+            <button type="button" class="perfil-logout-btn" onclick="openCerrarSesionModal()">Cerrar sesión</button>
         </form>
 
         <!-- Pop-up de confirmación -->
@@ -158,27 +151,11 @@
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="cerrarSesionTitle">
-
                 <h3 id="cerrarSesionTitle">¿Estás seguro de que querés cerrar sesión?</h3>
-
-                <p>
-                    Tu sesión se va a cerrar, pero no te preocupes:
-                    vas a poder volver a Foku cuando quieras.
-                    Tus datos y tu progreso seguirán guardados.
-                </p>
-
+                <p>Tu sesión se va a cerrar, pero no te preocupes: vas a poder volver a Foku cuando quieras. Tus datos y tu progreso seguirán guardados.</p>
                 <div class="cerrar-sesion-actions">
-                    <button type="button"
-                            class="cerrar-sesion-cancelar"
-                            onclick="closeCerrarSesionModal()">
-                        Cancelar
-                    </button>
-
-                    <button type="button"
-                            class="cerrar-sesion-continuar"
-                            onclick="confirmarCerrarSesion()">
-                        Continuar
-                    </button>
+                    <button type="button" class="cerrar-sesion-cancelar" onclick="closeCerrarSesionModal()"> Cancelar</button>
+                    <button type="button" class="cerrar-sesion-continuar" onclick="confirmarCerrarSesion()"> Continuar</button>
                 </div>
             </div>
         </div>

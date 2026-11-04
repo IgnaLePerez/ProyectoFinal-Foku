@@ -32,7 +32,7 @@
                 position: absolute;
                 top: calc(100% + 10px);
                 right: 0;
-                background: white;
+                background: #FCFBF8;
                 border: 1px solid #e7e2d8;
                 border-radius: 16px;
                 box-shadow: 0 12px 28px rgba(0,0,0,0.12);
@@ -48,20 +48,29 @@
             .user-menu a,
             .user-menu form button {
                 display: block;
-                width: 100%;
+                width: calc(100% - 12px);
+                margin: 3px 6px;
+                box-sizing: border-box;
                 text-align: left;
                 background: transparent;
                 border: none;
+                border-radius: 9px;
                 padding: 0.9rem 1rem;
                 color: #212225;
                 text-decoration: none;
                 font-weight: 600;
                 cursor: pointer;
+                transition: background-color 0.15s ease;
             }
 
             .user-menu a:hover,
             .user-menu form button:hover {
-                background: #f8f5f0;
+                background: #EAEAEA;
+            }
+
+            .user-menu a:active,
+            .user-menu form button:active {
+                background: #CCCCCC;
             }
 
             .user-menu form {
