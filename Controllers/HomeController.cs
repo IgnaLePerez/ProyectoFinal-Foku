@@ -128,6 +128,30 @@ public class HomeController : Controller
     }
 
     [HttpPost]
+    public IActionResult UpdateTarea([FromBody] UpdateTareaInput payload)
+    {
+        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
+        {
+            return Unauthorized();
+        }
+
+        if (payload == null || payload.idTarea <= 0 || string.IsNullOrWhiteSpace(payload.nombre))
+        {
+            return BadRequest();
+        }
+
+        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
+        var tarea = BD.GetTareasPorUsuario(usuarioId).FirstOrDefault(t => t.Id == payload.idTarea);
+        if (tarea == null)
+        {
+            return Forbid();
+        }
+
+        BD.ModificarTarea(payload.idTarea, nombre: payload.nombre.Trim(), descripcion: payload.descripcion?.Trim());
+        return Ok();
+    }
+
+    [HttpPost]
     public IActionResult ToggleTarea([FromBody] ToggleTareaInput payload)
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
@@ -141,6 +165,30 @@ public class HomeController : Controller
         }
 
         BD.ModificarTarea(payload.id, payload.terminada);
+        return Ok();
+    }
+
+    [HttpPost]
+    public IActionResult UpdateEtiqueta([FromBody] EtiquetaInput payload)
+    {
+        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
+        {
+            return Unauthorized();
+        }
+
+        if (payload == null || payload.id <= 0 || string.IsNullOrWhiteSpace(payload.nombre) || string.IsNullOrWhiteSpace(payload.color))
+        {
+            return BadRequest();
+        }
+
+        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
+        var etiqueta = BD.ObtenerEtiquetasPorUsuario(usuarioId).FirstOrDefault(e => e.Id == payload.id);
+        if (etiqueta == null)
+        {
+            return Forbid();
+        }
+
+        BD.ModificarEtiqueta(payload.id, payload.nombre.Trim(), payload.color.Trim());
         return Ok();
     }
 
@@ -183,7 +231,7 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult AddEtiquetaTarea([FromBody] TareaEtiquetaInput payload)
     {
-        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
+       if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
             return Unauthorized();
         }
@@ -282,6 +330,13 @@ public class HomeController : Controller
         public string descripcion { get; set; }
     }
 
+    public class UpdateTareaInput
+    {
+        public int idTarea { get; set; }
+        public string nombre { get; set; }
+        public string descripcion { get; set; }
+    }
+
     public class ToggleTareaInput
     {
         public int id { get; set; }
@@ -290,6 +345,7 @@ public class HomeController : Controller
 
     public class EtiquetaInput
     {
+        public int id { get; set; }
         public string nombre { get; set; }
         public string color { get; set; }
     }

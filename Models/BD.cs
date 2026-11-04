@@ -178,6 +178,22 @@ public static class BD
         }
     }
 
+    public static void ModificarEtiqueta(int idEtiqueta, string nombre, string color)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Execute(
+                "exec ModificarEtiqueta @pIdEtiqueta, @pNombre, @pColor",
+                new
+                {
+                    pIdEtiqueta = idEtiqueta,
+                    pNombre = nombre,
+                    pColor = color
+                }
+            );
+        }
+    }
+
     public static void CrearEtiqueta(int idUsuario, string nombre, string color)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
