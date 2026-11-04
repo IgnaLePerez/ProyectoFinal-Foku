@@ -138,9 +138,50 @@
         </div>
         </div>
 
-        <form class="perfil-logout-form" asp-controller="Usuario" asp-action="CerrarSesion" method="post">
-            <button type="submit" class="perfil-logout-btn">Cerrar sesión</button>
+        <!-- Cerrar sesión -->
+        <form class="perfil-logout-form"
+            asp-controller="Usuario"
+            asp-action="CerrarSesion"
+            method="post"
+            id="formCerrarSesion">
+
+            <button type="button"
+                    class="perfil-logout-btn"
+                    onclick="openCerrarSesionModal()">
+                Cerrar sesión
+            </button>
         </form>
+
+        <!-- Pop-up de confirmación -->
+        <div id="cerrarSesionModal" class="cerrar-sesion-backdrop" aria-hidden="true">
+            <div class="cerrar-sesion-modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="cerrarSesionTitle">
+
+                <h3 id="cerrarSesionTitle">¿Estás seguro de que querés cerrar sesión?</h3>
+
+                <p>
+                    Tu sesión se va a cerrar, pero no te preocupes:
+                    vas a poder volver a Foku cuando quieras.
+                    Tus datos y tu progreso seguirán guardados.
+                </p>
+
+                <div class="cerrar-sesion-actions">
+                    <button type="button"
+                            class="cerrar-sesion-cancelar"
+                            onclick="closeCerrarSesionModal()">
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="cerrar-sesion-continuar"
+                            onclick="confirmarCerrarSesion()">
+                        Continuar
+                    </button>
+                </div>
+            </div>
+        </div>
     </main>
 
 </body>

@@ -42,10 +42,10 @@ html {
 
 :root {
   /* Fuentes */
-  --font-museomoderno: 'MuseoModerno', 'Segoe UI', sans-serif;
-  --font-commissioner: 'Commissioner', 'Segoe UI', sans-serif;
-  --font-jost: 'Jost', 'Segoe UI', sans-serif;
-  --font-average: 'Average', serif;
+  --font-museomoderno: 'MuseoModerno';
+  --font-commissioner: 'Commissioner';
+  --font-jost: 'Jost';
+  --font-average: 'Average';
 
   /* Acento */
   --acento-rest: #FF9509;

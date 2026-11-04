@@ -166,3 +166,32 @@ if (inputFotoPerfil && formFotoPerfil) {
         }
     });
 }
+
+// Abrir el pop-up de cerrar sesión
+function openCerrarSesionModal() {
+    const modal = document.getElementById('cerrarSesionModal');
+
+    if (modal) {
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+}
+
+// Cerrar el pop-up
+function closeCerrarSesionModal() {
+    const modal = document.getElementById('cerrarSesionModal');
+
+    if (modal) {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+    }
+}
+
+// Confirmar cierre de sesión
+function confirmarCerrarSesion() {
+    const form = document.getElementById('formCerrarSesion');
+
+    if (form) {
+        form.submit();
+    }
+}
