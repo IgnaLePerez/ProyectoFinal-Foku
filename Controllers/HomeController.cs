@@ -33,7 +33,7 @@ public class HomeController : Controller
         
         ViewBag.user = BD.GetUsuario(int.Parse(idSesion));
         ViewBag.tareas = BD.GetTareasPorUsuario(int.Parse(idSesion));
-        ViewBag.eventos = _calendar.GetEventos();
+        ViewBag.eventos = await _calendar.GetEventos();
 
         return View("WorkSpace");
     }
@@ -63,8 +63,17 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult WorkSpaceDirecto()
+    public async Task<IActionResult> WorkSpaceDirecto()
     {
+        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
+        {
+            return RedirectToAction("VistaLanding");
+        }
+
+        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
+        ViewBag.user = BD.GetUsuario(usuarioId);
+        ViewBag.tareas = BD.GetTareasPorUsuario(usuarioId);
+        ViewBag.eventos = await _calendar.GetEventos();
         return View("WorkSpace");
     }
 

@@ -128,9 +128,7 @@ function renderCalendar() {
     const grid = document.getElementById('calendar-grid');
     if (!grid) return;
 
-    const firstDayOfMonth = new Date(calendarState.year, calendarState.month, 1);
-    const startDay = new Date(firstDayOfMonth);
-    startDay.setDate(startDay.getDate() - firstDayOfMonth.getDay());
+    const daysInMonth = new Date(calendarState.year, calendarState.month + 1, 0).getDate();
 
     const eventMap = new Map();
     calendarEventosRaw.forEach((event) => {
@@ -141,11 +139,9 @@ function renderCalendar() {
     });
 
     const cells = [];
-    for (let i = 0; i < 42; i++) {
-        const currentDate = new Date(startDay);
-        currentDate.setDate(startDay.getDate() + i);
+    for (let day = 1; day <= daysInMonth; day++) {
+        const currentDate = new Date(calendarState.year, calendarState.month, day);
         const key = formatISODateLocal(currentDate);
-        const inCurrentMonth = currentDate.getMonth() === calendarState.month;
         const isToday = currentDate.toDateString() === new Date().toDateString();
         const events = eventMap.get(key) || [];
 
@@ -157,8 +153,8 @@ function renderCalendar() {
         const extraCount = events.length > 2 ? `<span class="calendar-more">+${events.length - 2}</span>` : '';
 
         cells.push(`
-            <div class="calendar-day ${inCurrentMonth ? '' : 'calendar-day-other'} ${isToday ? 'calendar-day-today' : ''}">
-                <span class="calendar-number">${currentDate.getDate()}</span>
+            <div class="calendar-day ${isToday ? 'calendar-day-today' : ''}">
+                <span class="calendar-number">${day}</span>
                 <div class="calendar-events">${dayEvents}${extraCount}</div>
             </div>
         `);

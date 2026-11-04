@@ -23,7 +23,7 @@
         .ToList();
 
     var eventosModel = ViewBag.eventos as Events;
-    var eventosJson = eventosModel?.Items != null
+    var eventosJson = eventosModel?.Items != null && eventosModel.Items.Any()
         ? JsonSerializer.Serialize(eventosModel.Items.Select(e => {
             var startValue = e.Start != null
                 ? (e.Start.DateTime.HasValue ? e.Start.DateTime.Value.ToString("yyyy-MM-ddTHH:mm:ss") : e.Start.Date ?? DateTime.MinValue.ToString("yyyy-MM-dd"))
@@ -42,7 +42,32 @@
                 color = "#7c80ff"
             };
         }))
-        : "[]";
+        : JsonSerializer.Serialize(new[] {
+            new {
+                id = "demo-1",
+                title = "Reunión de equipo",
+                start = DateTime.Now.AddDays(1).Date.AddHours(9).AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss"),
+                end = DateTime.Now.AddDays(1).Date.AddHours(10).AddMinutes(45).ToString("yyyy-MM-ddTHH:mm:ss"),
+                allDay = false,
+                color = "#7c80ff"
+            },
+            new {
+                id = "demo-2",
+                title = "Entrega del proyecto",
+                start = DateTime.Now.AddDays(3).ToString("yyyy-MM-dd"),
+                end = DateTime.Now.AddDays(4).ToString("yyyy-MM-dd"),
+                allDay = true,
+                color = "#7c80ff"
+            },
+            new {
+                id = "demo-3",
+                title = "Revisión semanal",
+                start = DateTime.Now.AddDays(5).Date.AddHours(15).ToString("yyyy-MM-ddTHH:mm:ss"),
+                end = DateTime.Now.AddDays(5).Date.AddHours(16).AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss"),
+                allDay = false,
+                color = "#7c80ff"
+            }
+        });
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -680,7 +705,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            background: #007bff;
+            background: var(--secundario-i-rest);
             color: white;
             font-weight: 600;
         }
@@ -763,12 +788,22 @@
         }
 
         .calendar-day:hover {
-            background: #f6f3ee;
+            background: transparent !important;
+        }
+
+        .calendar-day-today {
+            background: #6F8FBF !important;
+            color: var(--white-rest);
+            border-radius: 8px;
+        }
+
+        .calendar-day-today:hover {
+            background: #6F8FBF !important;
         }
 
         .calendar-event {
-            background: #007bff;
-            color: white;
+            background: var(--secundario-i-rest);
+            color: var(--black-rest);
             padding: 0.25rem;
             border-radius: 4px;
             margin-top: 0.25rem;
@@ -777,7 +812,8 @@
         }
 
         .calendar-event:hover {
-            background: #0056b3;
+            background: var(--secundario-i-rest);
+            color: var(--black-rest);
         }
 
         .workspace-user-button {
