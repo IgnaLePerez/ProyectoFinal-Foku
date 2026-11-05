@@ -195,3 +195,11 @@ function confirmarCerrarSesion() {
         form.submit();
     }
 }
+
+function abrirTienda() {
+    document.getElementById("tiendaModal").classList.add("open");
+}
+
+function cerrarTienda() {
+    document.getElementById("tiendaModal").classList.remove("open");
+}

@@ -66,37 +66,49 @@
             <button type="button" class="perfil-edit-button" onclick="openPerfilModal()"> Editar perfil</button>
         </section>
 
+        <div class="profile-content">
+            <div id="tiendaModal" class="tienda-modal-backdrop">
+            <div class="tienda-modal" role="dialog" aria-modal="true" aria-labelledby="tiendaModalTitle">
 
+                <div class="tienda-modal-header">
+                    <h2 id="tiendaModalTitle">Tienda</h2>
 
-<div class="profile-squares">
+                    <button type="button" class="tienda-modal-close" onclick="cerrarTienda()">
+                        &times;
+                    </button>
+                </div>
 
-    <div class="profile-square">
-        <div class="profile-square-content">
-            <!-- FOTO 1: poner acá la imagen correspondiente -->
-            <img src="RUTA_DE_LA_FOTO_1" alt="Imagen 1">
+                <div class="tienda-modal-body">
+                    <!-- ACÁ VAMOS A AGREGAR EL CONTENIDO DE LA TIENDA MÁS ADELANTE -->
+                </div>
+
+            </div>
         </div>
-    </div>
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="profile-left">
 
-    <div class="profile-square">
-        <div class="profile-square-content">
-            <!-- FOTO 2: poner acá la imagen correspondiente -->
-            <img src="RUTA_DE_LA_FOTO_2" alt="Imagen 2">
+                <!-- FOTO 1: RACHA (830 x 102) -->
+                <div class="profile-racha">
+                    <!-- PONER FOTO DE RACHA ACÁ -->
+                </div>
+
+                <!-- FOTO 2: ESTADÍSTICAS (830 x 395) -->
+                <div class="profile-estadisticas">
+                    <!-- PONER FOTO DE ESTADÍSTICAS ACÁ -->
+                </div>
+
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <!-- FOTO 3: TIENDA (596 x 489) -->
+            <div class="profile-tienda">
+                <button type="button" class="profile-tienda-interior" onclick="abrirTienda()">
+                    <img src="/images/tienda_carrito.png" alt="Tienda" />
+                    <span>Tienda</span>
+                </button>
+            </div>
+
         </div>
-    </div>
-
-    <div class="profile-square">
-        <div class="profile-square-content">
-            <!-- FOTO 3: poner acá la imagen correspondiente -->
-            <img src="RUTA_DE_LA_FOTO_3" alt="Imagen 3">
-        </div>
-    </div>
-
-</div>
-
-
-
-
-
 
         <div id="perfilModal" class="perfil-modal-backdrop" aria-hidden="true">
         <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="perfilModalTitle">

@@ -538,32 +538,54 @@ body.perfil-page {
     border-color: #9C5901;
 }
 
-
-
-
-
-
-
-
-
-
-
-.profile-squares {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+.profile-content {
     width: 100%;
+    display: grid;
+    grid-template-columns: 830fr 596fr;
+    gap: 60px;
+    align-items: stretch;
+    box-sizing: border-box;
 }
 
-.profile-square {
-    aspect-ratio: 1 / 1;
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.profile-racha {
+    width: 100%;
+    aspect-ratio: 830 / 102;
+    background: #F1EFEA;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.profile-estadisticas {
+    width: 100%;
+    aspect-ratio: 830 / 395;
+    background: #F1EFEA;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.profile-right {
+    min-width: 0;
+    display: flex;
+}
+
+.profile-tienda {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
     background: #F1EFEA;
     border-radius: 18px;
     padding: 12px;
     box-sizing: border-box;
 }
 
-.profile-square-content {
+.profile-tienda-interior {
     width: 100%;
     height: 100%;
     background: #FCFBF8;
@@ -573,10 +595,105 @@ body.perfil-page {
     overflow: hidden;
 }
 
-.profile-square-content img {
+/* CUADRADO DE TIENDA */
+
+.profile-tienda-interior {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-    display: block;
+    background: #FCFBF8;
+    border: none;
+    border-radius: 14px;
+    padding: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+
+    cursor: pointer;
+    color: #212225;
+    font-family: inherit;
+    font-size: 1.25rem;
+    font-weight: 700;
+
+    transition: background-color 0.2s ease;
+}
+
+.profile-tienda-interior:hover {
+    background: #FFFFFF;
+}
+
+.profile-tienda-interior img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.profile-tienda-interior span {
+    font: inherit;
+}
+
+
+/* POPUP DE TIENDA */
+
+.tienda-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.tienda-modal-backdrop.open {
+    display: flex;
+}
+
+.tienda-modal {
+    background: #F3EFE9;
+    width: min(767px, calc(100% - 2rem));
+    height: min(709px, calc(100% - 2rem));
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.tienda-modal-header {
+    padding: 1.05rem 1.2rem 0.9rem;
+    border-bottom: 1px solid #d8d1c8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tienda-modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d2d2d;
+}
+
+.tienda-modal-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    color: #2d2d2d;
+    padding: 0 0.3rem;
+}
+
+.tienda-modal-close:hover {
+    color: #000000;
+}
+
+.tienda-modal-body {
+    padding: 1.2rem;
+    flex: 1;
+    overflow-y: auto;
 }
