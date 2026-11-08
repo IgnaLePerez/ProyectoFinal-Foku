@@ -1035,7 +1035,8 @@
                     </div>
 
                     <div id="task-add-form" class="task-add-form hidden">
-                        <input id="new-task-name" type="text" placeholder="Nombre de la tarea" maxlength="255" />
+                        <input id="new-task-name" type="text" placeholder="Nombre de la tarea" maxlength="255" aria-describedby="new-task-name-error" />
+                        <p id="new-task-name-error" class="task-name-error hidden" role="alert"></p>
                         <textarea id="new-task-description" rows="3" placeholder="Descripcion"></textarea>
                         <label class="task-deadline-field" for="new-task-deadline">
                             Fecha límite

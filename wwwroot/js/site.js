@@ -741,6 +741,7 @@ function abrirFormularioEdicionTarea(idTarea) {
 
     if (!form || !nameInput || !descInput) return;
 
+    limpiarErrorNombreTarea();
     form.dataset.mode = 'edit';
     form.dataset.taskId = String(idTarea);
     nameInput.value = tarea?.nombre || '';
@@ -753,6 +754,7 @@ function abrirFormularioEdicionTarea(idTarea) {
 function cerrarFormularioTarea() {
     const form = document.getElementById('task-add-form');
     if (!form) return;
+    limpiarErrorNombreTarea();
     form.classList.add('hidden');
     document.getElementById('tasks-widget')?.classList.remove('task-form-open');
     form.dataset.mode = 'create';
@@ -775,9 +777,11 @@ async function guardarNuevaTarea() {
     const fechaLimite = document.getElementById('new-task-deadline')?.value || null;
 
     if (!nombre) {
-        alert('Debe completar el nombre de la tarea');
+        mostrarErrorNombreTarea();
         return;
     }
+
+    limpiarErrorNombreTarea();
 
     try {
         const endpoint = isEdit ? '/Home/UpdateTarea' : '/Home/AddTarea';
@@ -803,9 +807,35 @@ async function guardarNuevaTarea() {
     }
 }
 
+function mostrarErrorNombreTarea() {
+    const nameInput = document.getElementById('new-task-name');
+    const error = document.getElementById('new-task-name-error');
+    if (!nameInput || !error) return;
+
+    nameInput.style.borderColor = 'red';
+    nameInput.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
+    nameInput.setAttribute('aria-invalid', 'true');
+    error.textContent = 'Título de la tarea - Este campo es obligatorio';
+    error.classList.remove('hidden');
+    nameInput.focus();
+}
+
+function limpiarErrorNombreTarea() {
+    const nameInput = document.getElementById('new-task-name');
+    const error = document.getElementById('new-task-name-error');
+    if (!nameInput || !error) return;
+
+    nameInput.style.borderColor = '';
+    nameInput.style.boxShadow = '';
+    nameInput.removeAttribute('aria-invalid');
+    error.textContent = '';
+    error.classList.add('hidden');
+}
+
 function abrirFormularioTarea() {
     const form = document.getElementById('task-add-form');
     if (!form) return;
+    limpiarErrorNombreTarea();
     form.dataset.mode = 'create';
     form.dataset.taskId = '';
     form.classList.remove('hidden');
@@ -824,6 +854,7 @@ function inicializarWidgetTareas() {
     const addButton = document.getElementById('task-add-button');
     const cancelButton = document.querySelector('.task-form-cancel');
     const saveButton = document.querySelector('.task-form-save');
+    const nameInput = document.getElementById('new-task-name');
 
     if (searchInput) {
         searchInput.addEventListener('input', () => cargarTareas());
@@ -847,6 +878,12 @@ function inicializarWidgetTareas() {
 
     if (saveButton) {
         saveButton.addEventListener('click', guardarNuevaTarea);
+    }
+
+    if (nameInput) {
+        nameInput.addEventListener('input', () => {
+            if (nameInput.value.trim()) limpiarErrorNombreTarea();
+        });
     }
 
     inicializarModalEtiquetas();

@@ -1097,6 +1097,12 @@ body.workspace-sidebar-collapsed > main > aside {
   min-height: 72px;
 }
 
+.task-name-error {
+  margin: -6px 0 0;
+  color: #dc3545;
+  font: 500 12px/1.3 var(--font-commissioner);
+}
+
 .task-deadline-field {
   display: flex;
   flex-direction: column;
