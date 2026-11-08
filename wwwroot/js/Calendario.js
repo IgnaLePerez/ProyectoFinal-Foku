@@ -215,33 +215,37 @@ function asegurarDentroDePantallaCalendario(widget) {
 }
 
 function hacerArrastrableCalendario(widget) {
-    let dragging = false;
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let pointerId = null;
+    let posX = 0;
+    let posY = 0;
     const header = widget.querySelector('.widget-header');
 
     if (header) {
-        header.onmousedown = arrastrarMouseDown;
+        header.onpointerdown = iniciarArrastre;
+        header.onpointermove = elementoArrastrado;
+        header.onpointerup = cerrarArrastre;
+        header.onpointercancel = cerrarArrastre;
+        header.onlostpointercapture = cerrarArrastre;
     }
 
-    function arrastrarMouseDown(e) {
-        if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+    function iniciarArrastre(e) {
+        if (e.button !== 0 || e.target.closest('button, select, input')) return;
 
-        dragging = true;
+        pointerId = e.pointerId;
+        posX = e.clientX;
+        posY = e.clientY;
         e.preventDefault();
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmousemove = elementoArrastrado;
-        document.onmouseup = cerrarArrastre;
+        header.setPointerCapture(pointerId);
     }
 
     function elementoArrastrado(e) {
-        if (!dragging) return;
+        if (e.pointerId !== pointerId) return;
 
         e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
+        const deltaX = e.clientX - posX;
+        const deltaY = e.clientY - posY;
+        posX = e.clientX;
+        posY = e.clientY;
 
         const currentLeft = widget.offsetLeft;
         const currentTop = widget.offsetTop;
@@ -256,8 +260,8 @@ function hacerArrastrableCalendario(widget) {
         const minTop = headerRect ? Math.max(10, headerRect.bottom + 10) : 10;
         const maxTop = Math.max(minTop, window.innerHeight - widget.offsetHeight - 10);
 
-        const nuevoTop = Math.min(Math.max(currentTop - pos2, minTop), maxTop);
-        const nuevoLeft = Math.min(Math.max(currentLeft - pos1, minLeft), maxLeft);
+        const nuevoTop = Math.min(Math.max(currentTop + deltaY, minTop), maxTop);
+        const nuevoLeft = Math.min(Math.max(currentLeft + deltaX, minLeft), maxLeft);
 
         widget.style.left = `${nuevoLeft}px`;
         widget.style.top = `${nuevoTop}px`;
@@ -265,10 +269,13 @@ function hacerArrastrableCalendario(widget) {
         asegurarDentroDePantallaCalendario(widget);
     }
 
-    function cerrarArrastre() {
-        dragging = false;
-        document.onmousemove = null;
-        document.onmouseup = null;
+    function cerrarArrastre(e) {
+        if (e.pointerId !== pointerId) return;
+
+        pointerId = null;
+        if (header.hasPointerCapture(e.pointerId)) {
+            header.releasePointerCapture(e.pointerId);
+        }
         asegurarDentroDePantallaCalendario(widget);
     }
 }

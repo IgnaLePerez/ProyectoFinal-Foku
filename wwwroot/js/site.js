@@ -278,66 +278,70 @@ function restaurarPomodoro() {
 function asegurarDentroDePantalla(widget) {
     if (!widget || widget.classList.contains('hidden')) return;
 
-    const rect = widget.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    const limites = obtenerLimitesWidget(widget);
+    widget.style.left = `${Math.min(Math.max(widget.offsetLeft, limites.minLeft), limites.maxLeft)}px`;
+    widget.style.top = `${Math.min(Math.max(widget.offsetTop, limites.minTop), limites.maxTop)}px`;
+}
 
-    let newLeft = widget.offsetLeft;
-    let newTop = widget.offsetTop;
+function obtenerLimitesWidget(widget) {
+    const contenedor = widget.offsetParent;
+    const ancho = contenedor ? contenedor.clientWidth : window.innerWidth;
+    const alto = contenedor ? contenedor.clientHeight : window.innerHeight;
 
-    if (rect.right > windowWidth) newLeft = windowWidth - rect.width - 10;
-    if (rect.left < 0) newLeft = 10;
-    if (rect.bottom > windowHeight) newTop = windowHeight - rect.height - 10;
-    if (rect.top < 0) newTop = 10;
-
-    widget.style.left = `${Math.max(10, newLeft)}px`;
-    widget.style.top = `${Math.max(10, newTop)}px`;
+    return {
+        minLeft: 10,
+        maxLeft: Math.max(10, ancho - widget.offsetWidth - 10),
+        minTop: 10,
+        maxTop: Math.max(10, alto - widget.offsetHeight - 10)
+    };
 }
 
 function hacerArrastrable(widget) {
-    let dragging = false;
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let pointerId = null;
+    let posX = 0;
+    let posY = 0;
     const header = widget.querySelector('.widget-header');
 
     if (header) {
-        header.onmousedown = arrastrarMouseDown;
+        header.onpointerdown = iniciarArrastre;
+        header.onpointermove = elementoArrastrado;
+        header.onpointerup = cerrarArrastre;
+        header.onpointercancel = cerrarArrastre;
+        header.onlostpointercapture = cerrarArrastre;
     }
 
-    function arrastrarMouseDown(e) {
-        if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+    function iniciarArrastre(e) {
+        if (e.button !== 0 || e.target.closest('button, select, input')) return;
 
-        dragging = true;
+        pointerId = e.pointerId;
+        posX = e.clientX;
+        posY = e.clientY;
         e.preventDefault();
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmousemove = elementoArrastrado;
-        document.onmouseup = cerrarArrastre;
+        header.setPointerCapture(pointerId);
     }
 
     function elementoArrastrado(e) {
-        if (!dragging) return;
+        if (e.pointerId !== pointerId) return;
 
         e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
+        const limites = obtenerLimitesWidget(widget);
+        const nuevoLeft = widget.offsetLeft + e.clientX - posX;
+        const nuevoTop = widget.offsetTop + e.clientY - posY;
+        posX = e.clientX;
+        posY = e.clientY;
 
-        const currentLeft = widget.offsetLeft;
-        const currentTop = widget.offsetTop;
-        const nuevoTop = currentTop - pos2;
-        const nuevoLeft = currentLeft - pos1;
-
-        widget.style.left = `${Math.max(0, Math.min(nuevoLeft, window.innerWidth - widget.offsetWidth))}px`;
-        widget.style.top = `${Math.max(0, Math.min(nuevoTop, window.innerHeight - widget.offsetHeight))}px`;
-
+        widget.style.left = `${Math.min(Math.max(nuevoLeft, limites.minLeft), limites.maxLeft)}px`;
+        widget.style.top = `${Math.min(Math.max(nuevoTop, limites.minTop), limites.maxTop)}px`;
         asegurarDentroDePantalla(widget);
     }
 
-    function cerrarArrastre() {
-        dragging = false;
-        document.onmousemove = null;
-        document.onmouseup = null;
+    function cerrarArrastre(e) {
+        if (e.pointerId !== pointerId) return;
+
+        pointerId = null;
+        if (header.hasPointerCapture(e.pointerId)) {
+            header.releasePointerCapture(e.pointerId);
+        }
         asegurarDentroDePantalla(widget);
     }
 }
@@ -551,12 +555,12 @@ async function cargarEtiquetasTareas() {
         const response = await fetch('/Home/GetEtiquetasTareas');
         if (!response.ok) throw new Error('No se pudieron cargar las etiquetas');
         const etiquetas = await response.json();
-        select.innerHTML = '<option value="">Tags</option>' + etiquetas.map(tag => 
+        select.innerHTML = '<option value="">Etiquetas</option>' + etiquetas.map(tag =>
             `<option value="${tag.id}">${tag.nombre}</option>`
         ).join('');
     } catch (error) {
         console.error(error);
-        select.innerHTML = '<option value="">Tags</option>';
+        select.innerHTML = '<option value="">Etiquetas</option>';
     }
 }
 
@@ -588,6 +592,11 @@ async function cargarTareas() {
 function getTareaPorId(idTarea) {
     const tareas = Array.isArray(window._fokuTareasCache) ? window._fokuTareasCache : [];
     return tareas.find(t => Number(t.id) === Number(idTarea));
+}
+
+function formatearFechaLimite(fecha) {
+    const coincidencia = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fecha || '');
+    return coincidencia ? `${coincidencia[3]}/${coincidencia[2]}/${coincidencia[1]}` : '';
 }
 
 async function eliminarTarea(idTarea) {
@@ -639,13 +648,14 @@ function renderizarTareas(tareas) {
                                 <span class="task-name">${escapeHtml(tarea.nombre || 'Sin nombre')}</span>
                             </div>
                             <div class="task-description">${escapeHtml(tarea.descripcion || 'Sin descripción')}</div>
+                            ${tarea.fechaLimite ? `<span class="task-deadline">Fecha límite: ${formatearFechaLimite(tarea.fechaLimite)}</span>` : ''}
                             <div class="task-tags">
                                 ${(tarea.tags || []).map(tag => `
                                     <span class="task-tag" style="background:${tag.color || '#e8e5e0'};">
                                         ${escapeHtml(tag.nombre)}
                                         <button type="button" class="task-tag-remove" data-remove-tag="${tag.id}" data-task-id="${tarea.id}" aria-label="Quitar etiqueta ${escapeHtml(tag.nombre)}">×</button>
                                     </span>
-                                `).join('') || '<span class="task-tag" style="background:#e8e5e0;">Sin tags</span>'}
+                                `).join('') || '<span class="task-tag" style="background:#e8e5e0;">Sin etiquetas</span>'}
                                 <button type="button" class="task-tag-add" data-open-tag-modal="${tarea.id}" aria-label="Agregar etiquetas a la tarea">Agregar etiquetas</button>
                             </div>
                         </div>
@@ -736,6 +746,7 @@ function abrirFormularioEdicionTarea(idTarea) {
     nameInput.value = tarea?.nombre || '';
     descInput.value = tarea?.descripcion || '';
     form.classList.remove('hidden');
+    document.getElementById('tasks-widget')?.classList.add('task-form-open');
     nameInput.focus();
 }
 
@@ -743,13 +754,16 @@ function cerrarFormularioTarea() {
     const form = document.getElementById('task-add-form');
     if (!form) return;
     form.classList.add('hidden');
+    document.getElementById('tasks-widget')?.classList.remove('task-form-open');
     form.dataset.mode = 'create';
     form.dataset.taskId = '';
 
     const nameInput = document.getElementById('new-task-name');
     const descInput = document.getElementById('new-task-description');
+    const deadlineInput = document.getElementById('new-task-deadline');
     if (nameInput) nameInput.value = '';
     if (descInput) descInput.value = '';
+    if (deadlineInput) deadlineInput.value = '';
 }
 
 async function guardarNuevaTarea() {
@@ -758,6 +772,7 @@ async function guardarNuevaTarea() {
     const idTarea = form ? Number(form.dataset.taskId) : 0;
     const nombre = document.getElementById('new-task-name')?.value?.trim();
     const descripcion = document.getElementById('new-task-description')?.value?.trim();
+    const fechaLimite = document.getElementById('new-task-deadline')?.value || null;
 
     if (!nombre) {
         alert('Debe completar el nombre de la tarea');
@@ -768,7 +783,7 @@ async function guardarNuevaTarea() {
         const endpoint = isEdit ? '/Home/UpdateTarea' : '/Home/AddTarea';
         const payload = isEdit
             ? { idTarea, nombre, descripcion }
-            : { nombre, descripcion };
+            : { nombre, descripcion, fechaLimite };
 
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -794,6 +809,7 @@ function abrirFormularioTarea() {
     form.dataset.mode = 'create';
     form.dataset.taskId = '';
     form.classList.remove('hidden');
+    document.getElementById('tasks-widget')?.classList.add('task-form-open');
     const nameInput = document.getElementById('new-task-name');
     if (nameInput) nameInput.focus();
 }

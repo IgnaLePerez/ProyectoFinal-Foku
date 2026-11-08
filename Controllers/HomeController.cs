@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Foku.Models;
+using Calendar = Foku.Models.Calendar;
 using System.Text.Json;
 
 namespace Foku.Controllers;
@@ -110,6 +112,7 @@ public class HomeController : Controller
                 id = t.Id,
                 nombre = t.Nombre,
                 descripcion = t.Descripcion,
+                fechaLimite = t.FechaLimite?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
                 terminada = t.Terminada,
                 tags = t.Etiquetas.Select(e => new { id = e.Id, nombre = e.Nombre, color = e.Color }).ToList()
             })
@@ -126,14 +129,34 @@ public class HomeController : Controller
             return Unauthorized();
         }
 
-        if (string.IsNullOrWhiteSpace(payload?.nombre))
+        if (string.IsNullOrWhiteSpace(payload?.nombre)
+            || !TryParseFechaLimite(payload.fechaLimite, out var fechaLimite))
         {
             return BadRequest();
         }
 
         var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
-        BD.AgregarTarea(usuarioId, payload.nombre, payload.descripcion ?? string.Empty);
+        BD.AgregarTarea(usuarioId, payload.nombre, payload.descripcion ?? string.Empty, fechaLimite);
         return Ok();
+    }
+
+    private static bool TryParseFechaLimite(string? valor, out DateTime? fechaLimite)
+    {
+        if (string.IsNullOrWhiteSpace(valor))
+        {
+            fechaLimite = null;
+            return true;
+        }
+
+        if (DateTime.TryParseExact(valor, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var fecha)
+            && fecha >= new DateTime(1753, 1, 1))
+        {
+            fechaLimite = fecha;
+            return true;
+        }
+
+        fechaLimite = null;
+        return false;
     }
 
     [HttpPost]
@@ -337,6 +360,7 @@ public class HomeController : Controller
     {
         public string nombre { get; set; }
         public string descripcion { get; set; }
+        public string? fechaLimite { get; set; }
     }
 
     public class UpdateTareaInput

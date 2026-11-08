@@ -253,6 +253,8 @@
             border: 1px solid #d8d0c8;
             border-radius: 18px;
             background: rgba(255,255,255,0.18);
+            width: 100%;
+            min-width: 0;
         }
 
         .task-add-form input,
@@ -263,13 +265,33 @@
             background: rgba(255,255,255,0.5);
             color: #333;
             width: 100%;
+            min-width: 0;
             font: inherit;
             resize: vertical;
+        }
+
+        .task-deadline-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            width: 100%;
+            min-width: 0;
+            color: #585858;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .task-deadline-field input[type="date"] {
+            width: 100%;
+            min-width: 0;
+            min-height: 42px;
+            resize: none;
         }
 
         .task-form-actions {
             display: flex;
             justify-content: flex-end;
+            flex-wrap: wrap;
             gap: 0.7rem;
         }
 
@@ -439,6 +461,7 @@
             color: white;
             font-weight: 600;
             font-size: 0.82rem;
+            transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
         }
 
         .task-edit-btn {
@@ -583,6 +606,7 @@
             padding: 0.7rem 0.9rem;
             cursor: pointer;
             font-weight: 700;
+            transition: background-color 0.2s ease;
         }
 
         .task-tag-create-button:hover,
@@ -605,6 +629,7 @@
             font-weight: 700;
             background: #6c757d;
             color: white;
+            transition: background-color 0.2s ease;
         }
 
         .task-tag-edit-cancel:hover {
@@ -832,7 +857,7 @@
 </head>
 <body>
     <!-- Header superior -->
-    <header>
+    <header id="workspace-header">
         <div>
             <a asp-controller="Home" asp-action="VistaLanding" aria-label="Ir a la landing" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
                 <img src="/images/logo.png" alt="Foku Logo" />
@@ -871,7 +896,7 @@
 
     <!-- Cuerpo principal -->
     <main>
-        <aside>
+        <aside id="workspace-sidebar">
             <nav>
                 <ul>
                     <!-- Agregado id="tour-documentos" -->
@@ -991,11 +1016,11 @@
                         <h3>Tareas</h3>
                     </div>
                     <div class="task-header-controls">
-                        <select id="task-tag-filter" aria-label="Filtrar por tags">
-                            <option value="">Tags</option>
+                        <select id="task-tag-filter" aria-label="Filtrar por etiquetas">
+                            <option value="">Etiquetas</option>
                         </select>
                         <select id="task-status-filter" aria-label="Filtrar por estado">
-                            <option value="">Filters</option>
+                            <option value="">Filtros</option>
                             <option value="false">Sin terminar</option>
                             <option value="true">Terminadas</option>
                         </select>
@@ -1012,6 +1037,10 @@
                     <div id="task-add-form" class="task-add-form hidden">
                         <input id="new-task-name" type="text" placeholder="Nombre de la tarea" maxlength="255" />
                         <textarea id="new-task-description" rows="3" placeholder="Descripcion"></textarea>
+                        <label class="task-deadline-field" for="new-task-deadline">
+                            Fecha límite
+                            <input id="new-task-deadline" type="date" min="1753-01-01" />
+                        </label>
                         <div class="task-form-actions">
                             <button type="button" class="task-form-cancel">Cancelar</button>
                             <button type="button" class="task-form-save">Guardar</button>
@@ -1079,6 +1108,10 @@
         </div>
     </main>
 
+    <button id="toggle-workspace-sidebar" class="workspace-panel-toggle workspace-panel-toggle-left"
+            type="button" aria-expanded="true" aria-controls="workspace-sidebar"
+            aria-label="Ocultar menú lateral" title="Ocultar menú lateral"
+            onclick="toggleWorkspaceSidebar()">‹</button>
     <!-- Estructura HTML limpia para el Tour -->
 
     <div id="tour-overlay" class="tour-overlay" data-usuario="@(usuario?.Id.ToString() ?? "invitado")"></div>
@@ -1103,6 +1136,17 @@
             const menu = document.getElementById('workspaceUserMenu');
             if (!menu) return;
             menu.classList.toggle('open');
+        }
+
+        function toggleWorkspaceSidebar() {
+            const button = document.getElementById('toggle-workspace-sidebar');
+            const sidebar = document.getElementById('workspace-sidebar');
+            const isExpanded = document.body.classList.toggle('workspace-sidebar-collapsed') === false;
+            button.setAttribute('aria-expanded', String(isExpanded));
+            button.setAttribute('aria-label', isExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral');
+            button.title = isExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral';
+            button.textContent = isExpanded ? '‹' : '›';
+            sidebar.setAttribute('aria-hidden', String(!isExpanded));
         }
 
         document.addEventListener('click', function (event) {
