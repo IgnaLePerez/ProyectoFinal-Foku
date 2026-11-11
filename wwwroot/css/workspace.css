@@ -99,12 +99,20 @@ main {
   width: 100%;
 }
 
+/* Sidebar adaptativo preciso */
 main aside {
-  margin-top: 6rem;
+  /* 1. Margen superior fluido: usa 6rem en pantallas altas, pero se reduce proporcionalmente en laptops */
+  margin-top: min(6rem, 8vh);
   margin-left: 2.6%;
   max-width: 240px;
   min-width: 0;
-  overflow: hidden;
+  
+  /* 2. Altura máxima: toma toda la pantalla menos el margen superior y 1.5rem de espacio inferior fijo */
+  max-height: calc(100dvh - min(6rem, 8vh) - 1.5rem);
+  
+  /* 3. Permite scroll si la pantalla es extremadamente pequeña */
+  overflow-y: auto;
+  
   opacity: 1;
   transform: translateX(0);
   transition: max-width 0.28s ease, margin-left 0.28s ease, opacity 0.2s ease, transform 0.28s ease;
@@ -114,10 +122,13 @@ ul {
   background-color: var(--cards);
   width: fit-content;
   border-radius: var(--border-radius-cards);
+  
   padding: 4rem 0.2rem;
+  
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  
+  gap: min(2rem, 2.5vh);
 }
 
 ul li {
