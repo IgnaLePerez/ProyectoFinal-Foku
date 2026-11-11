@@ -66,8 +66,63 @@
             <button type="button" class="perfil-edit-button" onclick="openPerfilModal()"> Editar perfil</button>
         </section>
 
+
+        <!-- SECCIÓN INFERIOR DEL PERFIL -->
+
         <div class="profile-content">
-            <div id="tiendaModal" class="tienda-modal-backdrop">
+
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="profile-left">
+
+                <!-- RACHA: ACÁ VA LA FOTO DE RACHA -->
+                <div class="profile-racha">
+                    <h2>Racha</h2>
+
+                    <!-- ACÁ VA EL CONTENIDO DE RACHA -->
+                </div>
+
+                <!-- ESTADÍSTICAS: ACÁ VA LA FOTO DE ESTADÍSTICAS -->
+                <div class="profile-estadisticas">
+                    <h2>Estadísticas</h2>
+
+                    <!-- ACÁ VA EL CONTENIDO DE ESTADÍSTICAS -->
+                </div>
+
+            </div>
+
+            <!-- COLUMNA DERECHA: TIENDA -->
+            <div class="profile-tienda">
+
+                <!-- ENCABEZADO DE TIENDA -->
+                <div class="profile-tienda-header">
+                    <h2>Tienda</h2>
+
+                    <button type="button"
+                            class="profile-tienda-carrito"
+                            onclick="abrirTienda()">
+                        <img src="~/images/tienda_carrito.png" alt="Abrir tienda" />
+                    </button>
+                </div>
+
+                <!-- LÍNEA DIVISORIA -->
+                <div class="profile-tienda-linea"></div>
+
+                <!-- INTERIOR BLANCO -->
+                <div class="profile-tienda-interior">
+
+                    <!-- MENSAJE CUANDO TODAVÍA NO HAY UN FONDO -->
+                    <div class="profile-tienda-vacio">
+                        ¡Cómprate y equípate un fondo para empezar a personalizar tu espacio!
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- POPUP DE TIENDA: FUERA DE PROFILE-CONTENT -->
+        <div id="tiendaModal" class="tienda-modal-backdrop">
             <div class="tienda-modal" role="dialog" aria-modal="true" aria-labelledby="tiendaModalTitle">
 
                 <div class="tienda-modal-header">
@@ -79,36 +134,12 @@
                 </div>
 
                 <div class="tienda-modal-body">
-                    <!-- ACÁ VAMOS A AGREGAR EL CONTENIDO DE LA TIENDA MÁS ADELANTE -->
+                    <!-- CONTENIDO DE LA TIENDA MÁS ADELANTE -->
                 </div>
 
             </div>
         </div>
-            <!-- COLUMNA IZQUIERDA -->
-            <div class="profile-left">
 
-                <!-- FOTO 1: RACHA (830 x 102) -->
-                <div class="profile-racha">
-                    <!-- PONER FOTO DE RACHA ACÁ -->
-                </div>
-
-                <!-- FOTO 2: ESTADÍSTICAS (830 x 395) -->
-                <div class="profile-estadisticas">
-                    <!-- PONER FOTO DE ESTADÍSTICAS ACÁ -->
-                </div>
-
-            </div>
-
-            <!-- COLUMNA DERECHA -->
-            <!-- FOTO 3: TIENDA (596 x 489) -->
-            <div class="profile-tienda">
-                <button type="button" class="profile-tienda-interior" onclick="abrirTienda()">
-                    <img src="/images/tienda_carrito.png" alt="Tienda" />
-                    <span>Tienda</span>
-                </button>
-            </div>
-
-        </div>
 
         <div id="perfilModal" class="perfil-modal-backdrop" aria-hidden="true">
         <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="perfilModalTitle">
