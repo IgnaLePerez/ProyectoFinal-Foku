@@ -146,7 +146,7 @@ function renderCalendar() {
         const events = eventMap.get(key) || [];
 
         const dayEvents = events.slice(0, 2).map((event) => {
-            const title = (event.title || 'Evento').slice(0, 16);
+            const title = event.title || 'Evento';
             return `<div class="calendar-event" title="${escapeHtml(event.title || 'Evento')}">${escapeHtml(title)}</div>`;
         }).join('');
 
