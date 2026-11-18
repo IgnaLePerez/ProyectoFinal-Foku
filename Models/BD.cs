@@ -13,12 +13,9 @@ public static class BD
 
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            int? id = connection.QueryFirstOrDefault<int?>(
-                query,
-                new { pUsername = nombreUsuario, pContraseña = contraseña }
-            );
+            int id = connection.QueryFirstOrDefault<int>(query, new { pUsername = nombreUsuario, pContraseña = contraseña });
 
-            return id?.ToString() ?? "-1";
+            return id.ToString();
         }
     }
 

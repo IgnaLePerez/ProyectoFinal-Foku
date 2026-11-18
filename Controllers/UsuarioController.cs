@@ -56,12 +56,12 @@ public class UsuarioController : Controller
     }
 
     [HttpGet]
-    public IActionResult VerificarSesion()
+    public bool SesionValida(string nombreUsuario, string password)
     {
-        string? id = HttpContext.Session.GetString("id");
-        bool existeSesion = !string.IsNullOrEmpty(id) && id != "-1";
-
-        return Json(new { existeSesion });
+        if (BD.BuscarSesion(nombreUsuario, password) == "0"){
+            return false;
+        }
+        return true;
     }
 
     [HttpGet]
