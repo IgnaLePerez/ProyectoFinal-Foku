@@ -383,7 +383,7 @@ let indicePasoActual = 0;
 // Obtiene la clave única del usuario logueado
 function obtenerClaveUsuarioTour() {
     const overlay = document.getElementById('tour-overlay');
-    const usuario = overlay ? overlay.getAttribute('data-usuario') : 'invitado';
+    const usuario = overlay ? overlay.getAttribute('data-usuario').trim() : 'invitado';
     return `foku_tour_completado_${usuario}`;
 }
 
@@ -391,32 +391,32 @@ function obtenerClaveUsuarioTour() {
 function iniciarTour() {
     const claveTour = obtenerClaveUsuarioTour();
 
-    // Comprueba si el tour ya fue completado con el ID actual
+    // Si es 'invitado' (no cargó bien el usuario), no guardamos ni mostramos hasta que cargue
+    if (claveTour === 'foku_tour_completado_invitado') return;
+
     if (localStorage.getItem(claveTour) === 'true') {
         return;
     }
 
-    // Recupera el progreso guardado con el nombre de usuario anterior
-    const claveAnterior = 'foku_tour_completado_CamiTesteoPerfil3';
-
-    if (localStorage.getItem(claveAnterior) === 'true') {
-        localStorage.setItem(claveTour, 'true');
-        return;
-    }
-
     const overlay = document.getElementById('tour-overlay');
-
-    if (overlay) overlay.classList.add('visible');
+    if (overlay) {
+        overlay.classList.add('visible');
+    }
 
     indicePasoActual = 0;
     mostrarPasoActual();
 }
 // Muestra la tarjeta y resalta el elemento del paso actual
 function mostrarPasoActual() {
-    // Quitar resaltado del paso anterior
+    // 1. Quitar resaltado y clase del paso anterior
     const elementoPrevio = document.querySelector('.tour-resaltado');
     if (elementoPrevio) {
         elementoPrevio.classList.remove('tour-resaltado');
+    }
+
+    const contenedorPrevio = document.querySelector('.tour-contenedor-activo');
+    if (contenedorPrevio) {
+        contenedorPrevio.classList.remove('tour-contenedor-activo');
     }
 
     const pasoInfo = listaPasosTour[indicePasoActual];
@@ -428,7 +428,17 @@ function mostrarPasoActual() {
 
     if (!elementoActual || !tarjeta) return;
 
-    // Resaltar elemento activo
+    // 2. Subir <main> o <header> por encima del fondo oscuro
+    const main = document.querySelector('main');
+    const header = document.getElementById('workspace-header');
+
+    if (pasoInfo.elementoId === 'tour-racha' && header) {
+        header.classList.add('tour-contenedor-activo');
+    } else if (main) {
+        main.classList.add('tour-contenedor-activo');
+    }
+
+    // 3. Resaltar elemento activo
     elementoActual.classList.add('tour-resaltado');
 
     // Actualizar textos
