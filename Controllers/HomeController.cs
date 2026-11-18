@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Foku.Models;
 using Calendar = Foku.Models.Calendar;
 using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Foku.Controllers;
 
@@ -11,11 +12,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly Calendar _calendar;
+    private readonly IWebHostEnvironment _environment;
 
-    public HomeController(ILogger<HomeController> logger, Calendar calendar)
+    public HomeController(ILogger<HomeController> logger, Calendar calendar, IWebHostEnvironment environment)
     {
         _logger = logger;
         _calendar = calendar;
+        _environment = environment;
     }
 
     public IActionResult VistaLanding()
@@ -356,6 +359,110 @@ public class HomeController : Controller
         return Ok();
     }
 
+    [HttpGet]
+    public IActionResult GetDocumentos()
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+
+        var documentos = BD.ObtenerDocumentosPorUsuario(usuarioId)
+            .Select(d => DocumentoJson(d))
+            .ToList();
+
+        return Json(documentos);
+    }
+
+    [HttpPost]
+    [RequestSizeLimit(100_000_000)]
+    public async Task<IActionResult> UploadDocumento(IFormFile archivo)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (archivo == null || archivo.Length == 0) return BadRequest("No se recibió ningún archivo.");
+
+        var extension = Path.GetExtension(archivo.FileName);
+        if (!string.Equals(extension, ".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest("Solo se permiten archivos PDF.");
+        }
+
+        var nombreSeguro = Path.GetFileName(archivo.FileName).Trim();
+        if (nombreSeguro.Length == 0) return BadRequest("Nombre de archivo inválido.");
+
+        int id = BD.AgregarDocumento(usuarioId, nombreSeguro);
+        var carpeta = Path.Combine(_environment.WebRootPath, "uploads", "documentos");
+        Directory.CreateDirectory(carpeta);
+        var rutaFisica = Path.Combine(carpeta, id + ".pdf");
+
+        await using var stream = System.IO.File.Create(rutaFisica);
+        await archivo.CopyToAsync(stream);
+
+        var documento = BD.ObtenerDocumento(id, usuarioId);
+        return documento == null ? Ok() : Json(DocumentoJson(documento));
+    }
+
+    [HttpPost]
+    public IActionResult ToggleDocumento([FromBody] DocumentoIdInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || payload.id <= 0) return BadRequest();
+
+        var documento = BD.ObtenerDocumento(payload.id, usuarioId);
+        if (documento == null) return Forbid();
+
+        bool destacado = BD.AlternarDocumentoDestacado(payload.id, usuarioId);
+        documento.Destacado = destacado;
+        return Json(DocumentoJson(documento));
+    }
+
+    [HttpPost]
+    public IActionResult RenombrarDocumento([FromBody] RenombrarDocumentoInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || payload.id <= 0 || string.IsNullOrWhiteSpace(payload.nombre)) return BadRequest();
+
+        var documento = BD.ObtenerDocumento(payload.id, usuarioId);
+        if (documento == null) return Forbid();
+
+        var nombre = payload.nombre.Trim();
+        if (!BD.RenombrarDocumento(payload.id, usuarioId, nombre)) return NotFound();
+
+        documento.Nombre = nombre;
+        return Json(DocumentoJson(documento));
+    }
+
+    [HttpPost]
+    public IActionResult EliminarDocumento([FromBody] DocumentoIdInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || payload.id <= 0) return BadRequest();
+
+        var documento = BD.ObtenerDocumento(payload.id, usuarioId);
+        if (documento == null) return Forbid();
+
+        if (!BD.EliminarDocumento(payload.id, usuarioId)) return NotFound();
+
+        var rutaFisica = Path.Combine(_environment.WebRootPath, "uploads", "documentos", payload.id + ".pdf");
+        if (System.IO.File.Exists(rutaFisica)) System.IO.File.Delete(rutaFisica);
+
+        return Ok();
+    }
+
+    private bool TryGetUsuarioSesion(out int usuarioId)
+    {
+        var idSesion = HttpContext.Session.GetString("id");
+        return int.TryParse(idSesion, out usuarioId) && usuarioId > 0;
+    }
+
+    private static object DocumentoJson(Documento documento)
+    {
+        return new
+        {
+            id = documento.Id,
+            nombre = documento.Nombre,
+            destacado = documento.Destacado,
+            ruta = $"/uploads/documentos/{documento.Id}.pdf"
+        };
+    }
+
     public class TareaInput
     {
         public string nombre { get; set; }
@@ -397,5 +504,16 @@ public class HomeController : Controller
     public class EtiquetaIdInput
     {
         public int idEtiqueta { get; set; }
+    }
+
+    public class DocumentoIdInput
+    {
+        public int id { get; set; }
+    }
+
+    public class RenombrarDocumentoInput
+    {
+        public int id { get; set; }
+        public string nombre { get; set; } = string.Empty;
     }
 }

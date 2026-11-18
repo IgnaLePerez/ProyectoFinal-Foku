@@ -273,4 +273,111 @@ public static class BD
             );
         }
     }
+
+    public static List<Documento> ObtenerDocumentosPorUsuario(int idUsuario)
+    {
+        const string query = @"
+            SELECT ID AS Id, Nombre, IdUsuario, Destacado
+            FROM Documentos
+            WHERE IdUsuario = @pIdUsuario
+            ORDER BY Destacado DESC, Nombre ASC;";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            return connection.Query<Documento>(query, new { pIdUsuario = idUsuario }).ToList();
+        }
+    }
+
+    public static int AgregarDocumento(int idUsuario, string nombre)
+    {
+        const string query = @"
+            INSERT INTO Documentos (Nombre, IdUsuario, Destacado)
+            OUTPUT INSERTED.ID
+            VALUES (@pNombre, @pIdUsuario, 0);";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            return connection.QuerySingle<int>(query, new { pNombre = nombre, pIdUsuario = idUsuario });
+        }
+    }
+
+    public static Documento? ObtenerDocumento(int idDocumento, int idUsuario)
+    {
+        const string query = @"
+            SELECT ID AS Id, Nombre, IdUsuario, Destacado
+            FROM Documentos
+            WHERE ID = @pIdDocumento AND IdUsuario = @pIdUsuario;";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            return connection.QueryFirstOrDefault<Documento>(query, new
+            {
+                pIdDocumento = idDocumento,
+                pIdUsuario = idUsuario
+            });
+        }
+    }
+
+    public static bool AlternarDocumentoDestacado(int idDocumento, int idUsuario)
+    {
+        const string query = @"
+            UPDATE Documentos
+            SET Destacado = CASE WHEN Destacado = 1 THEN 0 ELSE 1 END
+            WHERE ID = @pIdDocumento AND IdUsuario = @pIdUsuario;
+
+            SELECT Destacado
+            FROM Documentos
+            WHERE ID = @pIdDocumento AND IdUsuario = @pIdUsuario;";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            return connection.QueryFirstOrDefault<bool>(query, new
+            {
+                pIdDocumento = idDocumento,
+                pIdUsuario = idUsuario
+            });
+        }
+    }
+
+    public static bool RenombrarDocumento(int idDocumento, int idUsuario, string nombre)
+    {
+        const string query = @"
+            UPDATE Documentos
+            SET Nombre = @pNombre
+            WHERE ID = @pIdDocumento AND IdUsuario = @pIdUsuario;";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            return connection.Execute(query, new
+            {
+                pIdDocumento = idDocumento,
+                pIdUsuario = idUsuario,
+                pNombre = nombre
+            }) > 0;
+        }
+    }
+
+    public static bool EliminarDocumento(int idDocumento, int idUsuario)
+    {
+        const string query = @"
+            BEGIN TRANSACTION;
+
+            DELETE FROM DocumentosXMarcadores
+            WHERE IdDocumento = @pIdDocumento;
+
+            DELETE FROM Documentos
+            WHERE ID = @pIdDocumento AND IdUsuario = @pIdUsuario;
+
+            COMMIT TRANSACTION;";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            int filas = connection.Execute(query, new
+            {
+                pIdDocumento = idDocumento,
+                pIdUsuario = idUsuario
+            });
+            return filas > 0;
+        }
+    }
 }
