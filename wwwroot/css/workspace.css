@@ -596,7 +596,7 @@ body.workspace-sidebar-collapsed > main > aside {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(33, 34, 37, 0.75);
+  background-color: transparent; /* La sombra del elemento resaltado hace el oscurecimiento */
   z-index: 2000;
   display: none;
 }
@@ -608,12 +608,14 @@ body.workspace-sidebar-collapsed > main > aside {
 .tour-resaltado {
   position: relative !important;
   z-index: 2002 !important;
-  box-shadow: 0 0 0 4px var(--acento-rest), 0 0 20px rgba(255, 149, 9, 0.7) !important;
   border-radius: 14px !important;
   background-color: #FFF3E0 !important;
   color: var(--black-rest) !important;
-  opacity: 1 !important;
-  transition: all 0.3s ease;
+  box-shadow: 
+      0 0 0 4px var(--acento-rest),
+      0 0 20px rgba(255, 149, 9, 0.7),
+      0 0 0 9999px rgba(33, 34, 37, 0.75) !important;
+  transition: background-color 0.15s ease;
 }
 
 .tour-contenedor-activo {

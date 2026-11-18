@@ -420,39 +420,30 @@ function iniciarTour() {
     mostrarPasoActual();
 }
 // Muestra la tarjeta y resalta el elemento del paso actual
+// Muestra la tarjeta y resalta el elemento del paso actual
 function mostrarPasoActual() {
-    // 1. Quitar resaltado y clase del paso anterior
-    const elementoPrevio = document.querySelector('.tour-resaltado');
-    if (elementoPrevio) {
-        elementoPrevio.classList.remove('tour-resaltado');
-    }
-
-    const contenedorPrevio = document.querySelector('.tour-contenedor-activo');
-    if (contenedorPrevio) {
-        contenedorPrevio.classList.remove('tour-contenedor-activo');
-    }
-
     const pasoInfo = listaPasosTour[indicePasoActual];
     const elementoActual = document.getElementById(pasoInfo.elementoId);
     const tarjeta = document.getElementById('tour-card');
     const tituloEl = document.getElementById('tour-titulo');
     const descEl = document.getElementById('tour-descripcion');
     const btnAnterior = document.getElementById('btn-anterior-tour');
+    const aside = document.getElementById('workspace-sidebar');
 
     if (!elementoActual || !tarjeta) return;
 
-    // 2. Subir <main> o <header> por encima del fondo oscuro
-    const main = document.querySelector('main');
-    const header = document.getElementById('workspace-header');
-
-    if (pasoInfo.elementoId === 'tour-racha' && header) {
-        header.classList.add('tour-contenedor-activo');
-    } else if (main) {
-        main.classList.add('tour-contenedor-activo');
+    if (aside) {
+        aside.style.overflow = 'visible';
     }
 
-    // 3. Resaltar elemento activo
+    // 1. Guardar referencia al anterior y activar el nuevo PRIMERO (evita el flash)
+    const elementoPrevio = document.querySelector('.tour-resaltado');
     elementoActual.classList.add('tour-resaltado');
+
+    // 2. Quitar resaltado del anterior solo si es distinto al actual
+    if (elementoPrevio && elementoPrevio !== elementoActual) {
+        elementoPrevio.classList.remove('tour-resaltado');
+    }
 
     // Actualizar textos
     tituloEl.innerText = pasoInfo.titulo;
@@ -519,10 +510,12 @@ function finalizarTour() {
     const tarjeta = document.getElementById('tour-card');
     const overlay = document.getElementById('tour-overlay');
     const elementoResaltado = document.querySelector('.tour-resaltado');
+    const aside = document.getElementById('workspace-sidebar');
 
     if (tarjeta) tarjeta.classList.add('hidden');
     if (overlay) overlay.classList.remove('visible');
     if (elementoResaltado) elementoResaltado.classList.remove('tour-resaltado');
+    if (aside) aside.style.overflow = '';
 
     const claveTour = obtenerClaveUsuarioTour();
     localStorage.setItem(claveTour, 'true');
