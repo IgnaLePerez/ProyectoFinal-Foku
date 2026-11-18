@@ -28,11 +28,11 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        string? idSesion = HttpContext.Session.GetString("id");
+        string idSesion = HttpContext.Session.GetString("id");
 
         if (string.IsNullOrEmpty(idSesion) || idSesion == "-1")
         {
-            return RedirectToAction("VistaLanding");
+            return RedirectToAction("VistaLanding");;
         }
 
         
@@ -58,7 +58,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return RedirectToAction("VistaLanding");
+            return RedirectToAction("VistaLanding");;
         }
 
         var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
@@ -72,7 +72,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return RedirectToAction("VistaLanding");
+            return RedirectToAction("VistaLanding");;
         }
 
         var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
@@ -82,19 +82,15 @@ public class HomeController : Controller
         return View("WorkSpace");
     }
 
-    [HttpGet]
     public IActionResult GetEtiquetasTareas()
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
-
-        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
-        var etiquetas = BD.ObtenerEtiquetasPorUsuario(usuarioId)
-            .Select(e => new { id = e.Id, nombre = e.Nombre, color = e.Color })
-            .ToList();
-
+        int usuarioId = int.Parse(HttpContext.Session.GetString("id"));
+        List<Etiqueta> etiquetas = new List<Etiqueta>();
+        etiquetas = BD.ObtenerEtiquetasPorUsuario(usuarioId);
         return Json(etiquetas);
     }
 
@@ -103,7 +99,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
@@ -129,7 +125,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (string.IsNullOrWhiteSpace(payload?.nombre)
@@ -167,7 +163,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (payload == null || payload.idTarea <= 0 || string.IsNullOrWhiteSpace(payload.nombre))
@@ -191,7 +187,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (payload == null || payload.id <= 0)
@@ -208,7 +204,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (payload == null || payload.id <= 0 || string.IsNullOrWhiteSpace(payload.nombre) || string.IsNullOrWhiteSpace(payload.color))
@@ -232,7 +228,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (payload == null || string.IsNullOrWhiteSpace(payload.nombre) || string.IsNullOrWhiteSpace(payload.color))
@@ -268,7 +264,7 @@ public class HomeController : Controller
     {
        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (payload == null || payload.idTarea <= 0 || payload.idEtiqueta <= 0)
@@ -292,7 +288,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (payload == null || payload.idTarea <= 0 || payload.idEtiqueta <= 0)
@@ -316,7 +312,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");
         }
 
         if (payload == null || payload.idTarea <= 0)
@@ -340,7 +336,7 @@ public class HomeController : Controller
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
         {
-            return Unauthorized();
+            return RedirectToAction("VistaLanding");;
         }
 
         if (payload == null || payload.idEtiqueta <= 0)

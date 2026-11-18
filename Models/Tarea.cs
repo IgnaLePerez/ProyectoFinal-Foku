@@ -12,11 +12,3 @@ public class Tarea{
 
     public Tarea(){ }
 }
-
-public class Etiqueta
-{
-    public int Id { get; set; }
-    public string Nombre { get; set; }
-    public string Color { get; set; }
-    public int IdUsuario { get; set; }
-}

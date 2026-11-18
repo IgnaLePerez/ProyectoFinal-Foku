@@ -1,5 +1,6 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Foku.Models;
 
 namespace Foku.Models;
 
@@ -114,10 +115,7 @@ public static class BD
         List<Tarea> tareas;
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            tareas = connection.Query<Tarea>(
-                "exec FiltrarTareas @pIdUsuario, @pIdEtiqueta, @pTerminada",
-                new
-                {
+            tareas = connection.Query<Tarea>("exec FiltrarTareas @pIdUsuario, @pIdEtiqueta, @pTerminada", new {
                     pIdUsuario = idUsuario,
                     pIdEtiqueta = idEtiqueta,
                     pTerminada = terminada
