@@ -19,21 +19,28 @@ function mostrarError(input, label, mensaje) {
     label.innerHTML = mensaje;
 }
 
+
 async function verificarSesion(event) {
     event.preventDefault();
 
     const username = inputUserName.value.trim();
+    const password = inputPassword.value.trim();
 
     if (!username) {
         mostrarError(inputUserName, labelUserName, 'Nombre de usuario - Campo obligatorio');
         return;
     }
 
+    if (!password) {
+        mostrarError(inputPassword, labelPassword, 'Contraseña - Campo obligatorio');
+        return;
+    }
+
     try {
-        const response = await fetch('/Usuario/NombreUsuarioValido?nombreUsuario=' + encodeURIComponent(username), {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        });
+        // Verificar si el nombre de usuario existe
+        const response = await fetch(
+            '/Usuario/NombreUsuarioValido?nombreUsuario=' + encodeURIComponent(username)
+        );
 
         const data = await response.json();
 
@@ -42,12 +49,30 @@ async function verificarSesion(event) {
             return;
         }
 
+        // Verificar si la sesión es válida
+        const responseSesion = await fetch(
+            '/Usuario/SesionValida?nombreUsuario=' + encodeURIComponent(username) +
+            '&password=' + encodeURIComponent(password)
+        );
+
+        const dataSesion = await responseSesion.json();
+        alert(dataSesion)
+        if (!dataSesion) {
+            mostrarError(inputPassword, labelPassword, 'Contraseña - Sesión inválida');
+            return;
+        }
+
+        // Si ambas verificaciones son correctas
         limpiarError(inputUserName, labelUserName);
+        limpiarError(inputPassword, labelPassword);
+
         event.target.submit();
+
     } catch (error) {
         console.error('Error:', error);
     }
 }
+
 
 const formIniciarSesion = document.getElementById('formIniciarSesion');
 if (formIniciarSesion) {

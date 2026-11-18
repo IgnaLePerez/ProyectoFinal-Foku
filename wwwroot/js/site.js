@@ -346,6 +346,19 @@ function hacerArrastrable(widget) {
     }
 }
 
+let zIndexWidgetActual = 1001;
+
+function ponerWidgetAlFrente(widget) {
+    if (!widget || widget.classList.contains('hidden')) return;
+    zIndexWidgetActual += 1;
+    widget.style.zIndex = String(zIndexWidgetActual);
+}
+
+document.addEventListener('pointerdown', (event) => {
+    const widget = event.target.closest('.floating-widget');
+    ponerWidgetAlFrente(widget);
+});
+
 /* ==========================================
    LÓGICA DEL TOUR PASO A PASO POR USUARIO
    ========================================== */
