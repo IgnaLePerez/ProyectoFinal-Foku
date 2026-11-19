@@ -152,16 +152,27 @@ body.perfil-page {
 }
 
 .perfil-card {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
     padding: 1.5rem 0 2rem;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
     background: transparent;
     border: none;
     border-radius: 0;
     box-shadow: none;
+}
+
+.perfil-card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #E3E0DA;
 }
 
 .perfil-avatar {
@@ -446,16 +457,6 @@ body.perfil-page {
     position: relative;
     padding-bottom: 2rem;
     margin-bottom: 1rem;
-}
-
-.perfil-card::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: #E3E0DA;
 }
 
 /* Pop-up Cerrar Sesión */

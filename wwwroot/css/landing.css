@@ -4,6 +4,9 @@
 }
 
 .user-menu-button {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
     background: #f0f0f0;
     border: 1px solid #ddd;
     border-radius: 999px;
@@ -61,12 +64,6 @@
 
 .user-menu form {
     margin: 0;
-}
-
-.user-menu-button {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
 }
 
 .user-menu-avatar {

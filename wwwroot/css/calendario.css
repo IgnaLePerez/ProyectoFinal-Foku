@@ -2,11 +2,13 @@
 .calendar-controls {
     display: flex;
     justify-content: space-between;
+    gap: 0.5rem;
     padding: 0.5rem;
 }
 
 .calendar-controls select {
     padding: 0.25rem;
+    padding-left: 0.7rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     background: white;
@@ -118,20 +120,6 @@
     font-size: 1.25rem;
     font-weight: 500;
     margin: 0;
-}
-
-.calendar-controls {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.calendar-controls select {
-    padding: 0.25rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-    color: #333;
-    padding-left: 0.7rem;
 }
 
 .calendar-controls input[type="number"] {
