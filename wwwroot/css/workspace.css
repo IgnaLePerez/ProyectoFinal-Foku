@@ -1636,3 +1636,99 @@ body.workspace-sidebar-collapsed > main > aside {
 .calendar-day-today:hover {
   background-color: #A2BAE3 !important;
 }
+
+/* Menú de usuario del workspace */
+.workspace-user-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.workspace-user-button {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: #212225;
+  font-weight: 700;
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+}
+
+.workspace-user-button:hover {
+  background: rgba(33, 34, 37, 0.04);
+}
+
+.workspace-user-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #FCFBF8;
+  border: 1px solid #e7e2d8;
+  border-radius: 14px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  min-width: 180px;
+  display: none;
+  z-index: 30;
+}
+
+.workspace-user-popover.open {
+  display: block;
+}
+
+.workspace-user-popover a,
+.workspace-user-popover form button {
+  display: block;
+  width: calc(100% - 6px);
+  margin: 3px;
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  text-align: left;
+  text-decoration: none;
+  color: #212225;
+  padding: 0.9rem 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.workspace-user-popover form {
+  margin: 0;
+}
+
+.workspace-user-popover a:hover,
+.workspace-user-popover form button:hover {
+  background: #EAEAEA;
+}
+
+.workspace-user-popover a:active,
+.workspace-user-popover form button:active {
+  background: #CCCCCC;
+}
+
+.workspace-user-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #FF9509;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.workspace-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
