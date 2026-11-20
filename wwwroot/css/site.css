@@ -221,13 +221,12 @@ p a {
   font: var(--text-buttons);
   border: 3px solid var(--acento-rest);
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 5px;
 }
 
 .btnAcentoOutline:hover {
@@ -253,13 +252,12 @@ p a {
   font: var(--text-buttons);
   border: 3px solid var(--secundario-i-rest);
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 5px;
 }
 
 .btnSecundarioIOutline:hover {
@@ -280,13 +278,12 @@ p a {
   font: var(--text-buttons);
   border: 3px solid var(--secundario-ii-rest);
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 5px;
 }
 
 .btnSecundarioIIOutline:hover {
@@ -307,13 +304,12 @@ p a {
   font: var(--text-buttons);
   border: 3px solid var(--black-rest);
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 5px;
 }
 
 .btnBlackOutline:hover {
@@ -334,13 +330,12 @@ p a {
   font: var(--text-buttons);
   border: 3px solid var(--white-rest);
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 5px;
 }
 
 .btnWhiteOutline:hover {
@@ -361,13 +356,12 @@ p a {
   font: var(--text-buttons);
   border: 3px solid var(--grey-rest);
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 5px;
 }
 
 .btnGreyOutline:hover {

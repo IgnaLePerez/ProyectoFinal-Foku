@@ -120,16 +120,12 @@
     gap: 0.7rem;
 }
 
-.task-form-cancel,
-.task-form-save {
+.task-form-cancel {
     padding: 0.6rem 1rem;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 700;
-}
-
-.task-form-cancel {
     background: #6c757d;
     color: white;
 }
@@ -139,6 +135,11 @@
 }
 
 .task-form-save {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
     background: #4f7dbe;
     color: white;
 }
@@ -277,7 +278,22 @@
     flex-shrink: 0;
 }
 
-.task-edit-btn,
+.task-edit-btn {
+    padding: 0.45rem 0.7rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    font-size: 0.82rem;
+    transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+    background: #5a7dbb;
+}
+
+.task-edit-btn:hover {
+    background: #4d6ea7;
+}
+
 .task-delete-btn {
     padding: 0.45rem 0.7rem;
     border: none;
@@ -287,17 +303,6 @@
     font-weight: 600;
     font-size: 0.82rem;
     transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
-}
-
-.task-edit-btn {
-    background: #5a7dbb;
-}
-
-.task-edit-btn:hover {
-    background: #4d6ea7;
-}
-
-.task-delete-btn {
     background: #d76767;
 }
 
