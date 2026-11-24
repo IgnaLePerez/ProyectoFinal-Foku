@@ -378,4 +378,14 @@ public static class BD
             return filas > 0;
         }
     }
+
+    public static void CambiarContraseña(int id, string contraseña)
+    {
+        string query = "exec CambiarContraseña @pId, @pContraseña";
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Execute(query, new {pId = id, pContraseña = contraseña});
+        }
+    }
 }

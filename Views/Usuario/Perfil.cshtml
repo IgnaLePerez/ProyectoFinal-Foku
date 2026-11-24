@@ -6,6 +6,7 @@
     var usernameInicial = !string.IsNullOrWhiteSpace(Model?.Username) ? Model.Username : "usuario";
     var mensajeExito = TempData["SuccessPerfil"] as string;
     var mensajeError = TempData["ErrorPerfil"] as string;
+    var mensajeErrorPassword = TempData["ErrorPassword"] as string;
 }
 
 <!DOCTYPE html>
@@ -165,19 +166,31 @@
             </div>
 
             <!-- Formulario para cambiar foto -->
-            <form asp-controller="Usuario"
-                asp-action="CambiarFotoPerfil"
-                method="post"
-                enctype="multipart/form-data"
-                id="formFotoPerfil"
-                class="perfil-foto-form">
-                <label for="inputFotoPerfil" class="perfil-btn-secondary">Cambiar foto</label>
-                <input type="file"
-                    id="inputFotoPerfil"
-                    name="foto"
-                    accept="image/*"
-                    hidden />
-            </form>
+            <div class="perfil-modal-photo-actions">
+
+                <form asp-controller="Usuario"
+                    asp-action="CambiarFotoPerfil"
+                    method="post"
+                    enctype="multipart/form-data"
+                    id="formFotoPerfil"
+                    class="perfil-foto-form">
+
+                    <label for="inputFotoPerfil" class="perfil-btn-secondary">Cambiar foto</label>
+
+                    <input type="file"
+                        id="inputFotoPerfil"
+                        name="foto"
+                        accept="image/*"
+                        hidden />
+                </form>
+
+                <button type="button" class="perfil-btn-secondary" onclick="openPasswordModal()">Cambiar contraseña</button>
+
+            </div>
+
+            <div class="perfil-password-action">
+                <button type="button" class="perfil-btn-secondary" onclick="openPasswordModal()">Cambiar contraseña</button>
+            </div>
 
             <!-- Único formulario para editar nombre y usuario -->
             <form asp-controller="Usuario"
@@ -210,6 +223,74 @@
                 </div>
             </form>
         </div>
+        </div>
+
+        <!-- Popup para cambiar contraseña -->
+        <div id="passwordModal" class="perfil-modal-backdrop">
+            <div class="perfil-modal password-modal">
+                <h3 id="passwordModalTitle">Cambiar contraseña</h3>
+                <p class="password-description"> Elegí una contraseña segura para proteger tu cuenta.</p>
+
+                <form asp-controller="Usuario"
+                    asp-action="CambiarContraseña"
+                    method="post"
+                    id="formCambiarPassword"
+                    class="perfil-modal-form">
+
+                    <div class="perfil-field">
+                        <label for="nuevaContraseña">Nueva contraseña</label>
+
+                        <div class="password-input-container">
+                            <input type="password"
+                                id="nuevaContraseña"
+                                name="nuevaContraseña"
+                                autocomplete="new-password"
+                                required />
+
+                            <button type="button"
+                                    class="password-toggle"
+                                    onclick="mostrarOcultarPassword('nuevaContraseña', this)">
+                                Mostrar
+                            </button>
+                        </div>
+
+                        <p id="passwordAyuda" class="password-help">Mínimo 8 caracteres, con letras y números.</p>
+                    </div>
+
+                    <div class="perfil-field">
+                        <label for="confirmarContraseña">Confirmar nueva contraseña</label>
+
+                        <div class="password-input-container">
+                            <input type="password"
+                                id="confirmarContraseña"
+                                name="confirmarContraseña"
+                                autocomplete="new-password"
+                                required />
+
+                            <button type="button"
+                                    class="password-toggle"
+                                    onclick="mostrarOcultarPassword('confirmarContraseña', this)">
+                                Mostrar
+                            </button>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(mensajeErrorPassword))
+                    {
+                        <p id="mensajeErrorPassword" class="perfil-mensaje perfil-mensaje-error">@mensajeErrorPassword</p>
+                    }
+
+                    <div class="perfil-modal-actions">
+                        <button type="button"
+                                class="perfil-btn-secondary"
+                                onclick="closePasswordModal()">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="perfil-submit-btn">Guardar contraseña</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Cerrar sesión -->

@@ -200,4 +200,74 @@ public IActionResult CambiarFotoPerfil(IFormFile foto)
 
         return RedirectToAction("Perfil");
     }
+
+    [HttpPost]
+    public IActionResult CambiarContraseña(string nuevaContraseña, string confirmarContraseña)
+    {
+        string idSesion = HttpContext.Session.GetString("id");
+
+        if (idSesion == null || idSesion == "-1")
+        {
+            return RedirectToAction("VistaLanding", "Home");
+        }
+
+        Usuario usuario = BD.GetUsuario(int.Parse(idSesion));
+
+        if (usuario == null)
+        {
+            return RedirectToAction("VistaLanding", "Home");
+        }
+
+        if (nuevaContraseña == "" || confirmarContraseña == "")
+        {
+            TempData["ErrorPassword"] = "Completá los dos campos.";
+            return RedirectToAction("Perfil");
+        }
+
+        if (nuevaContraseña != confirmarContraseña)
+        {
+            TempData["ErrorPassword"] = "Las contraseñas no coinciden.";
+            return RedirectToAction("Perfil");
+        }
+
+        if (nuevaContraseña.Length < 8)
+        {
+            TempData["ErrorPassword"] = "La contraseña debe tener al menos 8 caracteres.";
+            return RedirectToAction("Perfil");
+        }
+
+        bool tieneLetra = false;
+        bool tieneNumero = false;
+
+        foreach (char caracter in nuevaContraseña)
+        {
+            if (char.IsLetter(caracter))
+            {
+                tieneLetra = true;
+            }
+
+            if (char.IsDigit(caracter))
+            {
+                tieneNumero = true;
+            }
+        }
+
+        if (!tieneLetra || !tieneNumero)
+        {
+            TempData["ErrorPassword"] = "La contraseña debe incluir letras y números.";
+            return RedirectToAction("Perfil");
+        }
+
+        if (nuevaContraseña == "12345678a" || nuevaContraseña == "12345678q" || nuevaContraseña == "abcdefgh" || nuevaContraseña == "password" || nuevaContraseña == "Password" || nuevaContraseña == "password123" || nuevaContraseña == "Password123" || nuevaContraseña == "admin123" || nuevaContraseña == "Contraseña" || nuevaContraseña == "Contraseña12345" || nuevaContraseña == "contraseña" || nuevaContraseña == "contraseña12345")
+        {
+            TempData["ErrorPassword"] = "La contraseña es muy común. Elegí otra.";
+            return RedirectToAction("Perfil");
+        }
+
+        BD.CambiarContraseña(usuario.Id, nuevaContraseña);
+
+        TempData["SuccessPerfil"] = "Contraseña actualizada correctamente.";
+
+        return RedirectToAction("Perfil");
+    }
 }

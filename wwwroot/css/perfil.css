@@ -773,3 +773,92 @@ body.perfil-page {
     overflow-y: auto;
 }
 
+/* Botón para cambiar contraseña */
+.perfil-password-action {
+    margin-top: 0.8rem;
+}
+
+/* Popup de contraseña */
+.password-modal {
+    max-width: 480px;
+}
+
+.password-description {
+    color: #5D5E65;
+    margin-bottom: 1.2rem;
+    font-family: 'Commissioner', sans-serif;
+}
+
+.password-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.password-input-container input {
+    flex: 1;
+    min-width: 0;
+}
+
+.password-toggle {
+    border: none;
+    background: transparent;
+    color: #3E6FB6;
+    font-family: 'Commissioner', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.4rem;
+}
+
+.password-toggle:hover {
+    color: #FF9509;
+}
+
+.password-help {
+    color: #5D5E65;
+    font-size: 0.85rem;
+    margin: 0.3rem 0 0;
+}
+
+.password-help.error {
+    color: #d93636;
+}
+
+.password-help.success {
+    color: #43845a;
+}
+
+.perfil-modal-photo-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.perfil-modal-photo-actions .perfil-foto-form {
+    margin: 0;
+}
+
+.perfil-modal-photo-actions button {
+    margin: 0;
+}
+
+.perfil-modal-photo-actions button {
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+}
+
+#formCambiarPassword .perfil-submit-btn {
+    background-color: #FF9509;
+    transition: background-color 0.2s;
+}
+
+#formCambiarPassword .perfil-submit-btn:hover {
+    background-color: #DA7C00;
+}
+
+#formCambiarPassword .perfil-submit-btn:active {
+    background-color: #9C5901;
+}

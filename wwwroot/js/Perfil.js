@@ -203,3 +203,129 @@ function abrirTienda() {
 function cerrarTienda() {
     document.getElementById("tiendaModal").classList.remove("open");
 }
+
+// POPUP PARA CAMBIAR CONTRASEÑA
+
+const passwordModal = document.getElementById('passwordModal');
+const formCambiarPassword = document.getElementById('formCambiarPassword');
+
+const nuevaContraseña = document.getElementById('nuevaContraseña');
+const confirmarContraseña = document.getElementById('confirmarContraseña');
+const passwordAyuda = document.getElementById('passwordAyuda');
+
+// Abrir popup
+function openPasswordModal() {
+    if (passwordModal) {
+        passwordModal.classList.add('open');
+        passwordModal.setAttribute('aria-hidden', 'false');
+    }
+}
+
+// Cerrar popup
+function closePasswordModal() {
+    if (passwordModal) {
+        passwordModal.classList.remove('open');
+        passwordModal.setAttribute('aria-hidden', 'true');
+    }
+}
+
+// Mostrar u ocultar contraseña
+function mostrarOcultarPassword(id, boton) {
+    const input = document.getElementById(id);
+
+    if (!input) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        boton.textContent = 'Ocultar';
+    } else {
+        input.type = 'password';
+        boton.textContent = 'Mostrar';
+    }
+}
+
+// Evitar copiar, cortar y pegar en los dos campos
+[nuevaContraseña, confirmarContraseña].forEach(input => {
+    if (input) {
+        input.addEventListener('copy', event => event.preventDefault());
+        input.addEventListener('cut', event => event.preventDefault());
+        input.addEventListener('paste', event => event.preventDefault());
+    }
+});
+
+// Contraseñas demasiado comunes
+const contraseñasDebiles = [
+    '12345678q',
+    '12345678a',
+    '1234567890',
+    'password',
+    'password123',
+    'qwerty123',
+    'abcdefgh',
+    'admin123',
+    'contraseña',
+    'Contraseña',
+    'Contraseña12345',
+    'contraseña12345'
+];
+
+// Validar contraseña
+function validarNuevaContraseña() {
+    const password = nuevaContraseña.value;
+
+    if (password.length < 8) {
+        passwordAyuda.textContent = 'La contraseña debe tener al menos 8 caracteres.';
+        passwordAyuda.className = 'password-help error';
+        return false;
+    }
+
+    if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+        passwordAyuda.textContent = 'Debe incluir al menos una letra y un número.';
+        passwordAyuda.className = 'password-help error';
+        return false;
+    }
+
+    if (contraseñasDebiles.includes(password.toLowerCase())) {
+        passwordAyuda.textContent = 'Es una contraseña muy común. Elegí una menos predecible.';
+        passwordAyuda.className = 'password-help error';
+        return false;
+    }
+
+    passwordAyuda.textContent = 'La contraseña cumple con los requisitos.';
+    passwordAyuda.className = 'password-help success';
+
+    return true;
+}
+
+// Validar mientras escribe
+if (nuevaContraseña) {
+    nuevaContraseña.addEventListener('input', function () {
+        validarNuevaContraseña();
+    });
+}
+
+// Validar formulario antes de enviarlo
+if (formCambiarPassword) {
+    formCambiarPassword.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const passwordValida = validarNuevaContraseña();
+
+        if (!passwordValida) {
+            return;
+        }
+
+        if (nuevaContraseña.value !== confirmarContraseña.value) {
+            alert('Las contraseñas no coinciden.');
+            confirmarContraseña.focus();
+            return;
+        }
+
+        formCambiarPassword.submit();
+    });
+}
+
+// Si el servidor devuelve un error, volver a abrir el popup
+if (document.getElementById('mensajeErrorPassword')) {
+    openPasswordModal();
+}
