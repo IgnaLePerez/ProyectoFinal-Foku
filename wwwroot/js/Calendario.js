@@ -23,13 +23,10 @@ function abrirCalendario() {
     widget.classList.remove('hidden');
     widget.style.display = 'flex';
     widget.style.position = 'fixed';
-    widget.style.transform = 'none';
-    widget.style.zIndex = '1001';
 
     const width = widget.offsetWidth || 600;
-    const height = widget.offsetHeight || 620;
     widget.style.left = `${Math.max(10, (window.innerWidth - width) / 2)}px`;
-    widget.style.top = `${Math.max(10, (window.innerHeight - height) / 2)}px`;
+    widget.style.top = '40px';
     widget.style.right = 'auto';
     widget.style.bottom = 'auto';
 
@@ -192,14 +189,12 @@ function asegurarDentroDePantallaCalendario(widget) {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     const sidebar = document.querySelector('main aside');
-    const header = document.querySelector('header');
 
     const sidebarRect = sidebar ? sidebar.getBoundingClientRect() : null;
-    const headerRect = header ? header.getBoundingClientRect() : null;
 
     const minLeft = sidebarRect ? Math.max(10, sidebarRect.right + 10) : 10;
     const maxLeft = Math.max(minLeft, windowWidth - rect.width - 10);
-    const minTop = headerRect ? Math.max(10, headerRect.bottom + 10) : 10;
+    const minTop = 40;
     const maxTop = Math.max(minTop, windowHeight - rect.height - 10);
 
     let newLeft = widget.offsetLeft;
@@ -250,14 +245,12 @@ function hacerArrastrableCalendario(widget) {
         const currentLeft = widget.offsetLeft;
         const currentTop = widget.offsetTop;
         const sidebar = document.querySelector('main aside');
-        const header = document.querySelector('header');
 
         const sidebarRect = sidebar ? sidebar.getBoundingClientRect() : null;
-        const headerRect = header ? header.getBoundingClientRect() : null;
 
         const minLeft = sidebarRect ? Math.max(10, sidebarRect.right + 10) : 10;
         const maxLeft = Math.max(minLeft, window.innerWidth - widget.offsetWidth - 10);
-        const minTop = headerRect ? Math.max(10, headerRect.bottom + 10) : 10;
+        const minTop = 40;
         const maxTop = Math.max(minTop, window.innerHeight - widget.offsetHeight - 10);
 
         const nuevoTop = Math.min(Math.max(currentTop + deltaY, minTop), maxTop);
