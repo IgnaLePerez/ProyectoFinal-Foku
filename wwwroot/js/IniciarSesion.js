@@ -56,7 +56,6 @@ async function verificarSesion(event) {
         );
 
         const dataSesion = await responseSesion.json();
-        alert(dataSesion)
         if (!dataSesion) {
             mostrarError(inputPassword, labelPassword, 'Contraseña - Sesión inválida');
             return;
