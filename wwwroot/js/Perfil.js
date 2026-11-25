@@ -351,3 +351,9 @@ if (confirmarContraseña) {
 if (document.getElementById('mensajeErrorPassword')) {
     openPasswordModal();
 }
+
+const errorPassword = document.getElementById('errorPassword');
+
+if (errorPassword && errorPassword.textContent.trim() !== '') {
+    openPasswordModal();
+}

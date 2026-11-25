@@ -20,6 +20,12 @@ public class UsuarioController : Controller
     [HttpPost]
     public IActionResult IniciarSesion(string nombreUsuario, string contraseña)
     {
+        if (contraseña != contraseña.Trim())
+        {
+            TempData["ErrorLogin"] = "La contraseña no puede tener espacios al principio o al final.";
+            return RedirectToAction("VistaIniciarSesion");
+        }
+
         HttpContext.Session.SetString("id", BD.BuscarSesion(nombreUsuario, contraseña));
         return RedirectToAction("Index", "Home");
     }
@@ -40,6 +46,18 @@ public class UsuarioController : Controller
     [HttpPost]
     public IActionResult RegistrarDatos(string nombreUsuario, string contraseña, string nombre, string apellido, string email)
     {
+        if (contraseña.Length < 8 || contraseña.Contains(" "))
+        {
+            ViewBag.msj = "La contraseña debe tener al menos 8 caracteres, con letras y números.";
+
+            ViewBag.nombreUsuario = nombreUsuario;
+            ViewBag.nombre = nombre;
+            ViewBag.apellido = apellido;
+            ViewBag.email = email;
+
+            return View("Registrarse");
+        }
+
         Usuario user = new Usuario(0, nombreUsuario, nombre, apellido, email, contraseña, 0);
         BD.CrearUsuario(user);
 
@@ -72,7 +90,6 @@ public class UsuarioController : Controller
         {
             return RedirectToAction("VistaLanding", "Home");
         }
-
         Usuario usuario = BD.GetUsuario(int.Parse(idSesion));
         if (usuario == null)
         {
@@ -216,6 +233,18 @@ public IActionResult CambiarFotoPerfil(IFormFile foto)
         if (usuario == null)
         {
             return RedirectToAction("VistaLanding", "Home");
+        }
+
+        if (nuevaContraseña != nuevaContraseña.Trim() || confirmarContraseña != confirmarContraseña.Trim())
+        {
+            TempData["ErrorPassword"] = "La contraseña no puede tener espacios al principio o al final.";
+            return RedirectToAction("Perfil");
+        }
+
+        if (nuevaContraseña == usuario.Contraseña)
+        {
+            TempData["ErrorPassword"] = "La nueva contraseña no puede ser igual a la actual.";
+            return RedirectToAction("Perfil");
         }
 
         if (nuevaContraseña == "" || confirmarContraseña == "")
