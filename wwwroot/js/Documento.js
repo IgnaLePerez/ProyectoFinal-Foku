@@ -16,6 +16,9 @@ function cerrarModalDocumentos() {
 }
 
 async function cargarDocumentos() {
+  const container = document.getElementById('documentos-lista');
+  const searchInput = document.getElementById('documentos-search');
+  if (!container) return;
   try {
     const response = await fetch('/Home/GetDocumentos', { headers: { 'Accept': 'application/json' } });
     if (!response.ok) throw new Error('No se pudieron cargar los documentos');
@@ -29,12 +32,25 @@ async function cargarDocumentos() {
 function renderDocumentos() {
   const lista = document.getElementById('documentos-lista');
   if (!lista) return;
-
-  const ordenados = [...documentosCache].sort((a, b) => Number(b.destacado) - Number(a.destacado) || a.nombre.localeCompare(b.nombre));
+  const searchInput = document.getElementById('documentos-search');
+  // termino es if abreviado para ver si existe el input en pantalla
+  const termino = searchInput ? searchInput.value.trim().toLowerCase() : ''; //trim saca espacios inicio y final
+  // arma array nuevo de docs q filtramos
+  const filtrados = documentosCache.filter(doc => 
+    doc.nombre.toLowerCase().includes(termino)
+  );
+  //para los destacados, pone los destacados arriba
+  const ordenados = filtrados.sort((a, b) => 
+    Number(b.destacado) - Number(a.destacado) || a.nombre.localeCompare(b.nombre)
+  );
+  // ve si dsp de filtrar esta vacio y ve por que para mostrar msj
   if (ordenados.length === 0) {
-    lista.innerHTML = '<p class="documentos-vacio">Aún no tienes documentos PDF.</p>';
+    lista.innerHTML = termino 
+      ? '<p class="documentos-vacio">No se encontraron documentos con ese nombre.</p>'
+      : '<p class="documentos-vacio">Aún no tienes documentos PDF.</p>';
     return;
   }
+}
 
   lista.innerHTML = ordenados.map(documento => `
     <article class="documentos-item${documento.destacado ? ' destacado' : ''}" data-id="${documento.id}">

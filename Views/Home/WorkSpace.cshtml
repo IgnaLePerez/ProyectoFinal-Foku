@@ -126,28 +126,24 @@
         <aside id="workspace-sidebar">
             <nav>
                 <ul>
-                    <!-- Agregado id="tour-documentos" -->
                     <li>
                         <button id="tour-documentos" type="button" onclick="abrirModalDocumentos()">
                             <img src="~/images/documents-icon.png" alt="Documents Icon" class="sidebar-icon-img" />
                             <p>Documentos</p>
                         </button>
                     </li>
-                    <!-- Agregado id="tour-pomodoro" -->
                     <li>
                         <button id="btn-pomodoro" id-tour="tour-pomodoro" onclick="abrirPomodoro()">
                             <img src="/images/pomodoro-icon.png" alt="Pomodoro Icon" class="sidebar-icon-img" />
                             <p>Pomodoro</p>
                         </button>
                     </li>
-                    <!-- Agregado id="tour-tareas" -->
                     <li>
                         <button id="tour-tareas" onclick="abrirTareas()">
                             <img src="/images/tasks-icon.png" alt="Tasks Icon" class="sidebar-icon-img" />
                             <p>Tareas</p>
                         </button>
                     </li>
-                    <!-- Agregado id="tour-calendario" -->
                     <li>
                         <button id="tour-calendario" onclick="abrirCalendario()">
                             <img src="~/images/calendar-icon.png" alt="Calendar Icon" class="sidebar-icon-img" />
@@ -209,7 +205,7 @@
                     </p>
                 </div>
 
-                <div class="widget-body">
+                <div class="widget-body-pomodoro">
                     <div class="timer-main-row">
                         <div class="timer-display-block">
                             <h2 id="timer-display">25:00</h2>
@@ -255,10 +251,10 @@
                     </div>
                 </div>
 
-                <div class="tasks-widget-body">
-                    <div class="task-toolbar">
+                <div class="widget-body">
+                    <div class="widget-toolbar">
                         <input id="task-search" type="text" placeholder="Buscar por nombre o descripción" aria-label="Buscar tarea" />
-                        <button id="task-add-button" type="button" class="btn-main-action task-add-button">Agregar tarea</button>
+                        <button id="task-add-button" type="button">Agregar tarea</button>
                     </div>
 
                     <div id="task-add-form" class="task-add-form hidden">
@@ -353,16 +349,17 @@
 
     <!-- Modal de Documentos -->
     <div id="documentos-modal" class="documentos-modal hidden" aria-hidden="true">
-        <div class="documentos-modal-backdrop" data-cerrar-documentos="true"></div>
-        <section class="documentos-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="documentos-modal-titulo">
-            <header class="documentos-modal-header">
-                <h3 id="documentos-modal-titulo">Documentos</h3>
+        <section class="documentos-modal-dialog widget-body" role="dialog" aria-modal="true" aria-labelledby="documentos-modal-titulo">
+            <header>
+                <h3>Documentos</h3>
                 <button type="button" class="documentos-modal-close" aria-label="Cerrar documentos" onclick="cerrarModalDocumentos()">&times;</button>
             </header>
-            <div class="documentos-modal-toolbar">
+            <div class="widget-toolbar">
+                <input id="documentos-search" type="text" placeholder="Buscar documento" aria-label="Buscar documento" />
+                <button id="documentos-add-button" type="button">Agregar PDF</button>
                 <input id="documentos-file-input" type="file" accept="application/pdf,.pdf" hidden />
-                <button id="documentos-add-button" type="button" class="documentos-add-button">Agregar PDF</button>
             </div>
+
             <div id="documentos-lista" class="documentos-lista" aria-live="polite">
                 <p class="documentos-vacio">Cargando documentos...</p>
             </div>

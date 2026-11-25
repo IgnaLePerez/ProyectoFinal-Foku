@@ -286,6 +286,19 @@ public static class BD
         }
     }
 
+    public static List<Documento> ObtenerDocumentosFiltrados(int idUsuario, string busqueda)
+    {
+        const string query = @"
+            SELECT ID AS Id, Nombre, IdUsuario, Destacado
+            FROM Documentos
+            WHERE IdUsuario = @pIdUsuario AND Nombre LIKE '%@busqueda%'
+            ORDER BY Destacado DESC, Nombre ASC;";
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            return connection.Query<Documento>(query, new { pIdUsuario = idUsuario }).ToList();
+        }
+    }
+
     public static int AgregarDocumento(int idUsuario, string nombre)
     {
         const string query = @"

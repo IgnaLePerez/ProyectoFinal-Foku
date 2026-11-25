@@ -68,20 +68,6 @@ public class HomeController : Controller
         return View();
     }
 
-    public async Task<IActionResult> WorkSpaceDirecto()
-    {
-        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
-        {
-            return RedirectToAction("VistaLanding");;
-        }
-
-        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
-        ViewBag.user = BD.GetUsuario(usuarioId);
-        ViewBag.tareas = BD.GetTareasPorUsuario(usuarioId);
-        ViewBag.eventos = await _calendar.GetEventos();
-        return View("WorkSpace");
-    }
-
     public IActionResult GetEtiquetasTareas()
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
@@ -356,14 +342,11 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult GetDocumentos()
+    public IActionResult GetDocumentos(string buscar = "")
     {
         if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
-
-        var documentos = BD.ObtenerDocumentosPorUsuario(usuarioId)
-            .Select(d => DocumentoJson(d))
-            .ToList();
-
+        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
+        var documentos = BD.ObtenerDocumentosFiltrados(usuarioId, buscar)
         return Json(documentos);
     }
 
@@ -457,6 +440,29 @@ public class HomeController : Controller
             destacado = documento.Destacado,
             ruta = $"/uploads/documentos/{documento.Id}.pdf"
         };
+    }
+
+    [HttpGet]
+    public IActionResult GetTareas(string buscar = "")
+    {
+        if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
+        {
+            return RedirectToAction("VistaLanding");
+        }
+
+        var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
+        var tareas = BD.ObtenerTareasFiltradas(usuarioId, etiquetaId, finalizada, buscar)
+            .Select(t => new {
+                id = t.Id,
+                nombre = t.Nombre,
+                descripcion = t.Descripcion,
+                fechaLimite = t.FechaLimite?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                terminada = t.Terminada,
+                tags = t.Etiquetas.Select(e => new { id = e.Id, nombre = e.Nombre, color = e.Color }).ToList()
+            })
+            .ToList();
+
+        return Json(tareas);
     }
 
     public class TareaInput
