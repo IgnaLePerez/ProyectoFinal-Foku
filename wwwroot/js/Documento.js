@@ -20,7 +20,8 @@ async function cargarDocumentos() {
   const searchInput = document.getElementById('documentos-search');
   if (!container) return;
   try {
-    const response = await fetch('/Home/GetDocumentos', { headers: { 'Accept': 'application/json' } });
+    const termino = searchInput ? encodeURIComponent(searchInput.value.trim()) : '';
+    const response = await fetch(`/Home/GetDocumentos?buscar=${termino}`, { headers: { 'Accept': 'application/json' } });
     if (!response.ok) throw new Error('No se pudieron cargar los documentos');
     documentosCache = await response.json();
     renderDocumentos();
@@ -50,7 +51,6 @@ function renderDocumentos() {
       : '<p class="documentos-vacio">Aún no tienes documentos PDF.</p>';
     return;
   }
-}
 
   lista.innerHTML = ordenados.map(documento => `
     <article class="documentos-item${documento.destacado ? ' destacado' : ''}" data-id="${documento.id}">
@@ -61,6 +61,7 @@ function renderDocumentos() {
         <button type="button" title="Eliminar" onclick="eliminarDocumento(${documento.id})">×</button>
       </div>
     </article>`).join('');
+}
 
 async function toggleDestacadoDocumento(id) {
   try {
@@ -196,6 +197,8 @@ function escapeHtml(value) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('documentos-search')?.addEventListener('input', () => cargarDocumentos());
+
   document.getElementById('documentos-add-button')?.addEventListener('click', () => {
     document.getElementById('documentos-file-input')?.click();
   });

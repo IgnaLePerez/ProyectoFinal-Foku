@@ -300,11 +300,16 @@ public static class BD
         const string query = @"
             SELECT ID AS Id, Nombre, IdUsuario, Destacado
             FROM Documentos
-            WHERE IdUsuario = @pIdUsuario AND Nombre LIKE '%@busqueda%'
+            WHERE IdUsuario = @pIdUsuario
+              AND (@pBusqueda = '' OR Nombre LIKE '%' + @pBusqueda + '%')
             ORDER BY Destacado DESC, Nombre ASC;";
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            return connection.Query<Documento>(query, new { pIdUsuario = idUsuario }).ToList();
+            return connection.Query<Documento>(query, new
+            {
+                pIdUsuario = idUsuario,
+                pBusqueda = busqueda?.Trim() ?? string.Empty
+            }).ToList();
         }
     }
 
