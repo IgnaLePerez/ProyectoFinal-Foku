@@ -55,8 +55,14 @@ async function validarUsuario() {
 
 function validarPassword() {
     const password = inputPassword.value;
+
     if (password.length < 8) {
         mostrarError(inputPassword, labelPassword, 'Contraseña - La contraseña debe tener al menos 8 caracteres');
+        return false;
+    }
+
+    if (password.includes(" ")) {
+        mostrarError(inputPassword, labelPassword, 'Contraseña - No puede contener espacios');
         return false;
     }
 
