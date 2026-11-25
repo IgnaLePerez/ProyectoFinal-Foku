@@ -111,7 +111,7 @@ body.perfil-page {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
     border: none;
-    background: #FCFBF8;
+    background: #EAEAEA;
     color: #212225;
 }
 
@@ -123,7 +123,7 @@ body.perfil-page {
 }
 
 .perfil-btn-secondary:hover {
-    background-color: #EAEAEA;
+    background-color: #e0e0e0;
 }
 .perfil-btn-secondary:active{
     background-color: #CCCCCC;
@@ -390,19 +390,25 @@ body.perfil-page {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 0.9rem;
+    padding: 0.6rem 1.2rem;
     border-radius: 8px;
-    background: #f1efe9;
+    background: #FCFBF8;
     color: #212225;
-    border: 1px solid #e3e0da;
+    border: none;
     font-family: var(--font-commissioner), sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .perfil-foto-form label:hover {
-    background: #e8e6e1;
+    background: #EAEAEA;
+    transform: translateY(-1px);
+}
+
+.perfil-foto-form label:active {
+    background: #CCCCCC;
 }
 
 /* Información dentro del modal */
@@ -841,13 +847,10 @@ body.perfil-page {
 }
 
 .perfil-modal-photo-actions button {
-    margin: 0;
-}
-
-.perfil-modal-photo-actions button {
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
+    margin: 0;
 }
 
 #formCambiarPassword .perfil-submit-btn {
@@ -861,4 +864,50 @@ body.perfil-page {
 
 #formCambiarPassword .perfil-submit-btn:active {
     background-color: #9C5901;
+}
+
+.password-error {
+    background-color: #FCE8E8;
+    color: #C62828;
+    border: 1px solid #E6A4A4;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.perfil-modal-photo-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-bottom: 4%;
+    margin-top: 1%;
+
+}
+
+.perfil-modal-photo-actions .perfil-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0.6rem 1.2rem;
+    min-height: 42px;
+    font-family: var(--font-commissioner), sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.5;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    background: #EAEAEA;
+    color: #212225;
+}
+
+.perfil-modal-photo-actions .perfil-btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.perfil-modal-photo-actions .perfil-btn-secondary:active {
+    background: #CCCCCC;
 }

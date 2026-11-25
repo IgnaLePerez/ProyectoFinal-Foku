@@ -213,20 +213,28 @@ const nuevaContraseña = document.getElementById('nuevaContraseña');
 const confirmarContraseña = document.getElementById('confirmarContraseña');
 const passwordAyuda = document.getElementById('passwordAyuda');
 
-// Abrir popup
+// Abrir popup de cambiar contraseña
 function openPasswordModal() {
+    closePerfilModal();
+
     if (passwordModal) {
         passwordModal.classList.add('open');
         passwordModal.setAttribute('aria-hidden', 'false');
     }
 }
 
-// Cerrar popup
+// Cerrar popup de cambiar contraseña
 function closePasswordModal() {
     if (passwordModal) {
         passwordModal.classList.remove('open');
         passwordModal.setAttribute('aria-hidden', 'true');
     }
+}
+
+// Cancelar y volver a Editar perfil
+function cancelarPasswordModal() {
+    closePasswordModal();
+    openPerfilModal();
 }
 
 // Mostrar u ocultar contraseña
@@ -310,18 +318,32 @@ if (formCambiarPassword) {
         event.preventDefault();
 
         const passwordValida = validarNuevaContraseña();
+        const errorPassword = document.getElementById('errorPassword');
 
         if (!passwordValida) {
             return;
         }
 
         if (nuevaContraseña.value !== confirmarContraseña.value) {
-            alert('Las contraseñas no coinciden.');
+            errorPassword.textContent = 'Las contraseñas no coinciden.';
+            errorPassword.style.display = 'block';
             confirmarContraseña.focus();
             return;
         }
 
+        errorPassword.style.display = 'none';
+
         formCambiarPassword.submit();
+    });
+}
+
+if (confirmarContraseña) {
+    confirmarContraseña.addEventListener('input', function () {
+        const errorPassword = document.getElementById('errorPassword');
+
+        if (errorPassword) {
+            errorPassword.style.display = 'none';
+        }
     });
 }
 

@@ -341,14 +341,14 @@ public class HomeController : Controller
         return Ok();
     }
 
-    [HttpGet]
+    /*[HttpGet]
     public IActionResult GetDocumentos(string buscar = "")
     {
         if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
         var usuarioId = int.Parse(HttpContext.Session.GetString("id"));
-        var documentos = BD.ObtenerDocumentosFiltrados(usuarioId, buscar)
+        var documentos = BD.ObtenerDocumentosFiltrados(usuarioId, buscar);
         return Json(documentos);
-    }
+    }*/
 
     [HttpPost]
     [RequestSizeLimit(100_000_000)]
@@ -442,7 +442,7 @@ public class HomeController : Controller
         };
     }
 
-    [HttpGet]
+    /*[HttpGet]
     public IActionResult GetTareas(string buscar = "")
     {
         if (HttpContext.Session.GetString("id") == null || HttpContext.Session.GetString("id") == "-1")
@@ -463,7 +463,7 @@ public class HomeController : Controller
             .ToList();
 
         return Json(tareas);
-    }
+    }*/
 
     public class TareaInput
     {

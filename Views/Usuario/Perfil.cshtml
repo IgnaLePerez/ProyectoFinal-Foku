@@ -175,7 +175,9 @@
                     id="formFotoPerfil"
                     class="perfil-foto-form">
 
-                    <label for="inputFotoPerfil" class="perfil-btn-secondary">Cambiar foto</label>
+                    <label for="inputFotoPerfil" class="perfil-btn-secondary">
+                        Cambiar foto
+                    </label>
 
                     <input type="file"
                         id="inputFotoPerfil"
@@ -184,12 +186,12 @@
                         hidden />
                 </form>
 
-                <button type="button" class="perfil-btn-secondary" onclick="openPasswordModal()">Cambiar contraseña</button>
+                <button type="button"
+                        class="perfil-btn-secondary"
+                        onclick="openPasswordModal()">
+                    Cambiar contraseña
+                </button>
 
-            </div>
-
-            <div class="perfil-password-action">
-                <button type="button" class="perfil-btn-secondary" onclick="openPasswordModal()">Cambiar contraseña</button>
             </div>
 
             <!-- Único formulario para editar nombre y usuario -->
@@ -277,13 +279,17 @@
 
                     @if (!string.IsNullOrEmpty(mensajeErrorPassword))
                     {
-                        <p id="mensajeErrorPassword" class="perfil-mensaje perfil-mensaje-error">@mensajeErrorPassword</p>
+                        <p id="errorPassword" class="password-error">@mensajeErrorPassword</p>
+                    }
+                    else
+                    {
+                        <p id="errorPassword" class="password-error" style="display: none;"></p>
                     }
 
                     <div class="perfil-modal-actions">
                         <button type="button"
                                 class="perfil-btn-secondary"
-                                onclick="closePasswordModal()">
+                                onclick="cancelarPasswordModal()">
                             Cancelar
                         </button>
 
