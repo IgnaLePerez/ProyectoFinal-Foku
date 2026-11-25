@@ -61,7 +61,6 @@ function renderDocumentos() {
         <button type="button" title="Eliminar" onclick="eliminarDocumento(${documento.id})">×</button>
       </div>
     </article>`).join('');
-}
 
 async function toggleDestacadoDocumento(id) {
   try {

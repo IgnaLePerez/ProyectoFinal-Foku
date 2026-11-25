@@ -1,6 +1,7 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Foku.Models;
+using System.Globalization;
 
 namespace Foku.Models;
 
@@ -110,7 +111,7 @@ public static class BD
         }
     }
 
-    public static List<Tarea> ObtenerTareasFiltradas(int idUsuario, int? idEtiqueta = null, bool? terminada = null, string? busqueda = null)
+    public static List<object> ObtenerTareasFiltradas(int idUsuario, int? idEtiqueta = null, bool? terminada = null, string? busqueda = null)
     {
         List<Tarea> tareas;
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -140,6 +141,14 @@ public static class BD
         return tareas
             .OrderBy(t => t.Terminada)
             .ThenBy(t => t.Nombre, StringComparer.OrdinalIgnoreCase)
+            .Select(t => (object)new {
+                id = t.Id,
+                nombre = t.Nombre,
+                descripcion = t.Descripcion,
+                fechaLimite = t.FechaLimite?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                terminada = t.Terminada,
+                tags = t.Etiquetas.Select(e => new { id = e.Id, nombre = e.Nombre, color = e.Color }).ToList()
+            })
             .ToList();
     }
 
