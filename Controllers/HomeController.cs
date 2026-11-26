@@ -431,6 +431,102 @@ public class HomeController : Controller
             ruta = $"/uploads/documentos/{documento.Id}.pdf"
         };
     }
+    // ================= ENDPOINTS MARCADORES Y RESALTADOS =================
+
+    [HttpGet]
+    public IActionResult GetMarcadores()
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        var marcadores = BD.ObtenerMarcadoresPorUsuario(usuarioId);
+        return Json(marcadores);
+    }
+
+    [HttpPost]
+    public IActionResult CrearMarcador([FromBody] MarcadorInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || string.IsNullOrWhiteSpace(payload.nombre) || string.IsNullOrWhiteSpace(payload.color))
+            return BadRequest();
+
+        var creado = BD.CrearMarcador(usuarioId, payload.nombre.Trim(), payload.color.Trim());
+        return Json(creado);
+    }
+
+    [HttpPost]
+    public IActionResult UpdateMarcador([FromBody] MarcadorInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || payload.id <= 0 || string.IsNullOrWhiteSpace(payload.nombre) || string.IsNullOrWhiteSpace(payload.color))
+            return BadRequest();
+
+        if (!BD.ModificarMarcador(payload.id, usuarioId, payload.nombre.Trim(), payload.color.Trim()))
+            return NotFound();
+
+        return Ok();
+    }
+
+    [HttpPost]
+    public IActionResult DeleteMarcador([FromBody] DocumentoIdInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || payload.id <= 0) return BadRequest();
+
+        if (!BD.BorrarMarcador(payload.id, usuarioId))
+            return NotFound();
+
+        return Ok();
+    }
+
+    [HttpGet]
+    public IActionResult GetResaltados(int idDocumento)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        var resaltados = BD.ObtenerResaltadosPorDocumento(idDocumento, usuarioId);
+        return Json(resaltados);
+    }
+
+    [HttpPost]
+    public IActionResult GuardarResaltado([FromBody] ResaltadoInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || payload.idDocumento <= 0 || payload.idMarcador <= 0 || string.IsNullOrWhiteSpace(payload.textoResaltado))
+            return BadRequest();
+
+        var doc = BD.ObtenerDocumento(payload.idDocumento, usuarioId);
+        if (doc == null) return Forbid();
+
+        var guardado = BD.AgregarResaltado(payload.idDocumento, payload.idMarcador, payload.textoResaltado, payload.pagina, payload.coordenadas);
+        return Json(guardado);
+    }
+
+    [HttpPost]
+    public IActionResult EliminarResaltado([FromBody] DocumentoIdInput payload)
+    {
+        if (!TryGetUsuarioSesion(out int usuarioId)) return Unauthorized();
+        if (payload == null || payload.id <= 0) return BadRequest();
+
+        if (!BD.EliminarResaltado(payload.id, usuarioId))
+            return NotFound();
+
+        return Ok();
+    }
+
+    // Clases Input para los JSON
+    public class MarcadorInput
+    {
+        public int id { get; set; }
+        public string nombre { get; set; } = string.Empty;
+        public string color { get; set; } = string.Empty;
+    }
+
+    public class ResaltadoInput
+    {
+        public int idDocumento { get; set; }
+        public int idMarcador { get; set; }
+        public string textoResaltado { get; set; } = string.Empty;
+        public int pagina { get; set; }
+        public string coordenadas { get; set; } = "[]";
+    }
     public class TareaInput
     {
         public string nombre { get; set; }

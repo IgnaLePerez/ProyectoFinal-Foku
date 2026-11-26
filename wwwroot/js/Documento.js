@@ -169,25 +169,19 @@ async function confirmarEliminarDocumento(id) {
   }
 }
 
-function abrirDocumento(id) {
-  const documento = documentosCache.find(d => d.id === id);
-  if (!documento) return;
-  cerrarModalDocumentos();
-
-  document.getElementById('pdf-viewer-title').textContent = documento.nombre;
-  document.getElementById('pdf-viewer-frame').src = documento.ruta + '#toolbar=0&navpanes=0&scrollbar=1&view=FitH';
-  document.getElementById('pdf-viewer').classList.remove('hidden');
+// Configurar worker de PDF.js
+if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
-function volverAlModalDocumentos() {
-  document.getElementById('pdf-viewer').classList.add('hidden');
-  document.getElementById('pdf-viewer-frame').src = 'about:blank';
-  abrirModalDocumentos();
-}
+let documentoActualId = null;
+let marcadoresCache = [];
+let resaltadosCache = [];
+let seleccionPendiente = null;
 
-function cerrarVisorDocumento() {
-  document.getElementById('pdf-viewer').classList.add('hidden');
-  document.getElementById('pdf-viewer-frame').src = 'about:blank';
+// Configurar worker de PDF.js
+if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
 function escapeHtml(value) {
@@ -230,3 +224,363 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelector('[data-cerrar-documentos="true"]')?.removeAttribute('data-cerrar-documentos');
 });
+
+
+// ================= GESTIÓN DE ETIQUETAS (MARCADORES) =================
+
+async function cargarMarcadoresPdf() {
+    const res = await fetch('/Home/GetMarcadores');
+    if (res.ok) {
+        marcadoresCache = await res.json();
+        renderListaMarcadoresPdf();
+    }
+}
+
+function renderListaMarcadoresPdf() {
+    const lista = document.getElementById('lista-marcadores-pdf');
+    if (!lista) return;
+
+    lista.innerHTML = marcadoresCache.map(m => `
+        <div style="display:flex; align-items:center; justify-content:space-between; background:#2b2b3d; padding:6px 8px; border-radius:4px;">
+            <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+                <span style="width:14px; height:14px; border-radius:50%; background:${m.color}; flex-shrink:0;"></span>
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(m.nombre)}</span>
+            </div>
+            <div style="display:flex; gap:4px;">
+                <button type="button" title="Editar" onclick="editarMarcadorPdf(${m.id})" style="cursor:pointer;">✎</button>
+                <button type="button" title="Borrar" onclick="borrarMarcadorPdf(${m.id})" style="cursor:pointer; color:#ff6b6b;">×</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function crearMarcadorPdf() {
+    const inputNombre = document.getElementById('nuevo-marcador-nombre');
+    const inputColor = document.getElementById('nuevo-marcador-color');
+    const nombre = inputNombre.value.trim();
+    const color = inputColor.value;
+    if (!nombre) return;
+
+    const res = await fetch('/Home/CrearMarcador', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, color })
+    });
+
+    if (res.ok) {
+        inputNombre.value = '';
+        await cargarMarcadoresPdf();
+    }
+}
+
+async function editarMarcadorPdf(id) {
+    const actual = marcadoresCache.find(m => m.id === id);
+    if (!actual) return;
+
+    const nuevoNombre = prompt('Nuevo nombre de la etiqueta:', actual.nombre);
+    if (!nuevoNombre || !nuevoNombre.trim()) return;
+
+    const nuevoColor = prompt('Nuevo color hexadecimal (ej: #ff5733 o #76c893):', actual.color) || actual.color;
+
+    const res = await fetch('/Home/UpdateMarcador', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, nombre: nuevoNombre.trim(), color: nuevoColor.trim() })
+    });
+
+    if (res.ok) {
+        await cargarMarcadoresPdf();
+        await cargarResaltadosPdf(documentoActualId); // Actualiza el color de los resaltados existentes
+        dibujarTodosLosResaltados();
+    }
+}
+
+async function borrarMarcadorPdf(id) {
+    if (!confirm('¿Borrar esta etiqueta? Se eliminarán también todos los textos resaltados con ella.')) return;
+
+    const res = await fetch('/Home/DeleteMarcador', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+    });
+
+    if (res.ok) {
+        await cargarMarcadoresPdf();
+        await cargarResaltadosPdf(documentoActualId);
+        dibujarTodosLosResaltados();
+    }
+}
+
+// ================= CREAR, DIBUJAR Y QUITAR RESALTADOS =================
+
+async function cargarResaltadosPdf(idDocumento) {
+    const res = await fetch(`/Home/GetResaltados?idDocumento=${idDocumento}`);
+    if (res.ok) {
+        resaltadosCache = await res.json();
+        renderListaResaltadosLateral();
+    }
+}
+
+function dibujarTodosLosResaltados() {
+    // Limpiar capas actuales
+    document.querySelectorAll('.pdf-highlight-layer').forEach(layer => layer.innerHTML = '');
+
+    resaltadosCache.forEach(resaltado => {
+        const pageWrapper = document.querySelector(`.pdf-page-wrapper[data-pagina="${resaltado.pagina}"]`);
+        if (!pageWrapper) return;
+
+        const layer = pageWrapper.querySelector('.pdf-highlight-layer');
+        const rects = JSON.parse(resaltado.coordenadas || '[]');
+
+        rects.forEach(r => {
+            const box = document.createElement('div');
+            box.style.position = 'absolute';
+            box.style.top = `${r.top}%`;
+            box.style.left = `${r.left}%`;
+            box.style.width = `${r.width}%`;
+            box.style.height = `${r.height}%`;
+            box.style.backgroundColor = resaltado.color;
+            box.style.opacity = '0.38';
+            box.style.mixBlendMode = 'multiply';
+            box.style.pointerEvents = 'auto'; // Permite hacer clic para borrarlo
+            box.style.cursor = 'pointer';
+            box.title = `${resaltado.nombreMarcador}: "${resaltado.textoResaltado}" (Clic para quitar)`;
+
+            box.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (confirm(`¿Quitar este resaltado (${resaltado.nombreMarcador})?`)) {
+                    eliminarResaltadoPdf(resaltado.id);
+                }
+            });
+
+            layer.appendChild(box);
+        });
+    });
+
+    renderListaResaltadosLateral();
+}
+
+function renderListaResaltadosLateral() {
+    const lista = document.getElementById('lista-resaltados-pdf');
+    if (!lista) return;
+
+    if (resaltadosCache.length === 0) {
+        lista.innerHTML = '<p style="color:#aaa;">Seleccioná texto en el PDF para resaltarlo.</p>';
+        return;
+    }
+
+    lista.innerHTML = resaltadosCache.map(r => `
+        <div style="background:#2b2b3d; padding:6px; border-left: 4px solid ${r.color}; border-radius:4px;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:0.75rem; color:#ccc;">
+                <span>${escapeHtml(r.nombreMarcador)} (Pág. ${r.pagina})</span>
+                <button type="button" onclick="eliminarResaltadoPdf(${r.id})" style="color:#ff6b6b; cursor:pointer;">×</button>
+            </div>
+            <p style="margin:4px 0 0 0; font-style:italic; color:#eee;">"${escapeHtml(r.textoResaltado)}"</p>
+        </div>
+    `).join('');
+}
+
+// Detectar cuando el usuario termina de seleccionar texto en el PDF
+document.addEventListener('mouseup', (e) => {
+    const container = document.getElementById('pdf-pages-container');
+    if (!container || !container.contains(e.target)) return;
+
+    const selection = window.getSelection();
+    const texto = selection.toString().trim();
+    if (!texto || selection.rangeCount === 0) {
+        ocultarTooltipResaltado();
+        return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const pageWrapper = range.commonAncestorContainer.nodeType === 1
+        ? range.commonAncestorContainer.closest('.pdf-page-wrapper')
+        : range.commonAncestorContainer.parentElement?.closest('.pdf-page-wrapper');
+
+    if (!pageWrapper) return;
+
+    const pageRect = pageWrapper.getBoundingClientRect();
+    const clientRects = Array.from(range.getClientRects());
+
+    // Convertir cada renglón seleccionado a porcentajes relativos a la página
+    const coordenadasPorcentaje = clientRects
+        .filter(r => r.width > 0 && r.height > 0)
+        .map(r => ({
+            top: ((r.top - pageRect.top) / pageRect.height) * 100,
+            left: ((r.left - pageRect.left) / pageRect.width) * 100,
+            width: (r.width / pageRect.width) * 100,
+            height: (r.height / pageRect.height) * 100
+        }));
+
+    seleccionPendiente = {
+        idDocumento: documentoActualId,
+        textoResaltado: texto,
+        pagina: parseInt(pageWrapper.dataset.pagina, 10),
+        coordenadas: JSON.stringify(coordenadasPorcentaje)
+    };
+
+    mostrarTooltipResaltado(e.clientX, e.clientY);
+});
+
+function mostrarTooltipResaltado(x, y) {
+    const tooltip = document.getElementById('pdf-highlight-tooltip');
+    if (!tooltip) return;
+
+    if (marcadoresCache.length === 0) {
+        tooltip.innerHTML = '<span style="font-size:0.8rem;">Creá una etiqueta a la izquierda primero</span>';
+    } else {
+        tooltip.innerHTML = marcadoresCache.map(m => `
+            <button type="button" onclick="confirmarGuardarResaltado(${m.id})" 
+                style="background:${m.color}; color:#000; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">
+                ${escapeHtml(m.nombre)}
+            </button>
+        `).join('');
+    }
+
+    tooltip.style.left = `${x}px`;
+    tooltip.style.top = `${y - 45}px`;
+    tooltip.classList.remove('hidden');
+}
+
+function ocultarTooltipResaltado() {
+    const tooltip = document.getElementById('pdf-highlight-tooltip');
+    tooltip?.classList.add('hidden');
+    seleccionPendiente = null;
+}
+
+async function confirmarGuardarResaltado(idMarcador) {
+    if (!seleccionPendiente) return;
+
+    const payload = {
+        ...seleccionPendiente,
+        idMarcador
+    };
+
+    const res = await fetch('/Home/GuardarResaltado', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    window.getSelection()?.removeAllRanges();
+    ocultarTooltipResaltado();
+
+    if (res.ok) {
+        const nuevoResaltado = await res.json();
+        resaltadosCache.push(nuevoResaltado);
+        dibujarTodosLosResaltados();
+    }
+}
+
+async function eliminarResaltadoPdf(idResaltado) {
+    const res = await fetch('/Home/EliminarResaltado', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: idResaltado })
+    });
+
+    if (res.ok) {
+        resaltadosCache = resaltadosCache.filter(r => r.id !== idResaltado);
+        dibujarTodosLosResaltados();
+    }
+}
+async function abrirDocumento(id) {
+    const documento = documentosCache.find(d => d.id === id);
+    if (!documento) return;
+
+    documentoActualId = id;
+    cerrarModalDocumentos();
+
+    document.getElementById('pdf-viewer-title').textContent = documento.nombre;
+    document.getElementById('pdf-viewer').classList.remove('hidden');
+    // Abrimos el modal de etiquetas junto con el documento
+    document.getElementById('pdf-marcadores-modal')?.classList.remove('hidden');
+
+    // Renderizamos el PDF primero para que nunca quede en blanco
+    await renderizarPdfConCapas(documento.ruta);
+
+    // Luego cargamos etiquetas y resaltados guardados
+    await cargarMarcadoresPdf();
+    await cargarResaltadosPdf(id);
+    dibujarTodosLosResaltados();
+}
+
+function volverAlModalDocumentos() {
+    cerrarVisorDocumento();
+    abrirModalDocumentos();
+}
+
+function cerrarVisorDocumento() {
+    document.getElementById('pdf-viewer').classList.add('hidden');
+    // Cerramos el modal de etiquetas al cerrar el documento
+    document.getElementById('pdf-marcadores-modal')?.classList.add('hidden');
+    document.getElementById('pdf-pages-container').innerHTML = '';
+    ocultarTooltipResaltado();
+    documentoActualId = null;
+}
+
+async function renderizarPdfConCapas(urlPdf) {
+    const container = document.getElementById('pdf-pages-container');
+    if (!container) return;
+
+    if (!window.pdfjsLib) {
+        container.innerHTML = '<p class="documentos-vacio">Error: No se cargó la librería PDF.js en Workspace.cshtml.</p>';
+        return;
+    }
+
+    container.innerHTML = '<p class="documentos-vacio">Cargando documento...</p>';
+
+    try {
+        const pdf = await pdfjsLib.getDocument(urlPdf).promise;
+        container.innerHTML = '';
+
+        for (let numPagina = 1; numPagina <= pdf.numPages; numPagina++) {
+            const page = await pdf.getPage(numPagina);
+            const scale = 1.35;
+            const viewport = page.getViewport({ scale });
+
+            const pageWrapper = document.createElement('div');
+            pageWrapper.className = 'pdf-page-wrapper';
+            pageWrapper.dataset.pagina = numPagina;
+            pageWrapper.style.position = 'relative';
+            pageWrapper.style.width = `${viewport.width}px`;
+            pageWrapper.style.height = `${viewport.height}px`;
+            pageWrapper.style.background = '#fff';
+            pageWrapper.style.boxShadow = '0 2px 10px rgba(33, 34, 37, 0.12)';
+            pageWrapper.style.flexShrink = '0';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext('2d');
+            await page.render({ canvasContext: ctx, viewport }).promise;
+
+            const highlightLayer = document.createElement('div');
+            highlightLayer.className = 'pdf-highlight-layer';
+            highlightLayer.style.position = 'absolute';
+            highlightLayer.style.inset = '0';
+            highlightLayer.style.pointerEvents = 'none';
+
+            const textLayerDiv = document.createElement('div');
+            textLayerDiv.className = 'textLayer';
+            textLayerDiv.style.width = `${viewport.width}px`;
+            textLayerDiv.style.height = `${viewport.height}px`;
+
+            const textContent = await page.getTextContent();
+            await pdfjsLib.renderTextLayer({
+                textContentSource: textContent,
+                container: textLayerDiv,
+                viewport: viewport,
+                textDivs: []
+            }).promise;
+
+            pageWrapper.appendChild(canvas);
+            pageWrapper.appendChild(highlightLayer);
+            pageWrapper.appendChild(textLayerDiv);
+            container.appendChild(pageWrapper);
+        }
+    } catch (error) {
+        console.error('Error renderizando PDF:', error);
+        container.innerHTML = `<p class="documentos-vacio">No se pudo mostrar el PDF (${escapeHtml(urlPdf)}).</p>`;
+    }
+}

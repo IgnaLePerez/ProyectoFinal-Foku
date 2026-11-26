@@ -415,4 +415,91 @@ public static class BD
             connection.Execute(query, new {pId = id, pContraseña = contraseña});
         }
     }
+
+    // ================= MARCADORES (ETIQUETAS DE PDF) =================
+
+public static List<Marcador> ObtenerMarcadoresPorUsuario(int idUsuario)
+{
+    const string query = "SELECT ID AS Id, Nombre, Color, IdUsuario FROM Marcadores WHERE IdUsuario = @pIdUsuario ORDER BY ID ASC;";
+    using var connection = new SqlConnection(_connectionString);
+    return connection.Query<Marcador>(query, new { pIdUsuario = idUsuario }).ToList();
+}
+
+public static Marcador CrearMarcador(int idUsuario, string nombre, string color)
+{
+    const string query = @"
+        INSERT INTO Marcadores (Nombre, Color, IdUsuario)
+        OUTPUT INSERTED.ID AS Id, INSERTED.Nombre, INSERTED.Color, INSERTED.IdUsuario
+        VALUES (@pNombre, @pColor, @pIdUsuario);";
+    using var connection = new SqlConnection(_connectionString);
+    return connection.QuerySingle<Marcador>(query, new { pNombre = nombre, pColor = color, pIdUsuario = idUsuario });
+}
+
+public static bool ModificarMarcador(int idMarcador, int idUsuario, string nombre, string color)
+{
+    const string query = @"
+        UPDATE Marcadores 
+        SET Nombre = @pNombre, Color = @pColor 
+        WHERE ID = @pIdMarcador AND IdUsuario = @pIdUsuario;";
+    using var connection = new SqlConnection(_connectionString);
+    return connection.Execute(query, new { pIdMarcador = idMarcador, pIdUsuario = idUsuario, pNombre = nombre, pColor = color }) > 0;
+}
+
+public static bool BorrarMarcador(int idMarcador, int idUsuario)
+{
+    // Gracias al ON DELETE CASCADE en SQL, esto también borra sus resaltados en DocumentosXMarcadores
+    const string query = "DELETE FROM Marcadores WHERE ID = @pIdMarcador AND IdUsuario = @pIdUsuario;";
+    using var connection = new SqlConnection(_connectionString);
+    return connection.Execute(query, new { pIdMarcador = idMarcador, pIdUsuario = idUsuario }) > 0;
+}
+
+// ================= RESALTADOS EN DOCUMENTOS =================
+
+public static List<DocumentoMarcador> ObtenerResaltadosPorDocumento(int idDocumento, int idUsuario)
+{
+    const string query = @"
+        SELECT dxm.ID AS Id, dxm.IdDocumento, dxm.IdMarcador, dxm.TextoResaltado, 
+               dxm.Pagina, dxm.Coordenadas, m.Nombre AS NombreMarcador, m.Color
+        FROM DocumentosXMarcadores dxm
+        INNER JOIN Marcadores m ON m.ID = dxm.IdMarcador
+        INNER JOIN Documentos d ON d.ID = dxm.IdDocumento
+        WHERE dxm.IdDocumento = @pIdDocumento AND d.IdUsuario = @pIdUsuario;";
+    using var connection = new SqlConnection(_connectionString);
+    return connection.Query<DocumentoMarcador>(query, new { pIdDocumento = idDocumento, pIdUsuario = idUsuario }).ToList();
+}
+
+public static DocumentoMarcador AgregarResaltado(int idDocumento, int idMarcador, string texto, int pagina, string coordenadas)
+{
+    const string query = @"
+        INSERT INTO DocumentosXMarcadores (IdDocumento, IdMarcador, TextoResaltado, Pagina, Coordenadas)
+        OUTPUT INSERTED.ID
+        VALUES (@pIdDocumento, @pIdMarcador, @pTexto, @pPagina, @pCoordenadas);";
+    using var connection = new SqlConnection(_connectionString);
+    int nuevoId = connection.QuerySingle<int>(query, new { 
+        pIdDocumento = idDocumento, 
+        pIdMarcador = idMarcador, 
+        pTexto = texto, 
+        pPagina = pagina, 
+        pCoordenadas = coordenadas 
+    });
+
+    const string selectQuery = @"
+        SELECT dxm.ID AS Id, dxm.IdDocumento, dxm.IdMarcador, dxm.TextoResaltado, 
+               dxm.Pagina, dxm.Coordenadas, m.Nombre AS NombreMarcador, m.Color
+        FROM DocumentosXMarcadores dxm
+        INNER JOIN Marcadores m ON m.ID = dxm.IdMarcador
+        WHERE dxm.ID = @pId;";
+        return connection.QuerySingle<DocumentoMarcador>(selectQuery, new { pId = nuevoId });
+    }
+
+    public static bool EliminarResaltado(int idResaltado, int idUsuario)
+    {
+        const string query = @"
+            DELETE dxm
+            FROM DocumentosXMarcadores dxm
+            INNER JOIN Documentos d ON d.ID = dxm.IdDocumento
+            WHERE dxm.ID = @pIdResaltado AND d.IdUsuario = @pIdUsuario;";
+        using var connection = new SqlConnection(_connectionString);
+        return connection.Execute(query, new { pIdResaltado = idResaltado, pIdUsuario = idUsuario }) > 0;
+    }
 }

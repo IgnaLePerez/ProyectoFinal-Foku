@@ -81,6 +81,7 @@
     <link rel="stylesheet" href="~/css/tareas.css">
     <link rel="stylesheet" href="~/css/documentos.css">
     <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css" />
     
 </head>
 <body>
@@ -369,18 +370,42 @@
     <!-- Contenedor fijo del visor PDF -->
     <section id="pdf-viewer" class="pdf-viewer hidden" aria-label="Visor de documento">
         <header class="pdf-viewer-header">
-            <button type="button" class="pdf-viewer-back" onclick="volverAlModalDocumentos()" aria-label="Volver a documentos">&#8592;</button>
+            <button type="button" class="pdf-viewer-back" onclick="volverAlModalDocumentos()" aria-label="Volver a documentos">←</button>
             <h3 id="pdf-viewer-title"></h3>
-            <button type="button" class="pdf-viewer-close" onclick="cerrarVisorDocumento()" aria-label="Cerrar visor">&times;</button>
+            <button type="button" class="pdf-viewer-close" onclick="cerrarVisorDocumento()" aria-label="Cerrar visor">×</button>
         </header>
-        <iframe id="pdf-viewer-frame" title="Documento PDF" src="about:blank"></iframe>
+
+        <div id="pdf-pages-container" class="pdf-pages-container"></div>
     </section>
+
+    <!-- Modal / Panel lateral de Etiquetas (se abre y cierra junto con el PDF) -->
+    <aside id="pdf-marcadores-modal" class="pdf-marcadores-modal hidden" aria-label="Etiquetas del documento">
+        <header class="pdf-marcadores-header">
+            <h4>Etiquetas</h4>
+        </header>
+        <div class="pdf-marcadores-body">
+            <div class="pdf-marcadores-form">
+                <input type="text" id="nuevo-marcador-nombre" placeholder="Nueva etiqueta..." maxlength="50" />
+                <input type="color" id="nuevo-marcador-color" value="#FF9509" title="Elegir color" />
+                <button type="button" onclick="crearMarcadorPdf()">+</button>
+            </div>
+            <div id="lista-marcadores-pdf" class="lista-marcadores-pdf"></div>
+
+            <hr class="pdf-marcadores-divider" />
+            <h5>Resaltados en este PDF</h5>
+            <div id="lista-resaltados-pdf" class="lista-resaltados-pdf"></div>
+        </div>
+    </aside>
+
+    <!-- Menú flotante al seleccionar texto -->
+    <div id="pdf-highlight-tooltip" class="pdf-highlight-tooltip hidden"></div>
 
     <!-- Script del cliente -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="~/js/site.js"></script>
     <script src="~/js/Calendario.js"></script>
     <script src="~/js/Documento.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         function toggleWorkspaceUserMenu() {
             const menu = document.getElementById('workspaceUserMenu');

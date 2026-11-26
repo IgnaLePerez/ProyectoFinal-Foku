@@ -219,3 +219,138 @@
 @media (max-width: 900px) {
   .pdf-viewer { left: 12px; right: 12px; }
 }
+/* Contenedor interno de páginas PDF.js (reemplaza el alto del iframe) */
+.pdf-pages-container {
+  width: 100%;
+  height: calc(100% - 58px);
+  overflow-y: auto;
+  background: #F2F0EB;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+  position: relative;
+}
+
+/* Modal / Panel flotante de Etiquetas vinculado al documento */
+.pdf-marcadores-modal {
+  position: fixed;
+  z-index: 3050;
+  right: 20px;
+  top: calc(1.4% + 119px);
+  width: 260px;
+  max-height: calc(100vh - 150px);
+  background: #FCFBF8;
+  border: 1px solid #E3E0DA;
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(33, 34, 37, 0.14);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #212225;
+}
+
+.pdf-marcadores-modal.hidden,
+.pdf-highlight-tooltip.hidden {
+  display: none !important;
+}
+
+.pdf-marcadores-header {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #E3E0DA;
+  background: #fff;
+}
+
+.pdf-marcadores-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pdf-marcadores-body {
+  padding: 0.85rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.pdf-marcadores-form {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.pdf-marcadores-form input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  border: 1px solid #d8d3ca;
+  border-radius: 8px;
+  padding: 0 0.5rem;
+  background: #fff;
+}
+
+.pdf-marcadores-form input[type="color"] {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #d8d3ca;
+  border-radius: 8px;
+  padding: 2px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.pdf-marcadores-form button {
+  height: 34px;
+  padding: 0 0.65rem;
+  border: none;
+  border-radius: 8px;
+  background: #FF9509;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lista-marcadores-pdf,
+.lista-resaltados-pdf {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.pdf-marcadores-divider {
+  border: 0;
+  border-top: 1px solid #E3E0DA;
+  margin: 0.3rem 0;
+}
+
+.pdf-marcadores-body h5 {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #5D5E65;
+}
+
+.pdf-highlight-tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: #212225;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(33, 34, 37, 0.28);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Ajustar el visor para dejar espacio al panel de etiquetas a la derecha */
+.pdf-viewer {
+  right: 300px;
+}
+
+@media (max-width: 900px) {
+  .pdf-viewer { left: 12px; right: 12px; }
+  .pdf-marcadores-modal { right: 12px; bottom: 12px; top: auto; max-height: 40vh; }
+}
