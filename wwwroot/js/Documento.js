@@ -496,8 +496,12 @@ async function abrirDocumento(id) {
     // Abrimos el modal de etiquetas junto con el documento
     document.getElementById('pdf-marcadores-modal')?.classList.remove('hidden');
 
+    // Usa la ruta devuelta por la API o la ruta estándar cuando la API no la incluye
+    const urlPdf = documento.ruta || documento.RutaArchivo || documento.rutaArchivo
+        || `/uploads/documentos/${id}.pdf`;
+
     // Renderizamos el PDF primero para que nunca quede en blanco
-    await renderizarPdfConCapas(documento.ruta);
+    await renderizarPdfConCapas(urlPdf);
 
     // Luego cargamos etiquetas y resaltados guardados
     await cargarMarcadoresPdf();
@@ -528,6 +532,7 @@ async function renderizarPdfConCapas(urlPdf) {
         return;
     }
 
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     container.innerHTML = '<p class="documentos-vacio">Cargando documento...</p>';
 
     try {
